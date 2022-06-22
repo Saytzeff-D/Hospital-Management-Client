@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.banner{
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./Assets/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 655px;
+}
