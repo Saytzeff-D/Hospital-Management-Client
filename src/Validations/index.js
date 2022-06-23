@@ -1,0 +1,1 @@
+export const validatePhone = new RegExp(/^(([+])([0-9]{1,3}))?([\d]{1,11})$/);
