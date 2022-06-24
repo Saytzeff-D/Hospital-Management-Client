@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function RegisterPatient(props) {
+    const {url} = props
     const navigate = useNavigate()
     const [photo, setPhoto] = useState('')
     const [photoError, setPhotoError] = useState('')
@@ -36,6 +38,9 @@ function RegisterPatient(props) {
             }else{
                 values.photo = photo
                 console.log(values)
+                axios.post(`${url}patient/register`, values).then((res)=>{
+                    console.log(res.data)
+                })
             }
         }
     })
@@ -55,7 +60,7 @@ function RegisterPatient(props) {
     }
     return (
         <div>
-            <form className='text-white p-4' style={{backgroundColor: '#000000'}} onSubmit={formik.handleSubmit}>
+            <form className='text-white p-4' style={{backgroundColor: '#000000', opacity: '0.8'}} onSubmit={formik.handleSubmit}>
                     <div className='bg-warning text-white h5 text-center p-3'>
                         HOSPITAL MANAGEMENT SOFTWARE
                     </div>

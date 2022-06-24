@@ -18,7 +18,7 @@ function PatientLogin(props) {
           
             email: Yup.string().email('Enter a valid E-Mail Address').required('E-mail is required'),
           
-            healthNum: Yup.string().required('HEALTH NUMBER IS REQUIRED')      
+            patientId: Yup.string().required('Patient Id is required')      
         }),
      
     })
@@ -30,8 +30,8 @@ function PatientLogin(props) {
     return (
         <div>
             <main className='form-row'>
-                <div className='form-group col-md-5 px-3 mx-3' style={{borderRight:"2px solid grey"}}>
-                <form className='text-white p-4' style={{backgroundColor: '#000000'}} onSubmit={formik.handleSubmit}>
+                <div className='col-lg-6 p-5 border-right'>
+                <form className='text-white p-4' style={{backgroundColor: '#000000', opacity: '0.75'}} onSubmit={formik.handleSubmit}>
                     <div className='bg-warning text-white h5 text-center p-3'>
                         HOSPITAL MANAGEMENT SOFTWARE
                     </div>
@@ -50,22 +50,30 @@ function PatientLogin(props) {
                        <div className='form-group'>
                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your Patient ID' name='patientId' />
                            {formik.touched.patientId && <div className='text-danger'>{formik.errors.patientId}</div>}
+                        </div>
                     
-                       <div className='form-group col-md-12 mt-3'>                        
-                   <button className='btn btn-primary form-control w-100' type='submit'>Login</button>
-                   <p className='py-2 font-weight-bold'>Don't have an account? <span className="text-warning" style={{cursor: 'pointer'}} onClick={goToRegister}>Register Here</span></p>
+                   <button className='btn btn-primary btn-block' type='submit'>Login</button>
+                   <div className="d-flex justify-content-between pt-2">
+                        <div>
+                            <a href='/' className='text-warning'>Forgot Patient Id?</a>
+                        </div>
+                        <div>
+                            <div className='d-flex justify-content-between'>
+                                <p onClick={goToRegister} className='text-primary px-1 font-weight-bold' style={{cursor: 'pointer'}}>Register</p>
+                                <p className='text-primary px-1 font-weight-bold' style={{cursor: 'pointer'}}>Staff Login</p>
+                            </div>
+                        </div>
                    </div>
                     </div>
                   
-                    </div>
             </form>
                 </div>
-                <div className='form-group col-md-6 mx-4'>
-                        <div className='form-group col-md-12 '>1.Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
+                <div className='col-6 d-none d-lg-block p-5'>
+                        <div className='form-group col-md-12 '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
                         </div>
-                        <div className='form-group col-md-12 '>2.Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
+                        <div className='form-group col-md-12 '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
                         </div>
-                        <div className='form-group col-md-12 '>3.Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
+                        <div className='form-group col-md-12 '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
                         </div>
               </div>
             </main>
