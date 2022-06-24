@@ -7,8 +7,8 @@ import PatientLogin from './Components/PatientLogin';
 import StaffLogin from './Components/StaffLogin';
 
 function App() {
-  const url = 'https://hospital-software-server.herokuapp.com'
-  // const url = 'http://localhost:4000/'
+  // const url = 'https://hospital-software-server.herokuapp.com/'
+  const url = 'http://localhost:4000/'
   return (
     <>
       <Routes>

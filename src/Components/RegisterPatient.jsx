@@ -9,6 +9,8 @@ function RegisterPatient(props) {
     const navigate = useNavigate()
     const [photo, setPhoto] = useState('')
     const [photoError, setPhotoError] = useState('')
+    const [error, setError] = useState('')
+    const [spinner, setSpinner] = useState({spin: '', text: 'Register'})
     const formik = useFormik({
         initialValues: {
             fullName: '',
@@ -33,6 +35,8 @@ function RegisterPatient(props) {
             disability: Yup.string().required('This field is required')          
         }),
         onSubmit: (values)=>{
+            setError('')
+            setSpinner({spin: 'spinner-border spinner-border-sm', text: ''})
             if(photo === ''){
                 setPhotoError('Upload a photo')
             }else{
@@ -40,6 +44,17 @@ function RegisterPatient(props) {
                 console.log(values)
                 axios.post(`${url}patient/register`, values).then((res)=>{
                     console.log(res.data)
+                    if(res.data.message === 'Success'){
+                        sessionStorage.setItem('Id', res.data.patientId)
+                        navigate('/views/patientLogin')
+                    }else{
+                        setError(res.data.message)
+                        setSpinner({spin: '', text: 'Register'})
+                    }
+                }).catch((err)=>{
+                    console.log(err.message)
+                    setError(err.message)
+                    setSpinner({spin: '', text: 'Register'})
                 })
             }
         }
@@ -66,6 +81,7 @@ function RegisterPatient(props) {
                     </div>
                     <hr className='text-white bg-white'/>
                     <p className='text-white font-weight-bold'>Patient Registration</p>
+                    {error !== '' && <div className="alert alert-danger"> <strong>Error!</strong> {error}</div>}
                     <div className='form-row'>
                         <div className='form-group col-md-4'>
                             <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your Full Name' name='fullName' />
@@ -122,11 +138,11 @@ function RegisterPatient(props) {
                     <div className='form-row'>                        
                         <div className='form-group col-12'>
                             <input onChange={pickFile} type="file" className='form-control d-none' name='photo' id='photo' />
-                            <button className='btn btn-block btn-light text-warning' onClick={clickFileInput} ><span><i className='fa fa-upload'></i></span> Pick a Photo</button>
+                            <div className='btn btn-block btn-light text-warning' onClick={clickFileInput} ><span><i className='fa fa-upload'></i></span> Pick a Photo</div>
                             {photo === '' ? <div className='text-danger'>{photoError}</div> : null}
                         </div>
                     </div>
-                    <button className='btn btn-primary btn-block' type='submit'>Register</button>
+                    <button className='btn btn-primary btn-block' type='submit'>{spinner.text} <span className={spinner.spin}></span></button>
                     <p className='py-2 font-weight-bold'>Already Registered? <span className="text-warning" style={{cursor: 'pointer'}} onClick={goToLogin}>Patient Login Here</span></p>
             </form>
         </div>
