@@ -2,8 +2,12 @@ import{ React, useState } from 'react';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function PatientLogin(props) {
+    const {url} = props
+    const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
+    const [error, setError] = useState('')
     const navigate = useNavigate()
    
     const formik = useFormik({
@@ -11,15 +15,31 @@ function PatientLogin(props) {
           
             email: '',
            
-            patientId: '',
+            healthId: '',
            
         },
         validationSchema: Yup.object({
           
             email: Yup.string().email('Enter a valid E-Mail Address').required('E-mail is required'),
           
-            patientId: Yup.string().required('Patient Id is required')      
+            healthId: Yup.string().required('Health Id is required')      
         }),
+        onSubmit: (values)=>{
+            setError('')
+            setLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
+            console.log(values)
+            axios.post(`${url}patient/login`, values).then((res)=>{
+                if (res.data.status === false) {
+                    setError(res.data.message)
+                    setLoading({btn: 'Login', loadStyle: ''})
+                } else {
+                    navigate('/dashboard')
+                }
+            }).catch((err)=>{
+                setError(err.response.data.message)
+                setLoading({btn: 'Login', loadStyle: ''})
+            })
+        }
      
     })
     const goToRegister = ()=>{
@@ -43,7 +63,9 @@ function PatientLogin(props) {
                    
                     <div className='form-group '>
                     <center> <p className='text-white font-weight-bold'>Patient Login</p></center> 
-                      
+                      {
+                        error !== '' && <div className='alert alert-danger'><b>Error!</b> {error}</div>
+                      }
                         <div className='form-group '>
                             <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="email" className='form-control' placeholder='Email Address' name='email' />
                             {formik.touched.email && <div className='text-danger'>{formik.errors.email}</div>}
@@ -51,11 +73,11 @@ function PatientLogin(props) {
                        
                        
                        <div className='form-group'>
-                           <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your Patient ID' name='patientId' />
-                           {formik.touched.patientId && <div className='text-danger'>{formik.errors.patientId}</div>}
+                           <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your Health ID' name='healthId' />
+                           {formik.touched.healthId && <div className='text-danger'>{formik.errors.healthId}</div>}
                         </div>
                     
-                   <button className='btn btn-primary btn-block' type='submit'>Login</button>
+                   <button className='btn btn-primary btn-block' type='submit'>{loading.btn} <span className={loading.loadStyle}></span></button>
                    <div className="d-flex justify-content-between pt-2">
                         <div>
                             <a href='/views/patientIdRetrieval' className='text-warning' >Forgot Patient Id?</a>
