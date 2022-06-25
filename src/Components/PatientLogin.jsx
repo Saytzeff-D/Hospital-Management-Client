@@ -25,6 +25,9 @@ function PatientLogin(props) {
     const goToRegister = ()=>{
         navigate('/views/addPatient')
     }
+    const goToStaffLogin=()=>{
+        navigate('/views/staffLogin')
+    }
  
  
     return (
@@ -55,12 +58,12 @@ function PatientLogin(props) {
                    <button className='btn btn-primary btn-block' type='submit'>Login</button>
                    <div className="d-flex justify-content-between pt-2">
                         <div>
-                            <a href='/' className='text-warning'>Forgot Patient Id?</a>
+                            <a href='/views/patientIdRetrieval' className='text-warning' >Forgot Patient Id?</a>
                         </div>
                         <div>
                             <div className='d-flex justify-content-between'>
-                                <p onClick={goToRegister} className='text-primary px-1 font-weight-bold' style={{cursor: 'pointer'}}>Register</p>
-                                <p className='text-primary px-1 font-weight-bold' style={{cursor: 'pointer'}}>Staff Login</p>
+                                <p onClick={goToRegister} className='text-primary px-1 font-weight-bold' style={{cursor: 'pointer', borderRight:"2px solid gray"}}>Register</p>
+                                <p className='text-primary px-1 font-weight-bold' onClick={goToStaffLogin} style={{cursor: 'pointer'}}>Staff Login</p>
                             </div>
                         </div>
                    </div>

@@ -5,10 +5,11 @@ import RegisterPatient from './Components/RegisterPatient';
 import BackgroundView from './Components/BackgroundView';
 import PatientLogin from './Components/PatientLogin';
 import StaffLogin from './Components/StaffLogin';
+import PatientIdRetrieval from './Components/PatientIdRetrieval';
 
 function App() {
-  // const url = 'https://hospital-software-server.herokuapp.com/'
-  const url = 'http://localhost:4000/'
+  const url = 'https://hospital-software-server.herokuapp.com/'
+  // const url = 'http://localhost:4000/'
   return (
     <>
       <Routes>
@@ -17,6 +18,7 @@ function App() {
           <Route path='/views/addPatient' element={<RegisterPatient url={url} />} />
           <Route path='/views/patientLogin' element={<PatientLogin/>}/>
           <Route path='/views/staffLogin' element={<StaffLogin />} />
+          <Route path='/views/patientIdRetrieval' element={<PatientIdRetrieval/>} />
         </Route>
       </Routes>
     </>

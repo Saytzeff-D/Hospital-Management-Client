@@ -4,22 +4,22 @@ import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 
 
-function StaffLogin(props) {
+function PatientIdRetrieval(props) {
     const navigate = useNavigate()
    
     const formik = useFormik({
         initialValues: {
           
-            email: '',
+            email: ''
            
-            staffId: '',
+          
            
         },
         validationSchema: Yup.object({
           
             email: Yup.string().email('Enter a valid E-Mail Address').required('E-mail is required'),
           
-            patientId: Yup.string().required('staff Id is required')      
+          
         }),
      
     })
@@ -38,7 +38,7 @@ function StaffLogin(props) {
               
                
                 <div className='form-group '>
-                <center> <p className='text-white font-weight-bold'>Staff Login</p></center> 
+                <center> <p className='text-white font-weight-bold'>Patient ID Retrieval</p></center> 
                   
                     <div className='form-group '>
                         <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="email" className='form-control' placeholder='Email Address' name='email' />
@@ -46,13 +46,10 @@ function StaffLogin(props) {
                     </div>
                    
                    
-                   <div className='form-group'>
-                       <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your Staff ID' name='staffId' />
-                       {formik.touched.staffId && <div className='text-danger'>{formik.errors.staffId}</div>}
-                    </div>
+                 
                 
-               <button className='btn btn-primary btn-block' type='submit'>Login</button>
-              
+               <button className='btn btn-primary btn-block' type='submit'>Retrieve ID</button>
+             
                 </div>
               
         </form>
@@ -67,4 +64,4 @@ function StaffLogin(props) {
     );
 }
 
-export default StaffLogin;
+export default PatientIdRetrieval;
