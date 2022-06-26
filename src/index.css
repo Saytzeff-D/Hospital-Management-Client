@@ -12,9 +12,9 @@ code {
     monospace;
 }
 .banner{
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./Assets/background.jpg');
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./Assets/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
-    height: 655px;
+    height: 657px;
 }

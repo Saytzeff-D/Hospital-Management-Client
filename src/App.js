@@ -17,7 +17,7 @@ function App() {
         <Route path='/views' element={<BackgroundView />}>
           <Route path='/views/addPatient' element={<RegisterPatient url={url} />} />
           <Route path='/views/patientLogin' element={<PatientLogin url={url} />}/>
-          <Route path='/views/staffLogin' element={<StaffLogin />} />
+          <Route path='/views/staffLogin' element={<StaffLogin url={url} />} />
           <Route path='/views/patientIdRetrieval' element={<PatientIdRetrieval url={url} />} />
         </Route>
       </Routes>

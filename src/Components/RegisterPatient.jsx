@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function RegisterPatient(props) {
+    sessionStorage.removeItem('Id')
     const {url} = props
     const navigate = useNavigate()
     const [photo, setPhoto] = useState('')
@@ -35,25 +36,25 @@ function RegisterPatient(props) {
             disability: Yup.string().required('This field is required')          
         }),
         onSubmit: (values)=>{
-            setError('')
-            setSpinner({spin: 'spinner-border spinner-border-sm', text: ''})
             if(photo === ''){
                 setPhotoError('Upload a photo')
             }else{
+                setError('')
+                setSpinner({spin: 'spinner-border spinner-border-sm', text: ''})
                 values.photo = photo
                 console.log(values)
                 axios.post(`${url}patient/register`, values).then((res)=>{
                     console.log(res.data)
                     if(res.data.message === 'Success'){
-                        sessionStorage.setItem('Id', res.data.patientId)
+                        sessionStorage.setItem('Id', res.data.healthId)
                         navigate('/views/patientLogin')
                     }else{
                         setError(res.data.message)
                         setSpinner({spin: '', text: 'Register'})
                     }
                 }).catch((err)=>{
-                    console.log(err.message)
-                    setError(err.message)
+                    console.log(err.response.data.message)
+                    setError(err.response.data.message)
                     setSpinner({spin: '', text: 'Register'})
                 })
             }
@@ -113,8 +114,8 @@ function RegisterPatient(props) {
                         <div className='form-group col-md-4'>
                             <select onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' name='gender'>
                                 <option value="">Gender</option>
-                                <option value="Single" >Male</option>
-                                <option value="Married">Female</option>
+                                <option value="Male" >Male</option>
+                                <option value="Female">Female</option>
                             </select>
                             {formik.touched.gender && <div className='text-danger'>{formik.errors.gender}</div>}
                         </div>
@@ -129,8 +130,8 @@ function RegisterPatient(props) {
                         <div className='form-group col-md-4'>
                             <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='disability' >
                                 <option value="">Any Disablity?</option>
-                                <option value="Single" >Yes</option>
-                                <option value="Married">No</option>
+                                <option value="Yes" >Yes</option>
+                                <option value="No">No</option>
                             </select>
                             {formik.touched.disability && <div className='text-danger'>{formik.errors.disability}</div>}
                         </div>

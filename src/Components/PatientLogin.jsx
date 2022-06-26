@@ -9,6 +9,7 @@ function PatientLogin(props) {
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
     const [error, setError] = useState('')
     const navigate = useNavigate()
+    const healthId = sessionStorage.getItem('Id')
    
     const formik = useFormik({
         initialValues: {
@@ -66,6 +67,13 @@ function PatientLogin(props) {
                       {
                         error !== '' && <div className='alert alert-danger'><b>Error!</b> {error}</div>
                       }
+                      {
+                        healthId !== null && error === ''
+                        ?
+                        <div className='alert alert-success'><b>Sucess!</b> Your Health Id is <b>{healthId}</b></div>
+                        :
+                        ''
+                      }
                         <div className='form-group '>
                             <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="email" className='form-control' placeholder='Email Address' name='email' />
                             {formik.touched.email && <div className='text-danger'>{formik.errors.email}</div>}
@@ -80,11 +88,11 @@ function PatientLogin(props) {
                    <button className='btn btn-primary btn-block' type='submit'>{loading.btn} <span className={loading.loadStyle}></span></button>
                    <div className="d-flex justify-content-between pt-2">
                         <div>
-                            <a href='/views/patientIdRetrieval' className='text-warning' >Forgot Patient Id?</a>
+                            <a href='/views/patientIdRetrieval' className='text-warning' >Forgot Health Id?</a>
                         </div>
                         <div>
                             <div className='d-flex justify-content-between'>
-                                <p onClick={goToRegister} className='text-primary px-1 font-weight-bold' style={{cursor: 'pointer', borderRight:"2px solid gray"}}>Register</p>
+                                <p onClick={goToRegister} className='text-primary px-1 font-weight-bold border-right' style={{cursor: 'pointer'}}>Register</p>
                                 <p className='text-primary px-1 font-weight-bold' onClick={goToStaffLogin} style={{cursor: 'pointer'}}>Staff Login</p>
                             </div>
                         </div>
