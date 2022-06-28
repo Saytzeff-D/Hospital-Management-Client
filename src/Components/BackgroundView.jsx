@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
-function BackgroundView(props) {
+function BackgroundView() {
+  const url = useSelector(state=>state.url)
+
     return (
         <div>
             <div className='banner animate__animated animate__pulse animate__faster'>

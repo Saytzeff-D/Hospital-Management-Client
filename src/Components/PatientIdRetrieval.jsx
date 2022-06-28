@@ -3,11 +3,13 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
 function PatientIdRetrieval(props) {
     sessionStorage.removeItem('Id')
-    const {url} = props
+    const url = useSelector(state=>state.url)
+
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [feedBack, setFeedBack] = useState('')
