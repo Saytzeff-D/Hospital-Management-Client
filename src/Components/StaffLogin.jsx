@@ -3,10 +3,12 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
 function StaffLogin(props) {
-    const {url} = props
+    const url = useSelector(state=>state.url)
+
     sessionStorage.removeItem('Id')
     const navigate = useNavigate()
     const [error, setError] = useState('')

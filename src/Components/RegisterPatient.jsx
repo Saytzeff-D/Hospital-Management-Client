@@ -3,10 +3,12 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 function RegisterPatient(props) {
     sessionStorage.removeItem('Id')
-    const {url} = props
+    const url = useSelector(state=>state.url)
+
     const navigate = useNavigate()
     const [photo, setPhoto] = useState('')
     const [photoError, setPhotoError] = useState('')
