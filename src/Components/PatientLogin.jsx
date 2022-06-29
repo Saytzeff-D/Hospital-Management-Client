@@ -54,7 +54,7 @@ function PatientLogin(props) {
     return (
         <div>
             <main className='form-row'>
-                <div className='col-lg-6 p-5 border-right'>
+                <div className='col-md-6 p-5 border-right'>
                 <form className='text-white p-4' style={{backgroundColor: '#000000', opacity: '0.75'}} onSubmit={formik.handleSubmit}>
                     <div className='bg-warning text-white h5 text-center p-3'>
                         HOSPITAL MANAGEMENT SOFTWARE
