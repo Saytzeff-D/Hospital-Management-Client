@@ -36,7 +36,7 @@ function PatientLogin(props) {
                     setError(res.data.message)
                     setLoading({btn: 'Login', loadStyle: ''})
                 } else {
-                    navigate('/dashboard')
+                    navigate('/patient')
                 }
             }).catch((err)=>{
                 setError(err.response.data.message)

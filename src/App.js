@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import './App.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import RegisterPatient from './Components/RegisterPatient';
-import BackgroundView from './Components/BackgroundView';
-import PatientLogin from './Components/PatientLogin';
-import StaffLogin from './Components/StaffLogin';
-import PatientIdRetrieval from './Components/PatientIdRetrieval';
+import RegisterPatient from './Components/Patient/RegisterPatient';
+import BackgroundView from './Components/Container/BackgroundView';
+import PatientLogin from './Components/Patient/PatientLogin';
+import StaffLogin from './Components/Staff/StaffLogin';
+import PatientIdRetrieval from './Components/Patient/PatientIdRetrieval';
+import PatientDashboard from './Components/Patient/PatientDashboard';
+import PatientSideBar from './Components/Patient/PatientSideBar';
+import StaffSideBar from './Components/Staff/StaffSideBar';
+import StaffDashboard from './Components/Staff/StaffDashboard';
 
 function App() {
 // const [url,setUrl]=useSelector(state=>state)
@@ -23,6 +27,12 @@ console.log(useSelector(state=>state))
           <Route path='/views/patientLogin' element={<PatientLogin url={url} />}/>
           <Route path='/views/staffLogin' element={<StaffLogin url={url} />} />
           <Route path='/views/patientIdRetrieval' element={<PatientIdRetrieval url={url} />} />
+        </Route>
+        <Route path='/patient/' element={<PatientSideBar />} >
+          <Route path='/patient/dashboard' element={<PatientDashboard />} />
+        </Route>
+        <Route path='/staff' element={<StaffSideBar />} >
+          <Route path='/staff/dashboard' element={<StaffDashboard />} />
         </Route>
       </Routes>
     </>
