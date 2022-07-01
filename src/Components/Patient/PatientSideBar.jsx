@@ -1,42 +1,41 @@
-import React, { useRef, useState } from 'react'
-import { Outlet } from 'react-router'
+import React, { useState } from 'react'
+import { Outlet, useNavigate } from 'react-router'
+import { NavLink } from 'react-router-dom'
 
 const PatientSideBar = ()=>{
-    // const mySidebar = useRef(0)
-    const [mySidebar, setMySidebar] = useState('show')
+    const navigate = useNavigate
+    const [num, setNum] = useState(0)
     const [mySidebarStyle, setMySideBarStyle] = useState({zIndex:3, width: '300px'})
     const [overlayBgStyle, setOverlayBgStyle] = useState({cursor: 'pointer'})
-    // const overlayBg = useRef(0)
-    // const [overlayBg, setOverlayBg] = useState('show')
+    
       const w3_open = ()=>{
-        //   if (mySidebar === 'show') {
-        //       setMySideBarStyle({zIndex:3, width: '300px', display: 'none'})
-        //       setOverlayBgStyle({cursor: 'pointer', display: 'none'})
-        //   } else {
-        //     setMySideBarStyle({zIndex:3, width: '300px', display: 'block'})
-        //     setOverlayBgStyle({cursor: 'pointer', display: 'block'})
-        //   }
-      }
-      const w3_close = ()=>{
-        // setMySideBarStyle({zIndex:3, width: '300px', display: 'none'})
-        // setOverlayBgStyle({cursor: 'pointer', display: 'none'})
+          if (num%2 === 0) {
+            setMySideBarStyle({zIndex:3, width: '300px', display: 'block'})
+            setOverlayBgStyle({cursor: 'pointer', display: 'block'})
+            setNum(num+1)         
+        } else {
+            setMySideBarStyle({zIndex:3, width: '300px', display: 'none'})
+            setOverlayBgStyle({cursor: 'pointer', display: 'none'})
+            setNum(num+1)
+        }
       }
     return(
         <div>
             {/* Top Container */}
-            <div className="w3-bar w3-top w3-black w3-large" style={{zIndex: 4}}>
-                <button className="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onClick={w3_open}><i className="fa fa-bars"></i>  Menu</button>
-                <span className="w3-bar-item w3-right">Logo</span>
+            <div className="w3-bar w3-top w3-blue w3-large" style={{zIndex: 4}}>
+                <button className="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onClick={w3_open}><i className="fa fa-bars"></i></button>
+                <span className="w3-bar-item w3-left font-weight-bold">Hospital Management System</span>
+                <span className='w3-right p-2 w3-hide-small font-weight-bold' onClick={navigate('/views/patientLogin')} style={{cursor: 'pointer'}}>Logout <i className='fa fa-power-off'></i></span>
             </div>
             {/* SideNav Menu */}
             <nav className="w3-sidebar w3-collapse w3-white w3-animate-left" style={mySidebarStyle}>
                 <br />
                 <div className="w3-container w3-row">
                     <div className="w3-col s4">
-                    <img src="../w3images/avatar2.png" alt='photoNow' className="w3-circle w3-margin-right" style={{width: '46px'}} />
+                    <img src={require("../../Assets/background.jpg")} alt='photoNow' className="w3-circle w3-margin-right" style={{width: '80px'}} />
                     </div>
                     <div className="w3-col s8 w3-bar">
-                    <span>Welcome, <strong>Mike</strong></span><br/>
+                    <span>Welcome, <strong>Patient</strong></span><br/>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
@@ -47,21 +46,17 @@ const PatientSideBar = ()=>{
                     <h5>Dashboard</h5>
                 </div>
                 <div className="w3-bar-block">
-                    <a href="/" className="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onClick={w3_close()} title="close menu"><i className="fa fa-remove fa-fw"></i>  Close Menu</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding w3-blue"><i className="fa fa-users fa-fw"></i>  Overview</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-eye fa-fw"></i>  Views</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Traffic</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-bullseye fa-fw"></i>  Geo</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-diamond fa-fw"></i>  Orders</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-bell fa-fw"></i>  News</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-bank fa-fw"></i>  General</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-history fa-fw"></i>  History</a>
-                    <a href="/" className="w3-bar-item w3-button w3-padding"><i className="fa fa-cog fa-fw"></i>  Settings</a><br/><br/>
+                    <NavLink to='/patient/dashboard' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Overview</NavLink> 
+                    <NavLink to='/patient/appointment' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-calendar fa-fw"></i>  My Appointments</NavLink> 
+                    <NavLink to='/patient/pharmacy' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Pharmacy</NavLink> 
+                    <NavLink to='/patient/ambulance' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-ambulance fa-fw"></i>  Ambulance</NavLink> 
+                    <NavLink to='/patient/liveChat' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Live Chat</NavLink>
+                    <NavLink to='/views/patientLogin' className="w3-bar-item w3-button w3-padding w3-hide-large"><i className="fa fa-power-off fa-fw"></i>  Logout</NavLink> 
                 </div>
             </nav>
 
             {/* Overlay Effect when openong sidebar */}
-            <div className="w3-overlay w3-hide-large w3-animate-opacity" onClick={w3_close} style={overlayBgStyle} title="close side menu"></div>
+            <div className="w3-overlay w3-hide-large w3-animate-opacity" style={overlayBgStyle} onClick={w3_open} title="close side menu"></div>
 
             {/* Page Content */}
             <div className="w3-main" style={{marginLeft: '300px', marginTop: '43px'}}>

@@ -3,8 +3,8 @@ import React from 'react';
 function StaffDashboard(props) {
     return (
         <div>
-            <div class="row">
-                <div class="col-md-12">
+            <div className="row w-100">
+                <div className="col-md-12">
                     <h1>Test Page</h1>
                     <br/>
                     <p>
