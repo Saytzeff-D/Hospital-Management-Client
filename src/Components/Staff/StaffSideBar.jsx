@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom'
 
 const StaffSideBar = ()=>{
-    const navigate = useNavigate
+    const navigate = useNavigate()
     const [num, setNum] = useState(0)
     const [mySidebarStyle, setMySideBarStyle] = useState({zIndex:3, width: '300px'})
     const [overlayBgStyle, setOverlayBgStyle] = useState({cursor: 'pointer'})
