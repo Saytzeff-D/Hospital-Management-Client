@@ -4,5 +4,11 @@ export const testAction=()=>{
         type:'change_backend_url_to_hosted',
         payload:'https://hospital-software-server.herokuapp.com/'
           }
+}
 
+export const setStaff=(params)=>{
+  return{
+    type: 'setStaff',
+    payload:params
+  }
 }

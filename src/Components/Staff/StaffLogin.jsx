@@ -1,15 +1,19 @@
-import{ React, useState } from 'react';
+import{ React, useState, useEffect } from 'react';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { setStaff } from '../../actions';
 
 
-function StaffLogin(props) {
+function StaffLogin() {
     const url = useSelector(state=>state.UrlReducer.url)
+    const staffInfo = useSelector(state=>state.UrlReducer.staffDetails)
 
-    sessionStorage.removeItem('Id')
+    
+    const dispatch= useDispatch()
+localStorage.removeItem('htStaffToken')
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
@@ -38,9 +42,19 @@ function StaffLogin(props) {
                     setError(res.data.message)
                     setLoading({btn: 'Login', loadStyle: ''})
                 } else {
-                    navigate('/dashboard')
+                    let staffDetails=res.data.details 
+                    console.log(res.data.token)  
+                    localStorage.htStaffToken=res.data.token
+                    dispatch(setStaff(staffDetails))
+                    // dispatch({type:'setStaff',payload:staffDetails})
+
+
+                    navigate('/staff/dashboard')
+                   
                 }
-            }).catch((err)=>{
+            })
+            .catch((err)=>{
+                console.log(err)
                 setError(err.response.data.message)
                 setLoading({btn: 'Login', loadStyle: ''})
             })

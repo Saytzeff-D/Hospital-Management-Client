@@ -12,6 +12,9 @@ import PatientSideBar from './Components/Patient/PatientSideBar';
 import StaffSideBar from './Components/Staff/StaffSideBar';
 import StaffDashboard from './Components/Staff/StaffDashboard';
 
+import RegisterStaff from './Components/Staff/RegisterStaff';
+
+
 function App() {
 console.log(useSelector(state=>state.UrlReducer))
   return (
@@ -27,12 +30,14 @@ console.log(useSelector(state=>state.UrlReducer))
         <Route path='/patient/' element={<PatientSideBar />} >
           <Route path='/patient/dashboard' element={<PatientDashboard />} />
         </Route>
+        <Route path='/views/addStaff' element={<RegisterStaff />} />
         <Route path='/staff' element={<StaffSideBar />} >
-          <Route path='/staff/dashboard' element={<StaffDashboard />} />
+         { <Route path='/staff/dashboard' element={<StaffDashboard />} />}
         </Route>
       </Routes>
     </>
   )
 }
-
-export default App;
+    
+    export default App;
+    

@@ -1,6 +1,45 @@
-import React from 'react';
+import axios from 'axios';
+import React, {useEffect} from 'react';
+import {useSelector,useDispatch } from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import { setStaff } from '../../actions';
+function StaffDashboard() {
+    const dispatch=useDispatch()
+const url = useSelector(state=>state.UrlReducer.url)
+let navigate=useNavigate()
+useEffect( ()=>{
 
-function StaffDashboard(props) {
+    if(!localStorage.htStaffToken){
+navigate('/views/staffLogin')
+    }
+    else{
+        let token=localStorage.htStaffToken
+axios.get(`${url}staff/dashboard`,{headers:{
+    'authorization' :  `Bearer ${token}`,
+    'Content-Type':'application/json',
+    'Accept':'application/json'
+  }}).then( res=>{
+    if(res.data.status){
+    dispatch(setStaff(res.data.staffDetails))
+    }
+    else{
+  console.log('unable to connect')
+    }
+
+
+
+  }).catch(err=>{
+    console.log('unable to connect')
+    console.log(err)
+  })
+        
+    }
+
+}
+
+)
+
+
     return (
         <div>
             <div className="row w-100">
