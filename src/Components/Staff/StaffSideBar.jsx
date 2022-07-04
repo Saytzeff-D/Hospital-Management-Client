@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom'
+import {useSelector,useDispatch} from 'react-redux'
 
 const StaffSideBar = ()=>{
+    const staffInfo=useSelector(state=>state.staffDetails)
+    console.log(staffInfo)
     const navigate = useNavigate()
     const [num, setNum] = useState(0)
     const [mySidebarStyle, setMySideBarStyle] = useState({zIndex:3, width: '300px'})
@@ -32,10 +35,10 @@ const StaffSideBar = ()=>{
                 <br />
                 <div className="w3-container w3-row">
                     <div className="w3-col s4">
-                    <img src={require("../../Assets/background.jpg")} alt='photoNow' className="w3-circle w3-margin-right" style={{width: '80px'}} />
+                    <img src={staffInfo.photo} alt='photoNow' className="w3-circle w3-margin-right" style={{width: '80px'}} />
                     </div>
                     <div className="w3-col s8 w3-bar">
-                    <span>Welcome, <strong>StaffRole</strong></span><br/>
+                    <span>Welcome, <strong className='text-capitalize '>{ `${staffInfo.role}`}.</strong></span><br/>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>

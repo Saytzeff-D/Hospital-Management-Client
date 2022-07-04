@@ -1,13 +1,21 @@
-import{ React, useState } from 'react';
+import{ React, useState, useEffect } from 'react';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 
 
 function StaffLogin(props) {
     const url = useSelector(state=>state.url)
+    const dispatch=useDispatch()
+
+    useEffect( ()=>{
+axios.get(`${url}staff/allstaffs`).then(res=>{
+    console.log(res.data)
+}).catch(err=> console.log(err))
+    },[])
+
 
     sessionStorage.removeItem('Id')
     const navigate = useNavigate()
@@ -37,7 +45,14 @@ function StaffLogin(props) {
                     setError(res.data.message)
                     setLoading({btn: 'Login', loadStyle: ''})
                 } else {
-                    navigate('/dashboard')
+                    let staffDetails=res.data.details 
+                    console.log(res.data.token)  
+                    localStorage.htStaffToken=res.data.token
+
+                    dispatch({type:'setStaff', payload:staffDetails})
+
+                    navigate('/staff/dashboard')
+                   
                 }
             }).catch((err)=>{
                 setError(err.response.data.message)

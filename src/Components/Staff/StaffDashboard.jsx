@@ -1,6 +1,23 @@
-import React from 'react';
-
+import React, {useEffect} from 'react';
+import {useSelector,useDispatch } from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 function StaffDashboard(props) {
+let navigate=useNavigate()
+useEffect( ()=>{
+
+    if(!localStorage.htStaffToken){
+navigate('/views/staffLogin')
+    }
+    else{
+
+        
+    }
+
+}
+
+)
+
+
     return (
         <div>
             <div className="row w-100">
