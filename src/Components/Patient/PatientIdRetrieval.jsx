@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 function PatientIdRetrieval(props) {
     sessionStorage.removeItem('Id')
-    const url = useSelector(state=>state.url)
+    const url = useSelector(state=>state.UrlReducer.url)
 
     const navigate = useNavigate()
     const [error, setError] = useState('')

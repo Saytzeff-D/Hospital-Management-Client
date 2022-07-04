@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 
 function StaffLogin(props) {
-    const url = useSelector(state=>state.url)
+    const url = useSelector(state=>state.UrlReducer.url)
 
     sessionStorage.removeItem('Id')
     const navigate = useNavigate()
@@ -34,6 +34,7 @@ function StaffLogin(props) {
             setLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
             axios.post(`${url}staff/login`, values).then((res)=>{
                 if (res.data.status === false) {
+                    console.log(res.data)
                     setError(res.data.message)
                     setLoading({btn: 'Login', loadStyle: ''})
                 } else {

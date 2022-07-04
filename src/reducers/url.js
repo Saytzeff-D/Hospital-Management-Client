@@ -1,11 +1,10 @@
 const initstate={
-//  url = 'https://hospital-software-server.herokuapp.com/'
-   url:'http://localhost:4000/'   
+   url: 'https://hospital-software-server.herokuapp.com/'
+   // url: 'http://localhost:4000/'   
 }
 
-const myReducer=(state=initstate,action)=>{
-
-return state;
+const UrlReducer=(state=initstate,action)=>{
+   return state;
 }
 
-export default myReducer
+export default UrlReducer
