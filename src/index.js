@@ -7,10 +7,9 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 import {createStore} from 'redux';
-import myReducer from './reducers/url';
-// import counter from './reducers/counter';
 import {Provider} from 'react-redux'
-let store= createStore(myReducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+import allReducers from './reducers/all';
+let store= createStore(allReducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 console.log(store)
 const root = ReactDOM.createRoot(document.getElementById('root'));

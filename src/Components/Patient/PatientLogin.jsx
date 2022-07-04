@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 function PatientLogin(props) {
-    const url = useSelector(state=>state.url)
+    const url = useSelector(state=>state.UrlReducer.url)
 
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
     const [error, setError] = useState('')

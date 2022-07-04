@@ -4,20 +4,16 @@ import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector,useDispatch } from 'react-redux';
+import { setStaff } from '../../actions';
 
 
-function StaffLogin(props) {
-    const url = useSelector(state=>state.url)
-    const dispatch=useDispatch()
+function StaffLogin() {
+    const url = useSelector(state=>state.UrlReducer.url)
+    const staffInfo = useSelector(state=>state.UrlReducer.staffDetails)
 
-    useEffect( ()=>{
-axios.get(`${url}staff/allstaffs`).then(res=>{
-    console.log(res.data)
-}).catch(err=> console.log(err))
-    },[])
-
-
-    sessionStorage.removeItem('Id')
+    
+    const dispatch= useDispatch()
+localStorage.removeItem('htStaffToken')
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
@@ -42,19 +38,23 @@ axios.get(`${url}staff/allstaffs`).then(res=>{
             setLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
             axios.post(`${url}staff/login`, values).then((res)=>{
                 if (res.data.status === false) {
+                    console.log(res.data)
                     setError(res.data.message)
                     setLoading({btn: 'Login', loadStyle: ''})
                 } else {
                     let staffDetails=res.data.details 
                     console.log(res.data.token)  
                     localStorage.htStaffToken=res.data.token
+                    dispatch(setStaff(staffDetails))
+                    // dispatch({type:'setStaff',payload:staffDetails})
 
-                    dispatch({type:'setStaff', payload:staffDetails})
 
                     navigate('/staff/dashboard')
                    
                 }
-            }).catch((err)=>{
+            })
+            .catch((err)=>{
+                console.log(err)
                 setError(err.response.data.message)
                 setLoading({btn: 'Login', loadStyle: ''})
             })

@@ -1,20 +1,11 @@
 const initstate={
-//  url = 'https://hospital-software-server.herokuapp.com/'
-   url:'http://localhost:4000/',
-   staffDetails:{}   
+   url: 'https://hospital-software-server.herokuapp.com/'
+   // url: 'http://localhost:4000/',
+
 }
 
-const myReducer=(state=initstate,action)=>{
-
-   if(action.type=='setStaff'){
-
-      let value=action.payload
-      let newstate={...state,staffDetails:value}
-      return newstate
-   }
-
-
-return state;
+const UrlReducer=(state=initstate,action)=>{
+   return state;
 }
 
-export default myReducer
+export default UrlReducer

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 function RegisterPatient(props) {
     sessionStorage.removeItem('Id')
-    const url = useSelector(state=>state.url)
+    const url = useSelector(state=>state.UrlReducer.url)
 
     const navigate = useNavigate()
     const [photo, setPhoto] = useState('')
@@ -73,6 +73,7 @@ function RegisterPatient(props) {
         const reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onload = ()=>{
+            console.log(reader.result)
             setPhoto(reader.result)
         }
     }
