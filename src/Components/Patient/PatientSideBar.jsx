@@ -50,7 +50,7 @@ const PatientSideBar = ()=>{
                     <NavLink style={{textDecoration: 'none'}} to='/patient/appointment' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-calendar fa-fw"></i>  My Appointments</NavLink> 
                     <NavLink style={{textDecoration: 'none'}} to='/patient/pharmacy' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Pharmacy</NavLink> 
                     <NavLink style={{textDecoration: 'none'}} to='/patient/ambulance' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-ambulance fa-fw"></i>  Ambulance</NavLink> 
-                    <NavLink style={{textDecoration: 'none'}} to='/patient/liveChat' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Live Chat</NavLink>
+                    <NavLink style={{textDecoration: 'none'}} to='/patient/chat' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Live Chat</NavLink>
                     <NavLink style={{textDecoration: 'none'}} to='/views/patientLogin' className="w3-bar-item w3-button w3-padding w3-hide-large"><i className="fa fa-power-off fa-fw"></i>  Logout</NavLink> 
                 </div>
             </nav>
