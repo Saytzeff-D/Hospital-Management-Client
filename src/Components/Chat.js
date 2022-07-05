@@ -1,0 +1,56 @@
+import { useEffect, useState } from 'react';
+import axios from "axios";
+
+const Chat = ({socket}) => {
+
+  const [allMessages, setAllMessages] = useState([]);
+  const [texts, setTexts] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    axios.get('http://localhost:4000/chat/get-chats').then((res) => {
+      if(res.data.status === true) {
+        setAllMessages(res.data.messages);
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
+  }, [])
+  socket.current.on('new-message', (msgs) => {
+    // console.log(allMessages);
+    setAllMessages([...allMessages, msgs]);
+  }) 
+
+  const sendMessage = () => {
+    setIsLoading(true);
+    axios.post('http://localhost:4000/chat/post-chats', {text: texts}).then((res) => {
+      if(res.data.status === true) {
+        // console.log(res.data)
+        chatMessage(res.data.text);
+      }
+    }).catch((err) => {
+      setIsLoading(false);
+      console.log(err);
+    })
+  }
+
+  const chatMessage = (msg) => {
+    socket.current.emit('get-message', msg)
+    setTexts("");
+    setIsLoading(false);
+  }
+  return (
+    <>
+      <div>
+        {allMessages.map((message, ind) => (
+          <p key={ind}>{message.text}</p>
+        ))}
+      </div>
+      <input type="text" className="form-control w-100 my-2" onChange={(e) => setTexts(e.target.value)} value={texts} placeholder="Type your message here..." name="text" />
+      <button className="btn btn-info" onClick={sendMessage}>{isLoading ? <span className="spinner-border"></span> : "Send"}</button>
+      {/* <button className="btn btn-info" onClick={() => chatMessage(texts)}>{isLoading ? <span className="spinner-border"></span> : "Send"}</button> */}
+    </>
+  )
+}
+
+export default Chat;

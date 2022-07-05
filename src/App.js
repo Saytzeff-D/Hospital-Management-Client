@@ -1,8 +1,9 @@
-import React from 'react';
+import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import './App.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import socketClient from 'socket.io-client';
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { faTwitter, faFontAwesome } from '@fortawesome/free-brands-svg-icons'
 import RegisterPatient from './Components/Patient/RegisterPatient';
@@ -14,7 +15,7 @@ import PatientDashboard from './Components/Patient/PatientDashboard';
 import PatientSideBar from './Components/Patient/PatientSideBar';
 import StaffSideBar from './Components/Staff/StaffSideBar';
 import StaffDashboard from './Components/Staff/StaffDashboard';
-
+import Chat from './Components/Chat';
 import RegisterStaff from './Components/Staff/RegisterStaff';
 import AllStaff from './Components/Staff/AllStaff';
 library.add(fas, faTwitter, faFontAwesome)
@@ -22,6 +23,7 @@ library.add(fas, faTwitter, faFontAwesome)
 
 function App() {
 console.log(useSelector(state=>state.UrlReducer))
+const socket = useRef(socketClient('http://localhost:4000'))
   return (
     <>
       <Routes>
@@ -34,11 +36,13 @@ console.log(useSelector(state=>state.UrlReducer))
         </Route>
         <Route path='/patient/' element={<PatientSideBar />} >
           <Route path='/patient/dashboard' element={<PatientDashboard />} />
+          <Route path='/patient/chat' element={<Chat socket={socket} />} />
         </Route>
         <Route path='/views/addStaff' element={<RegisterStaff />} />
         <Route path='/staff' element={<StaffSideBar />} >
           <Route path='/staff/dashboard' element={<StaffDashboard />} />
           <Route path='/staff/staffList' element={<AllStaff />} />
+          <Route path='/staff/livechat' element={<Chat />} />
         </Route>
       </Routes>
     </>
