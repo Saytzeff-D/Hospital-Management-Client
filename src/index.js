@@ -6,17 +6,18 @@ import { BrowserRouter } from 'react-router-dom'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
-import {createStore} from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import {Provider} from 'react-redux'
 import allReducers from './reducers/all';
-let store= createStore(allReducers,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+import thunk from 'redux-thunk';
+// const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION__COMPOSE || compose
+const Store= createStore(allReducers, applyMiddleware(thunk))
 
-console.log(store)
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <Provider store={store}>
+    <Provider store={Store}>
       <App />
       </Provider>
     </BrowserRouter>

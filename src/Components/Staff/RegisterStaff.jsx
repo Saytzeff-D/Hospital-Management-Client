@@ -69,9 +69,6 @@ function RegisterStaff() {
             }
         }
     })
-    const goToLogin = ()=>{
-        navigate('/views/patientLogin')
-    }
     const clickFileInput = ()=>{
         document.getElementById('photo').click()
     }
@@ -85,42 +82,43 @@ function RegisterStaff() {
     }
     return (
         <div>
-            <form className='text-white p-4' style={{backgroundColor: '#000000', opacity: '0.8'}} onSubmit={formik.handleSubmit}>
+            <form className='text-white px-4 pb-4' onSubmit={formik.handleSubmit}>
                     <div className='bg-warning text-white h5 text-center p-3'>
-                        HOSPITAL MANAGEMENT SOFTWARE
+                        Basic Information
                     </div>
-                    <hr className='text-white bg-white'/>
-                    <p className='text-white font-weight-bold'>Staff Registration</p>
+                    <hr className='text-white bg-dark'/>
                     {error !== '' && <div className="alert alert-danger"> <strong>Error!</strong> {error}</div>}
                     <div className='form-row'>
-                        <div className='form-group col-md-4'>
-                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your First Name' name='fname' />
+                        <div className='form-group col-md-6'>
+                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='First Name' name='fname' />
                             {formik.touched.fname && <div className='text-danger'>{formik.errors.fname}</div>}
                         </div>
-                        <div className='form-group col-md-4'>
-                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your Last Name' name='lname' />
+                        <div className='form-group col-md-6'>
+                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Last Name' name='lname' />
                         </div>
-                        <div className='form-group col-md-4'>
+                    </div>
+                    <div className='form-row'>
+                        <div className='form-group col-md-6'>
                             <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="email" className='form-control' placeholder='Email Address' name='email' />
                             {formik.touched.email && <div className='text-danger'>{formik.errors.email}</div>}
                         </div>
-                    </div>
-                    <div className='form-row'>
-                        <div className='form-group col-md-4'>
-                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" className='form-control' placeholder='Enter your Phone Number' name='phone' />
+                        <div className='form-group col-md-6'>
+                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="text" className='form-control' placeholder='Phone Number' name='phone' />
                             {formik.touched.phone && <div className='text-danger'>{formik.errors.phone}</div>}
                         </div>
-                        <div className='form-group col-md-4'>
-                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Enter your Home Address' name='address' />
+                    </div>
+                    <div className='form-row'>
+                        <div className='form-group col-md-6'>
+                            <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Home Address' name='address' />
                             {formik.touched.address && <div className='text-danger'>{formik.errors.address}</div>}
                         </div>
-                        <div className='form-group col-md-4'>
+                        <div className='form-group col-md-6'>
                             <input onChange={formik.handleChange} onBlur={formik.handleBlur} type="date" className='form-control' placeholder='Date of Birth' name='dob' />
                             {formik.touched.dob && <div className='text-danger'>{formik.errors.dob}</div>}
                         </div>
                     </div>
                     <div className='form-row'>                        
-                        <div className='form-group col-md-4'>
+                        <div className='form-group col-md-6'>
                             <select onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' name='gender'>
                                 <option value="">Gender</option>
                                 <option value="Male" >Male</option>
@@ -128,7 +126,7 @@ function RegisterStaff() {
                             </select>
                             {formik.touched.gender && <div className='text-danger'>{formik.errors.gender}</div>}
                         </div>
-                        <div className='form-group col-md-4'>
+                        <div className='form-group col-md-6'>
                             <select onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' name='maritalStatus' >
                                 <option value="">Marital Status</option>
                                 <option value="Single" >Single</option>
@@ -136,9 +134,11 @@ function RegisterStaff() {
                             </select>
                             {formik.touched.maritalStatus && <div className='text-danger'>{formik.errors.maritalStatus}</div>}
                         </div>
-                        <div className='form-group col-md-4'>
+                    </div>
+                    <div className='form-row'>                        
+                        <div className='form-group col-md-6'>
                             <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='role' >
-                                <option value="">Please select your role?</option>
+                                <option value="">Role</option>
                                 <option value="pharmacist" >Pharmacist</option>
                                 <option value="doctor">Doctor</option>
                                 <option value="nurse">Nurse</option>
@@ -148,13 +148,26 @@ function RegisterStaff() {
                             </select>
                             {formik.touched.role && <div className='text-danger'>{formik.errors.role}</div>}
                         </div>
-                    </div>
-                    <div className='form-row'>                        
-                        <div className='form-group col-6'>
-                            <input onChange={pickFile} type="file" className='form-control d-none' name='photo' id='photo' />
-                            <div className='btn btn-block btn-light text-warning' onClick={clickFileInput} ><span><i className='fa fa-upload'></i></span> Pick a Photo</div>
-                            {photo === '' ? <div className='text-danger'>{photoError}</div> : null}
+                        <div className='form-group col-md-6'>
+                            <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='role' >
+                                <option value="">Specialist</option>
+                                <option value="doctor">Ophthalmologist</option>
+                                <option value="nurse">Paediatrician</option>
+                                <option value="pharmacist" >Pharmacist</option>
+                                <option value="nurse">Dermatologist</option>
+                                <option value="nurse">Orthopaedician</option>
+                                <option value="nurse">Dentist</option>
+                                <option value="nurse">Gynaecologist</option>
+                                <option value="nurse">Physiotherapist</option>
+                                <option value="nurse">Nurse</option>
+                                <option value="accountant">Accountant</option>
+
+                                <option value="admin">Portal ADMIN</option>
+                            </select>
+                            {formik.touched.role && <div className='text-danger'>{formik.errors.role}</div>}
                         </div>
+                    </div>
+                    <div className='form-row'>
                         <div className='form-group col-md-6'>
                             <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='bloodGroup' >
                                 <option value=""> Blood Group Selection?</option>
@@ -165,10 +178,13 @@ function RegisterStaff() {
                             </select>
                             {formik.touched.bloodGroup && <div className='text-danger'>{formik.errors.bloodGroup}</div>}
                         </div>
-
+                    <div className='form-group col-6'>
+                            <input onChange={pickFile} type="file" className='form-control d-none' name='photo' id='photo' />
+                            <div className='btn btn-dark btn-block btn-light text-warning' onClick={clickFileInput} ><span><i className='fa fa-upload'></i></span> Click to Pick a Passport</div>
+                            {photo === '' ? <div className='text-danger'>{photoError}</div> : null}
+                        </div>
                     </div>
-                    <button className='btn btn-primary btn-block' type='submit'>{spinner.text} <span className={spinner.spin}></span></button>
-                    <p className='py-2 font-weight-bold'>Already Registered? <span className="text-warning" style={{cursor: 'pointer'}} onClick={goToLogin}>Staff Login Here</span></p>
+                    <button className='btn btn-warning btn-block' type='submit'>{spinner.text} <span className={spinner.spin}></span></button>
             </form>
         </div>
     );

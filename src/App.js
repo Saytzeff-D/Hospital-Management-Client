@@ -2,6 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import './App.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { faTwitter, faFontAwesome } from '@fortawesome/free-brands-svg-icons'
 import RegisterPatient from './Components/Patient/RegisterPatient';
 import BackgroundView from './Components/Container/BackgroundView';
 import PatientLogin from './Components/Patient/PatientLogin';
@@ -13,6 +16,8 @@ import StaffSideBar from './Components/Staff/StaffSideBar';
 import StaffDashboard from './Components/Staff/StaffDashboard';
 
 import RegisterStaff from './Components/Staff/RegisterStaff';
+import AllStaff from './Components/Staff/AllStaff';
+library.add(fas, faTwitter, faFontAwesome)
 
 
 function App() {
@@ -32,7 +37,8 @@ console.log(useSelector(state=>state.UrlReducer))
         </Route>
         <Route path='/views/addStaff' element={<RegisterStaff />} />
         <Route path='/staff' element={<StaffSideBar />} >
-         { <Route path='/staff/dashboard' element={<StaffDashboard />} />}
+          <Route path='/staff/dashboard' element={<StaffDashboard />} />
+          <Route path='/staff/staffList' element={<AllStaff />} />
         </Route>
       </Routes>
     </>

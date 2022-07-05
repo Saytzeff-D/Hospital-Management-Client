@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom'
-import {useSelector,useDispatch} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { setStaff } from '../../actions'
 
 const StaffSideBar = ()=>{
+    const url = useSelector(state=>state.UrlReducer.url)
     const staffInfo = useSelector(state=>state.StaffReducer.staffInfo)
     console.log(staffInfo)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [num, setNum] = useState(0)
     const [mySidebarStyle, setMySideBarStyle] = useState({zIndex:3, width: '300px'})
     const [overlayBgStyle, setOverlayBgStyle] = useState({cursor: 'pointer'})
@@ -23,9 +28,31 @@ const StaffSideBar = ()=>{
         }
       }
       function logoutStaff(){
-        localStorage.removeItem('htStaffToken')
+        localStorage.removeItem('StaffToken')
         navigate('/views/staffLogin')
       }
+      useEffect(()=>{
+        if(!localStorage.StaffToken){
+            navigate('/views/staffLogin')
+        }else{
+            let token=localStorage.StaffToken
+            axios.get(`${url}staff/dashboard`,{headers:{
+                'authorization' :  `Bearer ${token}`,
+                'Content-Type':'application/json',
+                'Accept':'application/json'
+            }}).then( res=>{
+                if(res.data.status){
+                dispatch(setStaff(res.data.staffDetails))
+                }
+                else{
+                    localStorage.removeItem('StaffToken')
+                }
+            }).catch(err=>{
+                console.log('unable to connect')
+                console.log(err)
+            })            
+            }
+        }, [navigate, dispatch, url])
     return(
         <div>
             {/* Top Container */}
@@ -42,12 +69,12 @@ const StaffSideBar = ()=>{
                     <img src={staffInfo.photo} alt='photoNow' className="w3-circle w3-margin-right" style={{width: '80px'}} />
                     </div>
                     <div className="w3-col s8 w3-bar">
-                    <span>Welcome, <strong className='text-capitalize '>{ `${staffInfo.fname}`}.</strong></span><br/>
+                    <span>Welcome, <strong className='text-capitalize '>{staffInfo.fname} {staffInfo.lname}.</strong></span><br/>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
                     <br/><br/>
-                  <span className='h5 text-capitalize'>  Role : {staffInfo.role}</span> 
+                  <span className='font-weight-bold text-capitalize'>{staffInfo.role}</span> 
 
 
                     </div>
@@ -57,28 +84,61 @@ const StaffSideBar = ()=>{
                     <h5>Dashboard</h5>
                 </div>
                 <div className="w3-bar-block">
-                    <NavLink to='/staff/dashboard' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Overview</NavLink> 
-                    { staffInfo.role!=='nurse' && staffInfo.role!=='accountant' && staffInfo.role!=='pharmacist'&& <NavLink to='/staff/appointment' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-calendar fa-fw"></i>  My Appointments</NavLink> }
-                    {  staffInfo.role!=='accountant' && <NavLink to='/staff/pharmacy' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Pharmacy</NavLink> }
-                   {staffInfo.role!=='pharmacist'&&staffInfo.role!=='accountant' &&<NavLink to='/staff/ambulance' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-ambulance fa-fw"></i>  Ambulance</NavLink> }
-                 {  staffInfo.role!=='nurse' && staffInfo.role!=='accountant' && staffInfo.role!=='pharmacist' && <NavLink to='/staff/birthRecords' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Birth Records</NavLink>}
-                   { staffInfo.role!=='nurse' && staffInfo.role!=='accountant' && staffInfo.role!=='pharmacist' && <NavLink to='/staff/deathRecords' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Death Records</NavLink>
-}
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/dashboard' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Overview</NavLink> 
+                    { 
+                    (staffInfo.role ==='admin' || staffInfo.role!=='doctor' || staffInfo.role ==='accountant')&& 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/appointment' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="fa-calendar-plus" />  Appointments</NavLink> 
+                    }
+                    {  
+                    (staffInfo.role === 'admin' || staffInfo.role ==='pharmacist' || staffInfo.role === 'accountant') && 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/pharmacy' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon  icon="fa-mortar-pestle" />  Pharmacy</NavLink> 
+                    }
+                   {
+                   (staffInfo.role === 'admin' || staffInfo.role === 'doctor' || staffInfo.role === 'accountant') &&
+                   <NavLink style={{textDecoration: 'none'}} to='/staff/ambulance' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="fa-ambulance" />  Ambulance</NavLink> 
+                   }
+                  {  
+                  (staffInfo.role ==='admin' || staffInfo.role ==='doctor' || staffInfo.role ==='') && 
+                  <NavLink style={{textDecoration: 'none'}} to='/staff/birthRecords' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="person-breastfeeding" />  Birth Records</NavLink>
+                  }
+                   { 
+                   (staffInfo.role ==='admin' || staffInfo.role ==='doctor' || staffInfo.role ==='') && 
+                   <NavLink style={{textDecoration: 'none'}} to='/staff/deathRecords' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="skull" />  Death Records</NavLink>
+                   }
 
-                   { staffInfo.role=='doctor' || staffInfo.role=='admin' && <NavLink to='/staff/addPrescription' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Add Prescription</NavLink>}
+                   { 
+                   (staffInfo.role ==='doctor') && 
+                   <NavLink style={{textDecoration: 'none'}} to='/staff/addPrescription' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="fa-file-presciption" />  Add Prescription</NavLink>
+                   }
 
-                   {staffInfo.role!=='accountant' && <NavLink to='/staff/medicineDetails' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Medicine Details</NavLink>}
-                    { staffInfo.role!=='nurse'&& staffInfo.role=='accountant' && <NavLink to='/staff/supllierList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Supplier List</NavLink>}
+                   {
+                   (staffInfo.role ==='pharmacy') && 
+                   <NavLink style={{textDecoration: 'none'}} to='/staff/medicineDetails' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="prescription-bottle-medical" />  Medicine Details</NavLink>
+                   }
+                    { 
+                    staffInfo.role ==='pharmacy' && 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/supllierList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="capsules" />  Supplier List</NavLink>
+                    }
 
-                   { staffInfo.role!=='nurse' && staffInfo.role!=='accountant' && <NavLink to='/staff/prescriptionList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Prescription List</NavLink>}
+                   { 
+                   staffInfo.role ==='pharmacy' && 
+                   <NavLink style={{textDecoration: 'none'}} to='/staff/prescriptionList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="prescription" />  Prescription List</NavLink>
+                   }
 
-                    { staffInfo.role!=='pharmacist'&& staffInfo.role!=='pharmacist' &&<NavLink to='/staff/patientList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Patient List</NavLink>}
+                    { 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/patientList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="fa-hospital" />  Patient List</NavLink>
+                    }
 
-
-                    { staffInfo.role!=='nurse'&& staffInfo.role!=='pharmacist' && <NavLink to='/staff/finance' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Finance</NavLink>}
-
-                    <NavLink to='/staff/liveChat' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Live Chat</NavLink>
-                    <NavLink to='/views/staffLogin' className="w3-bar-item w3-button w3-padding w3-hide-large"><i className="fa fa-power-off fa-fw"></i>  Logout</NavLink> 
+                    { 
+                    (staffInfo.role ==='admin' || staffInfo.role!=='accountant') && 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/finance' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="sack-dollar" />  Finance</NavLink>
+                    }
+                     { 
+                    (staffInfo.role ==='admin' || staffInfo.role!=='accountant') && 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/staffList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"> <FontAwesomeIcon icon="fa-person-dress" />  Staffs</NavLink>
+                    }
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/liveChat' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="comment-medical" />  Live Chat</NavLink>
+                    <NavLink style={{textDecoration: 'none'}} to='/views/staffLogin' className="w3-bar-item w3-button w3-padding w3-hide-large"><i className="fa fa-power-off fa-fw"></i>  Logout</NavLink> 
                 </div>
             </nav>
 

@@ -1,4 +1,4 @@
-import{ React, useState, useEffect } from 'react';
+import{ React, useState } from 'react';
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
@@ -9,8 +9,6 @@ import { setStaff } from '../../actions';
 
 function StaffLogin() {
     const url = useSelector(state=>state.UrlReducer.url)
-    const staffInfo = useSelector(state=>state.UrlReducer.staffDetails)
-
     
     const dispatch= useDispatch()
 localStorage.removeItem('htStaffToken')
@@ -44,13 +42,9 @@ localStorage.removeItem('htStaffToken')
                 } else {
                     let staffDetails=res.data.details 
                     console.log(res.data.token)  
-                    localStorage.htStaffToken=res.data.token
+                    localStorage.StaffToken=res.data.token
                     dispatch(setStaff(staffDetails))
-                    // dispatch({type:'setStaff',payload:staffDetails})
-
-
-                    navigate('/staff/dashboard')
-                   
+                    navigate('/staff/dashboard')                   
                 }
             })
             .catch((err)=>{

@@ -1,17 +1,18 @@
 const initState = {
     staffInfo:{},
-    count:0
+    staffTray: []
 }
 
 const StaffReducer = (state=initState, action)=>{
-    if(action.type=='setStaff'){
-        let newState={...state,staffInfo:action.payload}
-
-        return newState
+    switch (action.type) {
+        case 'setStaff':
+            let newState = {...state, staffInfo: action.payload}
+            return newState
+        case 'getStaff':
+            return {...state, staffTray: action.payload}
+        default:
+            return state
     }
-
-
-   return state
 }
 
 export default StaffReducer
