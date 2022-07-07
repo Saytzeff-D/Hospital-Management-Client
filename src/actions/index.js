@@ -20,3 +20,9 @@ export const getStaff = (url)=>{
     })
   }
 }
+export const setPatientDetails = (details)=>{
+  return{
+    type: 'patientDetails',
+    payload: details
+  }
+}

@@ -46,10 +46,12 @@ const StaffSideBar = ()=>{
                 }
                 else{
                     localStorage.removeItem('StaffToken')
+                    navigate('/views/staffLogin')
                 }
             }).catch(err=>{
                 console.log('unable to connect')
                 console.log(err)
+                navigate('/views/staffLogin')
             })            
             }
         }, [navigate, dispatch, url])
@@ -75,8 +77,6 @@ const StaffSideBar = ()=>{
                     <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
                     <br/><br/>
                   <span className='font-weight-bold text-capitalize'>{staffInfo.role}</span> 
-
-
                     </div>
                 </div>
                 <hr />

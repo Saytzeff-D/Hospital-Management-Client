@@ -11,7 +11,7 @@ function StaffLogin() {
     const url = useSelector(state=>state.UrlReducer.url)
     
     const dispatch= useDispatch()
-localStorage.removeItem('htStaffToken')
+    localStorage.removeItem('StaffToken')
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})

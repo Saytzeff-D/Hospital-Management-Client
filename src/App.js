@@ -18,12 +18,15 @@ import StaffDashboard from './Components/Staff/StaffDashboard';
 import Chat from './Components/Chat';
 import RegisterStaff from './Components/Staff/RegisterStaff';
 import AllStaff from './Components/Staff/AllStaff';
+import PatientAppointment from './Components/Patient/PatientAppointment';
+import PatientPharmacy from './Components/Patient/PatientPharmacy';
+import PatientAmbulance from './Components/Patient/PatientAmbulance';
 library.add(fas, faTwitter, faFontAwesome)
 
 
 function App() {
-console.log(useSelector(state=>state.UrlReducer))
-const socket = useRef(socketClient('http://localhost:4000'))
+console.log()
+const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
   return (
     <>
       <Routes>
@@ -36,13 +39,16 @@ const socket = useRef(socketClient('http://localhost:4000'))
         </Route>
         <Route path='/patient/' element={<PatientSideBar />} >
           <Route path='/patient/dashboard' element={<PatientDashboard />} />
-          <Route path='/patient/chat' element={<Chat socket={socket} />} />
+          <Route path='/patient/liveChat' element={<Chat socket={socket} />} />
+          <Route path='/patient/appointment' element={<PatientAppointment />} />
+          <Route path='/patient/pharmacy' element={<PatientPharmacy />} />
+          <Route path='/patient/ambulance' element={<PatientAmbulance />} />
         </Route>
         <Route path='/views/addStaff' element={<RegisterStaff />} />
         <Route path='/staff' element={<StaffSideBar />} >
           <Route path='/staff/dashboard' element={<StaffDashboard />} />
           <Route path='/staff/staffList' element={<AllStaff />} />
-          <Route path='/staff/livechat' element={<Chat />} />
+          <Route path='/staff/liveChat' element={<Chat />} />
         </Route>
       </Routes>
     </>
