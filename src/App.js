@@ -18,6 +18,7 @@ import StaffDashboard from './Components/Staff/StaffDashboard';
 import Chat from './Components/Chat';
 import RegisterStaff from './Components/Staff/RegisterStaff';
 import AllStaff from './Components/Staff/AllStaff';
+import PatientList from './Components/Patient/PatientList';
 library.add(fas, faTwitter, faFontAwesome)
 
 
@@ -38,10 +39,11 @@ const socket = useRef(socketClient('http://localhost:4000'))
           <Route path='/patient/dashboard' element={<PatientDashboard />} />
           <Route path='/patient/chat' element={<Chat socket={socket} />} />
         </Route>
-        <Route path='/views/addStaff' element={<RegisterStaff />} />
+        {/* <Route path='/views/addStaff' element={<RegisterStaff />} /> */}
         <Route path='/staff' element={<StaffSideBar />} >
           <Route path='/staff/dashboard' element={<StaffDashboard />} />
           <Route path='/staff/staffList' element={<AllStaff />} />
+          <Route path='/staff/patientList' element={<PatientList />} />
           <Route path='/staff/livechat' element={<Chat />} />
         </Route>
       </Routes>

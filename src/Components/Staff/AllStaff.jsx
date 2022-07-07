@@ -12,6 +12,7 @@ function AllStaff(props) {
         dispatch(getStaff(url))
     }, [dispatch, url])
     return (
+        
         <div className='py-3'>
             <div className='bg-white border p-2'>
                 <div className='d-flex justify-content-between border-bottom'>
