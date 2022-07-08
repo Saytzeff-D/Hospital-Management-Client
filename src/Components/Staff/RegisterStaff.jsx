@@ -27,6 +27,7 @@ function RegisterStaff() {
             gender: '',
             maritalStatus: '',
             fname: '',
+            speciality:'',
             created: new Date().toLocaleDateString()
          
         },
@@ -40,7 +41,8 @@ function RegisterStaff() {
             maritalStatus: Yup.string().required('This field is required'),
             lname: Yup.string().required('This field is required'),
             bloodGroup: Yup.string().required('This field is required'),
-            role: Yup.string().required('This field is required') 
+            role: Yup.string().required('This field is required') ,
+            specialtity:Yup.string().required('This field is required')
 
         }),
         onSubmit: (values)=>{
@@ -149,7 +151,7 @@ function RegisterStaff() {
                             {formik.touched.role && <div className='text-danger'>{formik.errors.role}</div>}
                         </div>
                         <div className='form-group col-md-6'>
-                            <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='role' >
+                            <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='speciality' >
                                 <option value="">Specialist</option>
                                 <option value="doctor">Ophthalmologist</option>
                                 <option value="nurse">Paediatrician</option>
@@ -164,7 +166,7 @@ function RegisterStaff() {
 
                                 <option value="admin">Portal ADMIN</option>
                             </select>
-                            {formik.touched.role && <div className='text-danger'>{formik.errors.role}</div>}
+                            {formik.touched.role && <div className='text-danger'>{formik.errors.speciality}</div>}
                         </div>
                     </div>
                     <div className='form-row'>

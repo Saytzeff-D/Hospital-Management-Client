@@ -1,5 +1,6 @@
 const initState = {
-    staffInfo:{},
+    viewPatientDetails:{},
+    staffInfo:{staffstatus:true},
     staffTray: []
 }
 
@@ -10,6 +11,8 @@ const StaffReducer = (state=initState, action)=>{
             return newState
         case 'getStaff':
             return {...state, staffTray: action.payload}
+        case 'viewPatientDetails':
+            return {...state, viewPatientDetails: action.payload}
         default:
             return state
     }
