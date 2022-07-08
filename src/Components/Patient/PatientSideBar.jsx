@@ -13,6 +13,7 @@ const PatientSideBar = ()=>{
     const [num, setNum] = useState(0)
     const [mySidebarStyle, setMySideBarStyle] = useState({zIndex:3, width: '300px'})
     const [overlayBgStyle, setOverlayBgStyle] = useState({cursor: 'pointer'})
+    const [loading, setLoading] = useState(true)
     
       const w3_open = ()=>{
           if (num%2 === 0) {
@@ -30,16 +31,14 @@ const PatientSideBar = ()=>{
         if(!token){
             navigate('/views/patientLogin')
         }else{
-            // const header = {headers: {'authorization' : `Bearer ${token}`, 'Content-Type' : 'application/json', 'Accept' : 'application/json'} }
-            alert(token)
             axios.get(`${url}patient/authPatient`, {headers: {
                 'authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }}).then((res)=>{
-                console.log(res.data)
                 if(res.data.status){
                     dispatch(setPatientDetails(res.data.authPatient))
+                    setLoading(false)
                 }else{
                     localStorage.removeItem('PatientToken')
                     navigate('/views/patientLogin')
@@ -98,7 +97,19 @@ const PatientSideBar = ()=>{
 
             {/* Page Content */}
             <div className="w3-main" style={{marginLeft: '300px', marginTop: '43px'}}>
-                <Outlet />
+                {
+                    loading 
+                    ?
+                    (
+                        <div className='d-flex justify-content-center p-5 m-5'>
+                            <p className='spinner-border text-danger'></p>
+                        </div>
+                    )
+                    :
+                    (
+                        <Outlet />
+                    )
+                }
             </div>
         </div>
     )
