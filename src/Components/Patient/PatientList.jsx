@@ -229,8 +229,7 @@ const filterWithParameter=(params,ID)=>{
                         </div>
                     </div>
 
-            <div  className='modal fade big-modal' id="editPat"
-            data-backdrop="static">
+            <div  className='modal fade big-modal' id="editPat">
                 <div className='modal-dialog modal-dialog-centered'>
                          <div className='modal-content'>
                               <div className='modal-header'>

@@ -1,85 +1,125 @@
+import axios from 'axios'
 import { useFormik } from 'formik'
 import React,{useState} from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import * as Yup from 'yup'
 
 
 const ViewProfile=()=>{
     const patientDetails=useSelector(state=>state.StaffReducer.viewPatientDetails)
-    console.log(patientDetails)
-    const[fullName,setFullName]=useState(patientDetails.fullName)
+    const url=useSelector(state=>state.UrlReducer.url)
+    
+    const[fullName,setFullName]=useState()
     console.log(fullName)
-    const [dob,setDOB]=useState(patientDetails.dob)
-    const [email,setEmail]=useState(patientDetails.email)
-    const [guardianName,setGuardianName]=useState(patientDetails.guardianName)
-    const [maritalStatus,setMaritalStatus]=useState(patientDetails.maritalStatus)
-    const [phone,setPhone]=useState(patientDetails.phone)
-    const [disability,setDisability]=useState(patientDetails.disability)
-    // const [dob,setDOB]=useState(patientDetails.dob)
+    const [dob,setDOB]=useState()
+    const [email,setEmail]=useState()
+    const [guardianName,setGuardianName]=useState()
+    const [maritalStatus,setMaritalStatus]=useState()
+    const [phone,setPhone]=useState()
+    const [disability,setDisability]=useState()
+    const [healthId,setHealthId]=useState()
+    console.log(patientDetails)
 
-    // console.log(patientDetails)
-    // const formik=useFormik({
-    //     initialValues:{
-    //         fullName:patientDetails.fullName,
-    //         dob:patientDetails.dob,
-    //         email:patientDetails.email,
-    //         guardianName:patientDetails.guardianName,
-    //         healthId:patientDetails.healthId,
-    //         phone:patientDetails.phone,
-    //         maritalStatus:patientDetails.maritalStatus,
-    //         address:patientDetails.address,
-    //         disablility:patientDetails.disability,
-    //         gender:patientDetails.gender
-    //     },
-    //     validationSchema: Yup.object({
-    //         fullName:Yup.string().required('This field is required')
-    //     }),
-    //     onSubmit:(values)=>{
-    //         console.log(values)
-    //     }
-    // })
-    // console.log(formik.values)
+    useEffect(()=>{
+        setFullName(patientDetails.fullName)
+        setDOB(patientDetails.dob)
+        setEmail(patientDetails.email)
+        setGuardianName(patientDetails.guardianName)
+        setMaritalStatus(patientDetails.maritalStatus)
+        setPhone(patientDetails.phone)
+        setDisability(patientDetails.disability)
+        setHealthId(patientDetails.healthId)        
+    },[patientDetails])
 
+    const saveDetails=()=>{
+        let updatedInfo={...patientDetails,fullName,dob,email,guardianName,phone,maritalStatus,disability}
+        console.log(updatedInfo)
+alert('going')
+        axios.post(`${url}patient/updatePat`,updatedInfo).then(res=>{
+            console.log(res)
+            if(res.data.status){
+                alert('updated, please close the modal')
+            }
+            else{
+                alert('operation failed')
+            }
+        }).catch(err=> console.log(err))
+
+    }
 
 
     return(
         <>
-        <div className='container'>
-            <div className='row w-100 bg-white m-auto text-center' style={{height:'200px'}}>
+        <div className=''>
+            <div className='row w-100 m-auto text-center'>
                <div className='col-12'>
-                    <form>
+                    <div>
                         <div class="row">
-                        <div class="input-group">
-                                <span class="input-group-text" id="inputGroupPrepend2">Full Name</span>
+                            <div class="input-group">
+                                <span style={{fontSize:'12px'}} class="input-group-text" id="inputGroupPrepend2">Full Name</span>
                                 <input value={fullName} type="text" onChange={(e)=>setFullName(e.target.value)} name='fullName' class="form-control"  required/>
-                            </div>
-                            
-                        </div>
+                            </div>                       
+                         </div>
+
+                         <div class="row my-2">
+                            <div class="input-group">
+                                <span style={{fontSize:'12px'}} class="input-group-text" id="inputGroupPrepend2"> Guardian Full Name</span>
+                                <input value={guardianName} type="text" onChange={(e)=>setGuardianName(e.target.value)} name='fullName' class="form-control"  required/>
+                            </div>                       
+                         </div>
+
+
+
                         <div className='row my-2'>
                             <div className='col-6'> <div class="input-group">
-                                <span class="input-group-text" id="inputGroupPrepend2">E-Mail</span>
+                                <span style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">E-Mail</span>
                                 <input value={email} type="text" onChange={(e)=>setEmail(e.target.value)} name='email' class="form-control"  required/>
                             </div></div>
-                            <div className='col'></div>
-
+                            <div className='col-6'>
+                                    <div class="input-group">
+                                        <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Date</span>
+                                         <input value={dob} type="date" onChange={(e)=>setDOB(e.target.value)} name='email' class="form-control"  required/>
+                                    </div>
+                            </div>
                         </div>
 
 
-                        {/* <div className='row my-2'>
-                            <div class="input-group">
-                                <span class="input-group-text" id="inputGroupPrepend2">@</span>
-                                <input type="text" class="form-control" id="validationDefaultUsername"  aria-describedby="inputGroupPrepend2" required/>
+
+                        <div className='row my-2'>
+                            <div className='col-6 input-group'>
+                                 <span style={{fontSize:'12px'}} class="input-group-text" id="inputGroupPrepend2">Marital Status</span>
+                                <select onChange={(e)=>setMaritalStatus(e.target.value)}  value={maritalStatus} name='maritalStatus' className='form-control'>        <option value="Single" >Single</option>
+                                <option value="Married">Married</option>
+                                </select>
                             </div>
-                        </div> */}
-                        {/* <div className='row'>
-                            <div class="input-group input-group-sm mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
-                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"/>
+                            <div className='col-6'>
+                                <div class="input-group">
+                                    <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Phone</span>
+                                    <input value={phone} type="text" onChange={(e)=>setPhone(e.target.value)} name='email' class="form-control"  required/>
+                                </div>
                             </div>
-                            
-                        </div> */}
-                        <button type='submit'>Submit</button>
-                    </form>
+                        </div>
+                        
+                        <div className='row my-2'>
+
+                            <div className='col-6 input-group'>
+                                <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Health ID</span>
+                                <input style={{cursor:'not-allowed'}} disabled type='text'  className='form-control' name='healthId' value={healthId} />
+                            </div>
+                            <div className='col-6 input-group'>
+                                <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Disability</span>
+                                <select onChange={(e)=>setDisability(e.target.value)} className='form-control' value={disability} name='disability' >
+                                    <option selected value="Yes" >Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <button onClick={saveDetails} className='btn btn-success my-2 w-25' >Save <i className='fa fa-save'></i></button>
+                    </div>
                 </div>
 
               </div>
