@@ -3,10 +3,13 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPatientDetails } from '../../actions';
 
 function PatientLogin(props) {
+    const dispatch = useDispatch()
     const url = useSelector(state=>state.UrlReducer.url)
+    sessionStorage.removeItem('PatientToken')
 
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
     const [error, setError] = useState('')
@@ -36,10 +39,14 @@ function PatientLogin(props) {
                     setError(res.data.message)
                     setLoading({btn: 'Login', loadStyle: ''})
                 } else {
-                    navigate('/patient')
+                    localStorage.PatientToken = res.data.token
+                    console.log(res.data.token, res.data.response)
+                    dispatch(setPatientDetails(res.data.response))
+                    sessionStorage.removeItem('Id')
+                    navigate('/patient/dashboard')
                 }
             }).catch((err)=>{
-                setError(err.response.data.message)
+                setError('An Error has occured. Please try again')
                 setLoading({btn: 'Login', loadStyle: ''})
             })
         }

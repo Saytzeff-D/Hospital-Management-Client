@@ -50,3 +50,15 @@
   .actbtn{
     font-size: 10px;
   }
+  .modal{
+    /* width:1000px; */
+    padding:0;
+    /* background-color:red */
+  }
+  .modal-content{
+    width:100%;
+  }
+  .modal-dialog{
+    width:100%
+  }
+  /* .big-modal */

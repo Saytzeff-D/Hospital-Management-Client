@@ -1,62 +1,98 @@
 import axios from 'axios'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import RegisterStaff from '../Staff/RegisterStaff';
+import RegisterPatient from './RegisterPatient';
+import Viewprofile from './Viewprofile';
+import ViewProfile from './Viewprofile';
+
 
 
 const  PatientList=()=>{
+    let dispatch=useDispatch()
     let url=useSelector(state=>state.UrlReducer.url)
     let [allPat,setAllPat]=useState([])
     let [filteredList, setFilteredList]=useState([])
     let [filterByName,setFilterByName]=useState('')
     let [filterById,setFilterById]=useState('')
+    let [image,setImage]=useState('')
     useEffect(()=>{
         console.log('fetching')
-        axios.get(`${url}patient`).then(res=>{
+        axios.get(`${url}patient/allpat`).then(res=>{
+            console.log(res)
+                setAllPat(res.data)
+                setFilteredList(res.data)
+    
+        }).catch(err=>{
+            console.log(err)
+            console.log('cannot connect')
+        })
+
+    },[])
+useEffect(()=>{
+   filterWithParameter(filterByName)
+},[filterByName])  
+
+useEffect(()=>{
+    filterWithParameter(filterById,'id')
+ },[filterById])  
+ 
+const filterWithParameter=(params,ID)=>{     
+
+    if(params!=''){
+        let filteredList=[]
+        let allPatients=allPat
+        if(!ID){        
+        allPatients.forEach( (each,i)=>{
+            if((each.fullName.toLowerCase()).includes(params.toLowerCase())){
+                filteredList.push(each)
+            }
+        })
+    }else{
+        allPatients.forEach((each,i)=>{
+            if((each.healthId.toLowerCase()).includes(params.toLowerCase())){
+                filteredList.push(each)
+            }
+        })
+    }
+    
+
+
+        setFilteredList(filteredList)
+
+    }else{
+        setFilteredList(allPat)
+
+    }
+
+    }
+
+    const deletePatient=(obj,index)=>{
+        axios.post(`${url}patient/deletePat`,obj).then(res=>{
             console.log(res)
             if(res.data.status){
-                console.log(res.data)
-                setAllPat(res.data.patients)
-                setFilteredList(res.data.patients)
-            }
-            else{
-                console.log('unable to fetch')
+                alert('deleted')
+                filterArray(obj._id)
+            }else{
+                alert(res.data.message)
             }
 
         }).catch(err=>{
             console.log(err)
-            console.log('cannot connect')
-
         })
-
-    },[filterById])
-useEffect(()=>{
-   filterWithParameter(filterByName)
-// console.log('cahnging')
-},[filterByName,filterById])  
-const filterWithParameter=(params=filterByName)=>{     
-
-    if(params!=''){
-        // console.log('movinssg')
-        let filteredList=[]
-        let allPatients=allPat
-        allPatients.forEach( (each,i)=>{
-            if((each.fullName.toLowerCase()).includes(filterByName.toLowerCase())){
-                filteredList.push(each)
-            }
-            else{
-                console.log(false)
-
-            }
-
-        })
-
-
-        setFilteredList(filteredList)
     }
 
+    const filterArray=(index)=>{
+        const filterAllPat= allPat.filter( (each,i)=> each._id!==index)
+        setAllPat(filterAllPat)
+        const filterFilteredList=filteredList.filter( (each,i)=> each._id!==index)
+        setFilteredList(filterFilteredList)
     }
+
+    
+
 
     return(
         <>
@@ -101,7 +137,7 @@ const filterWithParameter=(params=filterByName)=>{
         
         <section>
                
-            <div className='tableDiv row my-5 container text-center'>
+            <div className='tableDiv row my-5 w-100 text-center'>
                 <table className='table table-stripped table-bordered border-primary my-4'>
                     <thead className='table-dark'>
                         <tr>
@@ -131,10 +167,12 @@ const filterWithParameter=(params=filterByName)=>{
                             <td>{each.bloodGroup? each.bloodGroup:<span>---</span> }</td>
                             <td>
                                <div className='row'>
-                                <div className='col-4'><button className='btn btn-success actbtn'>Edit <i className='fa fa-edit'></i></button></div>
-                                <div className='col-4'><button className=' btn btn-danger actbtn'>Delete <i className='fa fa-trash'></i>
+                                <div className='col-4'><button data-target='#editPat' data-toggle='modal'  onClick={()=>dispatch({type:'viewPatientDetails', payload:each})}className='btn btn-success actbtn'>Edit <i className='fa fa-edit'></i></button></div>
+                                <div className='col-4'><button onClick={()=>deletePatient(each,i)} className=' btn btn-danger actbtn'>Delete <i className='fa fa-trash'></i>
                             </button></div>        
-                            <div className='col-4'><button className=' btn btn-warning actbtn'>photo <i className='fa fa-photo'></i></button></div>          
+                            <div className='col-4'><button
+                            data-target='#viewPat' data-toggle='modal'
+                             onClick={()=>setImage(each.photo)} className=' btn btn-warning actbtn'>photo <i className='fa fa-photo'></i></button></div>          
                             </div>          
                                 </td>
 
@@ -153,11 +191,61 @@ const filterWithParameter=(params=filterByName)=>{
 
 
                 </table>
-
-
-
             </div>
-                
+
+
+
+            <div className='modal fade' id="addStaff" data-backdrop="static">
+                        <div className='modal-dialog modal-dialog-centered'>
+                            <div className='modal-content'>
+                                <div className='modal-header'>
+                                    <h6 className='modal-title'>Add another Patient</h6>
+                                    <button type="button" className="close" data-dismiss="modal" >&times;</button>
+                                </div>
+                                <div className='modal-body'>
+                                    <RegisterPatient/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <div className='modal fade big-modal' id="viewPat" data-backdrop="static">
+                     <div className='modal-dialog modal-dialog-centered'>
+                         <div className='modal-content'>
+                              <div className='modal-header'>
+                                  <h4 className='modal-title px-2'>PATIENT PHOTO</h4>
+                                    <button type="button" className="close text-danger" data-dismiss="modal" >&times;</button>
+                                </div>
+                                
+                                <div className='modal-body border-zero'>
+                                    <div className='w-100 card container border-zero'>
+                                        <div className='card-body '> 
+                                            <img src={image} alt='profile photo' class='w-100'/>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            <div  className='modal fade big-modal' id="editPat"
+            data-backdrop="static">
+                <div className='modal-dialog modal-dialog-centered'>
+                         <div className='modal-content'>
+                              <div className='modal-header'>
+                                  <h4 className='modal-title px-2'>EDIT PATIENT INFO</h4>
+                                    <button type="button" className="close text-danger" data-dismiss="modal" >&times;</button>
+                                </div>
+                                
+                                <div className='modal-body'>
+                                   <ViewProfile/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+
+
 
 
         </section>        
