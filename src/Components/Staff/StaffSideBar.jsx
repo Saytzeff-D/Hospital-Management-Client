@@ -2,10 +2,19 @@ import React, { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
+import { useEffect } from 'react'
+
 
 const StaffSideBar = ()=>{
-    const staffInfo = useSelector(state=>state.StaffReducer.staffInfo)
-    // console.log(staffInfo)
+    const [staffInfo,setStaffInfo] = useState(useSelector(state=>state.StaffReducer.staffInfo))
+    
+    useEffect(()=>{
+        if(!staffInfo.fullName){
+            
+            setStaffInfo(JSON.parse(sessionStorage.hcmStaffDetails))
+        }
+    },[])
+   
     const navigate = useNavigate()
     const [num, setNum] = useState(0)
     const [mySidebarStyle, setMySideBarStyle] = useState({zIndex:3, width: '300px'})

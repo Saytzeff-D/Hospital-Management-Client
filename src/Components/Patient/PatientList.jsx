@@ -13,13 +13,14 @@ import ViewProfile from './Viewprofile';
 const  PatientList=()=>{
     let dispatch=useDispatch()
     let url=useSelector(state=>state.UrlReducer.url)
+    let allpat=useSelector(state=>state.StaffReducer.patTray)
     let [allPat,setAllPat]=useState([])
     let [filteredList, setFilteredList]=useState([])
     let [filterByName,setFilterByName]=useState('')
     let [filterById,setFilterById]=useState('')
     let [image,setImage]=useState('')
     useEffect(()=>{
-        console.log('fetching')
+        console.log('refetching')
         axios.get(`${url}patient/allpat`).then(res=>{
             console.log(res)
                 setAllPat(res.data)
@@ -30,7 +31,7 @@ const  PatientList=()=>{
             console.log('cannot connect')
         })
 
-    },[])
+    },[allpat])
 useEffect(()=>{
    filterWithParameter(filterByName)
 },[filterByName])  
@@ -114,15 +115,9 @@ const filterWithParameter=(params,ID)=>{
             <div className='row w-100'>
                 <div className='col-md-6'>
                     <input value={filterById}  onChange={(e)=>setFilterById(e.target.value)}className='form-control m-1' placeholder='Search Patient by ID' />
-                    <div className='d-flex justify-content-end'>
-                        <button className='btn btn-primary'>Search <FontAwesomeIcon icon='search' /></button>
-                        </div>
                     </div>
                     <div className='col-md-6'>
                         <input value={filterByName}  onChange={(e)=>setFilterByName(e.target.value)} className='form-control m-1' placeholder='Search Patient by Name' />
-                        <div className='d-flex justify-content-end'>
-                        <button className='btn btn-primary'>Search <FontAwesomeIcon icon='search' /></button>
-                        </div>
                     </div>
              </div>
         </div>

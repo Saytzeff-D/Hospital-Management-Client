@@ -2,13 +2,14 @@ import axios from 'axios'
 import { useFormik } from 'formik'
 import React,{useState} from 'react'
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup'
 
 
 const ViewProfile=()=>{
     const patientDetails=useSelector(state=>state.StaffReducer.viewPatientDetails)
     const url=useSelector(state=>state.UrlReducer.url)
+    let dispatch=useDispatch()
     
     const[fullName,setFullName]=useState()
     console.log(fullName)
@@ -19,6 +20,11 @@ const ViewProfile=()=>{
     const [phone,setPhone]=useState()
     const [disability,setDisability]=useState()
     const [healthId,setHealthId]=useState()
+    const [weight,setWeight]=useState()
+    const [height,setHeight]=useState()
+    const [genotype,setGenotype]=useState()
+    const [spinner, setSpinner] = useState({spin: 'fa fa-save mx-2', text: 'Save'})
+
     console.log(patientDetails)
 
     useEffect(()=>{
@@ -29,22 +35,33 @@ const ViewProfile=()=>{
         setMaritalStatus(patientDetails.maritalStatus)
         setPhone(patientDetails.phone)
         setDisability(patientDetails.disability)
-        setHealthId(patientDetails.healthId)        
+        setHealthId(patientDetails.healthId)
+        setWeight(patientDetails.weight)     
+        setHeight(patientDetails.height)
+        setGenotype(patientDetails.genotype)        
     },[patientDetails])
 
     const saveDetails=()=>{
-        let updatedInfo={...patientDetails,fullName,dob,email,guardianName,phone,maritalStatus,disability}
+        let updatedInfo={...patientDetails,fullName,dob,email,guardianName,phone,maritalStatus,disability,weight,height,genotype}
         console.log(updatedInfo)
-alert('going')
+        setSpinner({spin: 'spinner-border spinner-border-sm', text: ''})
         axios.post(`${url}patient/updatePat`,updatedInfo).then(res=>{
             console.log(res)
             if(res.data.status){
                 alert('updated, please close the modal')
+                dispatch({type:'updatePatient', payload:[]})
+                setSpinner({spin: 'fa fa-save mx-2', text: 'Save'})
             }
             else{
                 alert('operation failed')
+                setSpinner({spin: 'fa fa-save mx-2', text: 'Save'})
+
+
             }
-        }).catch(err=> console.log(err))
+        }).catch(err=>{
+             console.log(err)
+             setSpinner({spin: 'fa fa-save mx-2', text: 'Save'})
+                         })
 
     }
 
@@ -104,8 +121,13 @@ alert('going')
                         <div className='row my-2'>
 
                             <div className='col-6 input-group'>
-                                <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Health ID</span>
-                                <input style={{cursor:'not-allowed'}} disabled type='text'  className='form-control' name='healthId' value={healthId} />
+                                <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Genotype</span>
+                                <select onChange={(e)=>setGenotype(e.target.value)} className='form-control' value={genotype} name='genotype' >
+                                    <option value="ab" >AB</option>
+                                    <option value="a">Type A</option>
+                                    <option selected value="o"> Type O  </option>
+                                    <option value="b">Type B</option>
+                                </select>
                             </div>
                             <div className='col-6 input-group'>
                                 <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Disability</span>
@@ -115,11 +137,22 @@ alert('going')
                                 </select>
                             </div>
                         </div>
+                        <div className='row my-2'>
+
+                            <div className='col-6 input-group'>
+                                <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Weight</span>
+                                <input  type='text'  className='form-control' name='weight' value={weight} onChange={(e)=>setWeight(e.target.value)}/>
+                            </div>
+                            <div className='col-6 input-group'>
+                                <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">height</span>
+                                <input onChange={(e)=>setHeight(e.target.value)} type='text' className='form-control' value={height} name='height' />
+                                    </div>
+                        </div>
 
 
 
-                        <button onClick={saveDetails} className='btn btn-success my-2 w-25' >Save <i className='fa fa-save'></i></button>
-                    </div>
+                        <button onClick={saveDetails} className='btn btn-success my-2 w-25' >{spinner.text}<span className={spinner.spin}></span></button>
+                        </div>
                 </div>
 
               </div>
