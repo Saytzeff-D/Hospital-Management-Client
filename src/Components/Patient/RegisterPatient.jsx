@@ -6,8 +6,10 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 function RegisterPatient(props) {
+    
     sessionStorage.removeItem('Id')
     const url = useSelector(state=>state.UrlReducer.url)
+    
 
     const navigate = useNavigate()
     const [photo, setPhoto] = useState('')
@@ -63,7 +65,9 @@ function RegisterPatient(props) {
         }
     })
     const goToLogin = ()=>{
+        
         navigate('/views/patientLogin')
+       
     }
     const clickFileInput = ()=>{
         document.getElementById('photo').click()

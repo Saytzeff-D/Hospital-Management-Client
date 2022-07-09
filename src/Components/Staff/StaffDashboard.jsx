@@ -1,7 +1,51 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { useEffect } from 'react'
+import axios from 'axios'
+import {useSelector,useDispatch} from 'react-redux'
+import { useNavigate } from 'react-router'
+import { setStaff } from '../../actions';
+
+
 
 function StaffDashboard() {
+  let url=useSelector(state=>state.UrlReducer.url)
+  const navigate = useNavigate()
+  const dispatch=useDispatch()
+
+
+  useEffect(()=>{
+        
+    if(!localStorage.StaffToken){
+      navigate('/views/staffLogin')
+    }
+    else{
+    let token=localStorage.StaffToken
+    axios.get(`${url}staff/dashboard`, {headers:{
+      'authorization' :  `Bearer ${token}`,
+      'Content-Type':'application/json',
+      'Accept':'application/json'
+    }}).then(res=>{
+    if(res.data.status){
+      dispatch(setStaff(res.data.staffDetails))
+      console.log(res.data)
+    }
+    else{
+      localStorage.removeItem('staffToken')
+    navigate('/views/staffLogin')
+    
+    }
+    
+    }).catch(err=>{
+      localStorage.removeItem('kirchoffAdminToken')
+    navigate('/adminsignin')
+    })
+    
+    
+    }
+        })
+
+
     return (
         <div>
             <header className="w3-container" style={{paddingTop: '22px'}}>

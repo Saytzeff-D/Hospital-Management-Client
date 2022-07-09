@@ -8,6 +8,7 @@ export const testAction=()=>{
 }
 
 export const setStaff=(params)=>{
+  // alert(99)
   return{
     type: 'setStaff',
     payload:params
