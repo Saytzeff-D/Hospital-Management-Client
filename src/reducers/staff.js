@@ -7,8 +7,7 @@ const initState = {
 
 const StaffReducer = (state=initState, action)=>{
     switch (action.type) {
-        case 'setStaff':
-            
+        case 'setStaff':            
             let newState = {...state, staffInfo: action.payload}
             return newState
         case 'getStaff':
