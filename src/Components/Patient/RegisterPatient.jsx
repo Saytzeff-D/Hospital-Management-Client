@@ -55,9 +55,9 @@ function RegisterPatient(props) {
                         setSpinner({spin: '', text: 'Register'})
                     }
                 }).catch((err)=>{
-                    console.log(err.response.data.message)
-                    setError(err.response.data.message)
                     setSpinner({spin: '', text: 'Register'})
+                    console.log(err)
+                    err.message ? setError(err.message) : setError(err.response.data.message)
                 })
             }
         }
