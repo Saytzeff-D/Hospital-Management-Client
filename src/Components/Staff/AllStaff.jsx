@@ -14,7 +14,18 @@ function AllStaff(props) {
     return (
         
         <div className='py-3'>
-            <div className='bg-white border p-2'>
+            {
+                allStaff.length === 0
+                ?
+                (
+                <div className='d-flex justify-content-center'>
+                    <span className='spinner-border text-danger'></span>
+                </div>
+                )
+                :
+                (
+                    <div>
+                        <div className='bg-white border p-2'>
                 <div className='d-flex justify-content-between border-bottom'>
                     <div>
                         <p className='h6'>Staff List</p>
@@ -42,7 +53,7 @@ function AllStaff(props) {
                 <div className='row mt-2'>
                     {
                         allStaff.map((staff, index)=>(
-                            <div className='col-md-3 m-2'>
+                            <div key={index} className='col-md-3 my-2'>
                                 <div className='border shadow-lg d-flex justify-content-between'>
                                     <div className='col-md-5 px-0'>
                                         <img alt='staffPic' src={staff.photo} className='w-100 h-100' />
@@ -74,6 +85,9 @@ function AllStaff(props) {
                             </div>
                         </div>
                     </div>
+                    </div>
+                )
+            }
         </div>
     );
 }

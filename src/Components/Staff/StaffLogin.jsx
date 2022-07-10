@@ -44,7 +44,7 @@ function StaffLogin() {
                     console.log(res.data.token)  
                     localStorage.StaffToken=res.data.token
                     dispatch(setStaff(staffDetails))
-                    sessionStorage.hcmStaffDetails=JSON.stringify({ ...staffDetails,password:null })
+                    sessionStorage.StaffDetails = JSON.stringify({ ...staffDetails,password:null })
                     navigate('/staff/dashboard')                   
                 }
             })

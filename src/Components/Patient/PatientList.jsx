@@ -31,7 +31,7 @@ const  PatientList=()=>{
             console.log('cannot connect')
         })
 
-    },[allpat])
+    },[allpat, url])
 useEffect(()=>{
    filterWithParameter(filterByName)
 },[filterByName])  
@@ -162,12 +162,10 @@ const filterWithParameter=(params,ID)=>{
                             <td>{each.bloodGroup? each.bloodGroup:<span>---</span> }</td>
                             <td>
                                <div className='row'>
-                                <div className='col-4'><button data-target='#editPat' data-toggle='modal'  onClick={()=>dispatch({type:'viewPatientDetails', payload:each})}className='btn btn-success actbtn'>Edit <i className='fa fa-edit'></i></button></div>
-                                <div className='col-4'><button onClick={()=>deletePatient(each,i)} className=' btn btn-danger actbtn'>Delete <i className='fa fa-trash'></i>
-                            </button></div>        
-                            <div className='col-4'><button
-                            data-target='#viewPat' data-toggle='modal'
-                             onClick={()=>setImage(each.photo)} className=' btn btn-warning actbtn'>photo <i className='fa fa-photo'></i></button></div>          
+                                <div className='col-4'><FontAwesomeIcon className='text-success' style={{cursor: 'pointer'}} icon='edit' data-target='#editPat' data-toggle='modal'  onClick={()=>dispatch({type:'viewPatientDetails', payload:each})} /></div>
+                                <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={()=>deletePatient(each,i)} class='text-danger' icon='trash' /></div>        
+                            <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} class='text-warning' icon='image' data-target='#viewPat' data-toggle='modal'
+                             onClick={()=>setImage(each.photo)} /></div>          
                             </div>          
                                 </td>
 
@@ -215,7 +213,7 @@ const filterWithParameter=(params,ID)=>{
                                 <div className='modal-body border-zero'>
                                     <div className='w-100 card container border-zero'>
                                         <div className='card-body '> 
-                                            <img src={image} alt='profile photo' class='w-100'/>
+                                            <img src={image} alt='profilePhoto' class='w-100'/>
 
                                         </div>
                                     </div>

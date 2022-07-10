@@ -6,7 +6,6 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 function RegisterStaff() {
-    // sessionStorage.removeItem('Id')
     const url = useSelector(state=>state.UrlReducer.url)
 
 
@@ -27,7 +26,7 @@ function RegisterStaff() {
             gender: '',
             maritalStatus: '',
             fname: '',
-            speciality:'',
+            specialty:'',
             created: new Date().toLocaleDateString()
          
         },
@@ -39,10 +38,10 @@ function RegisterStaff() {
             dob: Yup.string().required('Date of Birth must be filled'),
             gender: Yup.string().required('Gender is required'),
             maritalStatus: Yup.string().required('This field is required'),
-            lname: Yup.string().required('This field is required'),
+            lname: Yup.string().required('Last Name is required'),
             bloodGroup: Yup.string().required('This field is required'),
             role: Yup.string().required('This field is required') ,
-            specialtity:Yup.string().required('This field is required')
+            specialty:Yup.string().required('This field is required')
 
         }),
         onSubmit: (values)=>{
@@ -58,7 +57,7 @@ function RegisterStaff() {
                     console.log(res.data)
                     if(res.data.status){
                         sessionStorage.setItem('Id', res.data.healthId)
-                        navigate('/views/staffLogin')
+                        navigate(0)
                     }else{
                         setError(res.data.message)
                         setSpinner({spin: '', text: 'Register'})
@@ -97,6 +96,7 @@ function RegisterStaff() {
                         </div>
                         <div className='form-group col-md-6'>
                             <input onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' placeholder='Last Name' name='lname' />
+                            {formik.touched.lname && <div className='text-danger'>{formik.errors.lname}</div>}
                         </div>
                     </div>
                     <div className='form-row'>
@@ -141,46 +141,44 @@ function RegisterStaff() {
                         <div className='form-group col-md-6'>
                             <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='role' >
                                 <option value="">Role</option>
-                                <option value="pharmacist" >Pharmacist</option>
-                                <option value="doctor">Doctor</option>
-                                <option value="nurse">Nurse</option>
-                                <option value="accountant">Accountant</option>
-
-                                <option value="admin">Portal ADMIN</option>
+                                <option value="Pharmacist" >Pharmacist</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Nurse">Nurse</option>
+                                <option value="Accountant">Accountant</option>
+                                <option value="Admin">Portal ADMIN</option>
                             </select>
                             {formik.touched.role && <div className='text-danger'>{formik.errors.role}</div>}
                         </div>
                         <div className='form-group col-md-6'>
-                            <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='speciality' >
+                            <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='specialty' >
                                 <option value="">Specialist</option>
-                                <option value="doctor">Ophthalmologist</option>
-                                <option value="nurse">Paediatrician</option>
-                                <option value="pharmacist" >Pharmacist</option>
-                                <option value="nurse">Dermatologist</option>
-                                <option value="nurse">Orthopaedician</option>
-                                <option value="nurse">Dentist</option>
-                                <option value="nurse">Gynaecologist</option>
-                                <option value="nurse">Physiotherapist</option>
-                                <option value="nurse">Nurse</option>
-                                <option value="accountant">Accountant</option>
-
+                                <option value="Ophthalmologist">Ophthalmologist</option>
+                                <option value="Paediatrician">Paediatrician</option>
+                                <option value="Pharmacist">Pharmacist</option>
+                                <option value="Dermatologist">Dermatologist</option>
+                                <option value="Orthopaedician">Orthopaedician</option>
+                                <option value="Dentist">Dentist</option>
+                                <option value="Gynaecologist">Gynaecologist</option>
+                                <option value="Physiotherapist">Physiotherapist</option>
+                                <option value="Nurse">Nurse</option>
+                                <option value="Accountant">Accountant</option>
                                 <option value="admin">Portal ADMIN</option>
                             </select>
-                            {formik.touched.role && <div className='text-danger'>{formik.errors.speciality}</div>}
+                            {formik.touched.specialty && <div className='text-danger'>{formik.errors.specialty}</div>}
                         </div>
                     </div>
                     <div className='form-row'>
                         <div className='form-group col-md-6'>
                             <select onChange={formik.handleChange} className='form-control' onBlur={formik.handleBlur} name='bloodGroup' >
                                 <option value=""> Blood Group Selection?</option>
-                                <option value="ab" >AB</option>
-                                <option value="a">Type A</option>
-                                <option value="o"> Type O  </option>
-                                <option value="b">Type B</option>
+                                <option value="AB" >AB</option>
+                                <option value="A">Type A</option>
+                                <option value="O"> Type O  </option>
+                                <option value="B">Type B</option>
                             </select>
                             {formik.touched.bloodGroup && <div className='text-danger'>{formik.errors.bloodGroup}</div>}
                         </div>
-                    <div className='form-group col-6'>
+                    <div className='form-group col-md-6'>
                             <input onChange={pickFile} type="file" className='form-control d-none' name='photo' id='photo' />
                             <div className='btn btn-dark btn-block btn-light text-warning' onClick={clickFileInput} ><span><i className='fa fa-upload'></i></span> Click to Pick a Passport</div>
                             {photo === '' ? <div className='text-danger'>{photoError}</div> : null}
