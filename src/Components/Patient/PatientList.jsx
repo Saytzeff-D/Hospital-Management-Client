@@ -19,19 +19,25 @@ const  PatientList=()=>{
     let [filterByName,setFilterByName]=useState('')
     let [filterById,setFilterById]=useState('')
     let [image,setImage]=useState('')
+    const displayAtOnce=2
+    const [presentPage,setPresentPage]=useState(0)
     useEffect(()=>{
         console.log('refetching')
         axios.get(`${url}patient/allpat`).then(res=>{
-            console.log(res)
+                console.log(res)
+                sessionStorage.patTray=JSON.stringify(res.data)
+            
                 setAllPat(res.data)
                 setFilteredList(res.data)
+
+                setTablePage()
     
         }).catch(err=>{
             console.log(err)
             console.log('cannot connect')
         })
 
-    },[allpat])
+    },[allpat,presentPage])
 useEffect(()=>{
    filterWithParameter(filterByName)
 },[filterByName])  
@@ -90,6 +96,48 @@ const filterWithParameter=(params,ID)=>{
         setAllPat(filterAllPat)
         const filterFilteredList=filteredList.filter( (each,i)=> each._id!==index)
         setFilteredList(filterFilteredList)
+    }
+    const fastForward=()=>{
+        let allpat=JSON.parse(sessionStorage.patTray)
+        if(presentPage<Math.floor((allpat.length)/displayAtOnce)){
+        setPresentPage(presentPage+1)
+        }
+        setTablePage()
+
+    }
+    const fastForwardEnd=()=>{
+        let allpat=JSON.parse(sessionStorage.patTray)
+        let lastPage= Math.floor((allpat.length)/displayAtOnce)
+        setPresentPage(lastPage)
+        setTablePage()
+    }
+    const backWard=()=>{
+        if(presentPage!==0){
+        setPresentPage(presentPage-1)
+        }
+        setTablePage()
+
+
+    }
+    const backWardEnd=()=>{
+        setPresentPage(0)
+        setTablePage()
+    }
+    function setTablePage(){
+        let pageNumber=presentPage
+        let filteredList=[]
+        
+        let allPatients=JSON.parse(sessionStorage.patTray)
+        console.log(allPatients)
+        allPatients.forEach((each,index)=>{
+            if(index>=pageNumber*displayAtOnce && index<=pageNumber*displayAtOnce+displayAtOnce-1){
+                filteredList.push(each)
+            }
+
+        })
+
+        setFilteredList(filteredList)
+
     }
 
     
@@ -153,13 +201,13 @@ const filterWithParameter=(params,ID)=>{
 
                        { filteredList.map( (each,i)=>(
                         <tr key={i}>
-                            <td scope='row'>{i+1}</td>
+                            <td scope='row'>{i+1+(displayAtOnce*presentPage)}</td>
                             <td colSpan={2}>{each.fullName}</td>
                             <td>{each.healthId}</td>
                             <td>{each.gender}</td>
                             <td>{each.phone}</td>
                             <td>{each.dob}</td>
-                            <td>{each.bloodGroup? each.bloodGroup:<span>---</span> }</td>
+                            <td>{each.genotype? each.genotype:<span>---</span> }</td>
                             <td>
                                <div className='row'>
                                 <div className='col-4'><button data-target='#editPat' data-toggle='modal'  onClick={()=>dispatch({type:'viewPatientDetails', payload:each})}className='btn btn-success actbtn'>Edit <i className='fa fa-edit'></i></button></div>
@@ -186,6 +234,19 @@ const filterWithParameter=(params,ID)=>{
 
 
                 </table>
+            </div>
+
+            <div  className='row mb-5'>
+                <div className='ml-auto mx-5'>   
+                    <i className='fa fa-angle-double-left mr-2'  onClick={backWardEnd}></i>    
+                     <i  className='fa fa-angle-left' style={{marginRight:'35px'}}  onClick={backWard}></i>
+                                     
+                    <span className='text-center m-auto' style={{marginLeft:'20px'}}>{presentPage+1}</span>
+                    <i className='fa fa-angle-right' style={{marginLeft:'35px'}} onClick={fastForward}></i>
+                    <i className='fa fa-angle-double-right ml-2'  onClick={fastForwardEnd} ></i>
+                   
+
+                </div>
             </div>
 
 
