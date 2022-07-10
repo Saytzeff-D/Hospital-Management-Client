@@ -2,7 +2,6 @@ const initState = {
     viewPatientDetails:{},
     staffInfo:{},
     staffTray: [],
-    patTray:{}
 }
 
 const StaffReducer = (state=initState, action)=>{

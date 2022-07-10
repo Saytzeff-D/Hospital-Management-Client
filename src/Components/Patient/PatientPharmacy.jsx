@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 function PatientPharmacy(props) {
-    const pharmBills = useSelector(state=>state.PatientReducer.pharmBills)
+    const pharmBills = useSelector(state=>state.PharmacyReducer.patientPharmBills)
     return (
         <div>
             <div className='row m-3 pt-3'>
