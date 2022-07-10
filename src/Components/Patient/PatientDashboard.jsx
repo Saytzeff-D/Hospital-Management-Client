@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 function PatientDashboard(props) {
@@ -20,7 +21,7 @@ function PatientDashboard(props) {
     </div>
     <div className="w3-quarter">
       <div className="w3-container w3-blue w3-padding-16">
-        <div className="w3-left"><i className="fa fa-medkit w3-xxlarge"></i></div>
+        <div className="w3-left"><FontAwesomeIcon icon='mortar-pestle' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>99</h3>
         </div>
@@ -40,7 +41,7 @@ function PatientDashboard(props) {
     </div>
     <div className="w3-quarter">
       <div className="w3-container w3-orange w3-text-white w3-padding-16">
-        <div className="w3-left"><i className="fa fa-user-doctor w3-xxlarge"></i></div>
+        <div className="w3-left"><FontAwesomeIcon icon='bed' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>50</h3>
         </div>

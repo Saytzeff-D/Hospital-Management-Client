@@ -61,14 +61,23 @@ function PatientAppointment(props) {
                             :
                             (
                                 <table className='table table-light table-striped table-responsive'>
-                                    <th>Appointment No</th>
-                                    <th>Appointment Date</th>
-                                    <th>Priority</th>
-                                    <th>Specialist</th>
-                                    <th>Doctor</th>
-                                    <th>Message</th>
-                                    <th>Message</th>
-                                    <th>Action</th>
+                                    <theaad>
+                                        <tr>
+                                            <th>Appointment No</th>
+                                            <th>Appointment Date</th>
+                                            <th>Priority</th>
+                                            <th>Specialist</th>
+                                            <th>Doctor</th>
+                                            <th>Message</th>
+                                            <th>Message</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </theaad>
+                                    <tbody>
+                                        {appointmentTray.map((appointment, index)=>(
+                                            <tr></tr>
+                                        ))}
+                                    </tbody>
                                 </table>
                             )
                         }

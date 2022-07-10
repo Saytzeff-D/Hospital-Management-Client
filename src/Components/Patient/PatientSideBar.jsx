@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import { setPatientDetails } from '../../actions'
+import LogoutMessage from '../Container/LogoutMessage'
 
 const PatientSideBar = ()=>{
     const dispatch = useDispatch()
@@ -14,6 +15,7 @@ const PatientSideBar = ()=>{
     const [mySidebarStyle, setMySideBarStyle] = useState({zIndex:3, width: '300px'})
     const [overlayBgStyle, setOverlayBgStyle] = useState({cursor: 'pointer'})
     const [loading, setLoading] = useState(true)
+    const [route, setRoute] = useState('')
     
       const w3_open = ()=>{
           if (num%2 === 0) {
@@ -44,15 +46,14 @@ const PatientSideBar = ()=>{
                     navigate('/views/patientLogin')
                 }
             }).catch((err)=>{
-                console.log(err)
+                console.log(err, token)
                 localStorage.removeItem('PatientToken')
                 navigate('/views/patientLogin')
             })
         }
       }, [navigate, dispatch, url])
       const Logout = ()=>{
-        localStorage.removeItem('PatientToken')
-        navigate('/views/patientLogin')
+        setRoute('patient')
       }
     return(
         <div>
@@ -60,7 +61,7 @@ const PatientSideBar = ()=>{
             <div className="w3-bar w3-top w3-blue w3-large" style={{zIndex: 4}}>
                 <button className="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onClick={w3_open}><i className="fa fa-bars"></i></button>
                 <span className="w3-bar-item w3-left font-weight-bold">Hospital Management System</span>
-                <span className='w3-right p-2 w3-hide-small font-weight-bold' onClick={Logout} style={{cursor: 'pointer'}}>Logout <i className='fa fa-power-off'></i></span>
+                <span data-toggle='modal' data-target='#logoutModal' className='w3-right p-2 w3-hide-small font-weight-bold' onClick={Logout} style={{cursor: 'pointer'}}>Logout <i className='fa fa-power-off'></i></span>
             </div>
             {/* SideNav Menu */}
             <nav className="w3-sidebar w3-collapse w3-white w3-animate-left" style={mySidebarStyle}>
@@ -88,7 +89,7 @@ const PatientSideBar = ()=>{
                     <NavLink style={{textDecoration: 'none'}} to='/patient/pharmacy' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Pharmacy</NavLink> 
                     <NavLink style={{textDecoration: 'none'}} to='/patient/ambulance' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-ambulance fa-fw"></i>  Ambulance</NavLink> 
                     <NavLink style={{textDecoration: 'none'}} to='/patient/liveChat' activeClassName='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-comment-o fa-fw"></i>  Live Chat</NavLink>
-                    <p style={{textDecoration: 'none'}} onClick={Logout} className="w3-bar-item w3-button w3-padding w3-hide-large"><i className="fa fa-power-off fa-fw"></i>  Logout</p> 
+                    <p style={{textDecoration: 'none'}} onClick={Logout} data-toggle='modal' data-target='#logoutModal' className="w3-bar-item w3-button w3-padding w3-hide-large"><i className="fa fa-power-off fa-fw"></i>  Logout</p> 
                 </div>
             </nav>
 
@@ -110,6 +111,20 @@ const PatientSideBar = ()=>{
                         <Outlet />
                     )
                 }
+            </div>
+
+            {/* Modal Logout */}
+            <div className='modal fade' data-backdrop='static' id='logoutModal'>
+                <div className='modal-dialog modal-dialog-centered'>
+                    <div className='modal-content'>
+                        <div className='modal-header'>
+                            <p className='h6'>Logout</p>
+                        </div>
+                        <div className='modal-body'>
+                            <LogoutMessage route={route} />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
