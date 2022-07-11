@@ -1,11 +1,71 @@
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPatientAppointmentList, getStaff } from '../../actions';
+import { useNavigate } from 'react-router';
 
 function PatientAppointment(props) {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const url = useSelector(state=>state.UrlReducer.url)
+    const staff = useSelector(state=>state.StaffReducer.staffTray)
     const patient = useSelector(state=>state.PatientReducer.patientDetails)
-    const appointmentTray = useSelector(state=>state.PatientReducer.appointmentTray)
-    console.log(patient)
+    const appointmentTray = useSelector(state=>state.AppointmentReducer.patientAppointment)
+    const [slot, setSlot] = useState('')
+    const [specialist, setSpecialist] = useState('')
+    const [shift, setShift] = useState('')
+    const [error, setError] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+    const reducerError = useSelector(state=>state.AppointmentReducer.awaitingResponse)
+    useEffect(()=>{
+            dispatch(getPatientAppointmentList(url, patient.healthId))
+    }, [dispatch])
+    const formik = useFormik({
+        initialValues : {
+            appointmentDate: '',
+            doctorName: '',
+            appointmentPriority: '',
+            slot: '',
+            specialist: '',
+            shift: '',
+            message: ''
+        },
+        onSubmit: (values)=>{
+            setError('')
+            setIsLoading(true)
+            values.shift = shift
+            values.slot =slot
+            values.specialist = specialist
+            console.log(values)
+            axios.post(`${url}patient/addAppointment`, values).then((res)=>{
+                if(res.data.status){
+                    navigate(0)
+                }else{
+                    setIsLoading(false)
+                }
+            }).catch((err)=>{
+                err.message !== '' ? setError(err.message) : setError(err.response.data.message)
+                setIsLoading(false)
+            })
+        }
+    })
+    const specialistChange = (value)=>{
+        dispatch(getStaff(url))
+        setSpecialist(value)
+    }
+    const shiftChange = (value)=>{
+        console.log(value)
+        setShift(value)
+        if (value === 'Morning') {
+            setSlot('08:00 - 11:00 AM')
+        } else if(value === 'Afternoon') {
+            setSlot('01:00 - 04:00 PM')
+        }else{
+            setSlot('24/7')
+        }
+    }
     return (
         <div>
             <div className='row px-5 py-2'>
@@ -46,39 +106,58 @@ function PatientAppointment(props) {
                 <div className='col-md-9 px-3'>
                     <div className='bg-white border p-2'>
                         <div className='d-flex justify-content-between border-bottom py-1 mb-1'>
-                            <p>My Appointments</p>
+                            <p className='h6'>My Appointments</p>
                             <button className='btn btn-primary' data-toggle='modal' data-target='#appointmentBox'><FontAwesomeIcon icon='plus' /> Add Appointment</button>
                         </div>
                         <input className='form-control col-lg-4 col-md-6 col-sm-8' placeholder='Search...'  />
                         {
-                            appointmentTray.length === 0
+                            reducerError === 'Waiting'
                             ?
-                            (
-                                <div className='p-2'>
-                                    <p className='h6'>No recent Appointment</p>
-                                </div>
-                            )
+                            (<span className='spinner-border-sm text-danger'></span>)
                             :
                             (
-                                <table className='table table-light table-striped table-responsive'>
-                                    <theaad>
-                                        <tr>
-                                            <th>Appointment No</th>
-                                            <th>Appointment Date</th>
-                                            <th>Priority</th>
-                                            <th>Specialist</th>
-                                            <th>Doctor</th>
-                                            <th>Message</th>
-                                            <th>Message</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </theaad>
-                                    <tbody>
-                                        {appointmentTray.map((appointment, index)=>(
-                                            <tr></tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                reducerError === 'AxiosError' 
+                                ? 
+                                <div className='alert alert-danger h6 my-2'> <FontAwesomeIcon icon='triangle-exclamation'/> Unable to fetch from the server</div>
+                                : 
+                                appointmentTray.length === 0
+                                ?
+                                (
+                                    <div className='p-2'>
+                                        <p className='h6'>No recent Appointment</p>
+                                    </div>
+                                )
+                                :
+                                (
+                                    <table className='table table-light table-striped table-responsive'>
+                                        <theaad>
+                                            <tr>
+                                                <th>Appointment No</th>
+                                                <th>Appointment Date</th>
+                                                <th>Priority</th>
+                                                <th>Specialist</th>
+                                                <th>Doctor</th>
+                                                <th>Status</th>
+                                                <th>Message</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </theaad>
+                                        <tbody>
+                                            {appointmentTray.map((appointment, index)=>(
+                                                <tr key={index}>
+                                                    <td>{appointment.appointmentNo}</td>
+                                                    <td>{appointment.appointmentDate}</td>
+                                                    <td>{appointment.appointmentPriority}</td>
+                                                    <td>{appointment.specialist}</td>
+                                                    <td>{appointment.doctorName}</td>
+                                                    <td>{appointment.status ? <span className='bg-success h6 p-1'>Approved</span> : <span className='bg-warning h6 p-1'>Pending</span>}</td>
+                                                    <td>{appointment.message}</td>
+                                                    <td><FontAwesomeIcon className='text-primary' icon='credit-card-front' /> <FontAwesomeIcon icon='bars' /> <FontAwesomeIcon icon='trash' /> </td>                                                    
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )
                             )
                         }
                     </div>
@@ -94,15 +173,22 @@ function PatientAppointment(props) {
                             <button data-dismiss='modal' className='close'>&times;</button>
                         </div>
                         <div className='modal-body'>
-                            <form>
+                            <form onSubmit={formik.handleSubmit}>
+                                {
+                                    error !== '' &&
+                                (<div className='alert alert-danger'>
+                                    <span><b>Error</b> {error}</span>
+                                </div>)
+
+                                }
                                 <div className='form-row'>
                                     <div className='form-group col-md-6'>
                                         <label>Date</label>
-                                        <input type='date' className='form-control' />
+                                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type='date' className='form-control' name='appointmentDate' />
                                     </div>
                                     <div className='form-group col-md-6'>
                                         <label>Specialist</label>
-                                        <select className='form-control'>
+                                        <select className='form-control' onChange={(e)=>specialistChange(e.target.value)} name='specialist'>
                                             <option value="">Select</option>
                                             <option value="Ophthalmologist">Ophthalmologist</option>
                                             <option value="Paediatrician">Paediatrician</option>
@@ -116,14 +202,17 @@ function PatientAppointment(props) {
                                 <div className='form-row'>
                                     <div className='form-group col-md-6'>
                                         <label>Doctor</label>
-                                        <select className='form-control'>
+                                        <select onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' name='doctorName'>
                                             <option value="">Select</option>
                                             {/* All Doctors will be fetched from the server */}
+                                            {staff.filter((each, i)=>(each.specialty === specialist)).map((doctor, i)=>(
+                                                <option key={i} value={doctor.fname + ' ' + doctor.lname}>{doctor.fname} {doctor.lname}</option>
+                                            ))}
                                         </select>
                                     </div>
                                     <div className='form-group col-md-6'>
                                         <label>Shift</label>
-                                        <select className='form-control'>
+                                        <select className='form-control' onChange={(e)=>shiftChange(e.target.value)}>
                                             <option value=''>Select</option>
                                             <option value='Morning'>Morning</option>
                                             <option value='Afternoon'>Afternoon</option>
@@ -134,11 +223,11 @@ function PatientAppointment(props) {
                                 <div className='form-row'>
                                     <div className='form-group col-md-6'>
                                         <label>Slot</label>
-                                        <input type='text' className='form-control' disabled />
+                                        <input type='text' value={slot} className='form-control' disabled />
                                     </div>
                                     <div className='form-group col-md-6'>
                                         <label>Appointment Priority</label>
-                                        <select className='form-control'>
+                                        <select onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' name='appointmentPriority'>
                                             <option value="">Select</option>
                                             <option value="Normal">Normal</option>
                                             <option value="Urgent">Urgent</option>
@@ -150,13 +239,15 @@ function PatientAppointment(props) {
                                 <div className='form-row'>
                                     <div className='form-group col-12'>
                                         <label>Message</label>
-                                        <textarea className='form-control' />
+                                        <textarea onChange={formik.handleChange} onBlur={formik.handleBlur} className='form-control' name='message' />
                                     </div>
                                 </div>
+                                <div typeof='submit' className='modal-footer'>
+                                    <button className='btn btn-primary' disabled={isLoading}>{
+                                        isLoading ? (<span className='spinner-border spinner-border-sm text-primary'></span>) : (<span>Save</span>)
+                                    }</button>
+                                </div>
                             </form>
-                        </div>
-                        <div className='modal-footer'>
-                            <button className='btn btn-primary'>Save</button>
                         </div>
                     </div>
                 </div>

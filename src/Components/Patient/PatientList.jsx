@@ -3,9 +3,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import RegisterStaff from '../Staff/RegisterStaff';
 import RegisterPatient from './RegisterPatient';
-import Viewprofile from './Viewprofile';
 import ViewProfile from './Viewprofile';
 
 
