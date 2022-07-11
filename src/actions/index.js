@@ -8,7 +8,6 @@ export const testAction=()=>{
 }
 
 export const setStaff=(params)=>{
-  // alert(99)
   return{
     type: 'setStaff',
     payload:params
@@ -25,5 +24,14 @@ export const setPatientDetails = (details)=>{
   return{
     type: 'patientDetails',
     payload: details
+  }
+}
+export const getPatientAppointmentList = (url, healthId)=>{
+  return (dispatch)=>{
+    return axios.post(`${url}patient/fetchAppointment`, healthId).then((res)=>{
+      dispatch({type: 'loggedInPatientAppointment', payload: res.data})
+    }).catch((err)=>{
+      dispatch({type: 'axiosError', payload: 'AxiosError'})
+    })
   }
 }
