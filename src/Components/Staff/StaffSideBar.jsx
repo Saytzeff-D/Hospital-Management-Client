@@ -102,7 +102,7 @@ const StaffSideBar = ()=>{
                 <div className="w3-bar-block">
                     <NavLink style={{textDecoration: 'none'}} to='/staff/dashboard' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Overview</NavLink> 
                     { 
-                     (staffInfo.role ==='doctor' || staffInfo.role ==='Accountant' || staffInfo.role ==='Admin') && 
+                     (staffInfo.role ==='Doctor' || staffInfo.role ==='Accountant' || staffInfo.role ==='Admin') && 
                     <NavLink style={{textDecoration: 'none'}} to='/staff/appointment' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-calendar fa-fw"></i>  Appointments</NavLink> 
                     }
                     {  
@@ -110,20 +110,20 @@ const StaffSideBar = ()=>{
                     <NavLink style={{textDecoration: 'none'}} to='/staff/pharmacy' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Pharmacy</NavLink> 
                     }
                    {
-                    (staffInfo.role === 'Admin' || staffInfo.role ==='doctor' || staffInfo.role ==='Accountant') &&
+                    (staffInfo.role === 'Admin' || staffInfo.role ==='Doctor' || staffInfo.role ==='Accountant') &&
                     <NavLink style={{textDecoration: 'none'}} to='/staff/ambulance' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-ambulance fa-fw"></i>  Ambulance</NavLink> 
                     }
                     {  
-                    (staffInfo.role === 'Admin' || staffInfo.role === 'doctor' || staffInfo.role ==='nurse') &&  
+                    (staffInfo.role === 'Admin' || staffInfo.role === 'Doctor' || staffInfo.role ==='Nurse') &&  
                     <NavLink style={{textDecoration: 'none'}} to='/staff/birthRecords' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='baby' />  Birth Records</NavLink>
                     }
                    { 
-                   (staffInfo.role === 'Admin' || staffInfo.role === 'doctor' || staffInfo.role ==='nurse') &&
+                   (staffInfo.role === 'Admin' || staffInfo.role === 'Doctor' || staffInfo.role ==='Nurse') &&
                    <NavLink style={{textDecoration: 'none'}} to='/staff/deathRecords' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='skull-crossbones' />  Death Records</NavLink>
                    }
 
                    { 
-                   (staffInfo.role === 'doctor' ) ?
+                   (staffInfo.role === 'Doctor' ) ?
                    <NavLink style={{textDecoration: 'none'}} to='/staff/addPrescription' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='prescription-bottle-medical' />  Add Prescription</NavLink> : ''
                    }
 
@@ -137,7 +137,7 @@ const StaffSideBar = ()=>{
                   }
 
                    { 
-                   (staffInfo.role === 'doctor' || staffInfo.role ==='Pharmacist') ?
+                   (staffInfo.role === 'Doctor' || staffInfo.role ==='Pharmacist') ?
                    <NavLink style={{textDecoration: 'none'}} to='/staff/prescriptionList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='prescription' />  Prescription List</NavLink> : ''
                    }
 

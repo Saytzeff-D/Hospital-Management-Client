@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import RegisterStaff from '../Staff/RegisterStaff';
 import RegisterPatient from './RegisterPatient';
-import Viewprofile from './Viewprofile';
 import ViewProfile from './Viewprofile';
 
 
@@ -19,7 +18,8 @@ const  PatientList=()=>{
     let [filterByName,setFilterByName]=useState('')
     let [filterById,setFilterById]=useState('')
     let [image,setImage]=useState('')
-    const displayAtOnce=2
+    let [staffAddPatRoute,setAddPatRoute]=useState('')
+    const displayAtOnce=3
     const [presentPage,setPresentPage]=useState(0)
     useEffect(()=>{
         console.log('refetching')
@@ -29,21 +29,34 @@ const  PatientList=()=>{
             
                 setAllPat(res.data)
                 setFilteredList(res.data)
-
                 setTablePage()
+
+                
     
         }).catch(err=>{
             console.log(err)
             console.log('cannot connect')
         })
 
-    },[allpat, url,presentPage])
+    },[allpat, url])
+useEffect(()=>{
+    setTablePage()
+},[presentPage])
 useEffect(()=>{
    filterWithParameter(filterByName)
+   if(filterByName==''){
+     setTablePage()
+   }
+   setPresentPage(0)
+   
 },[filterByName])  
 
 useEffect(()=>{
     filterWithParameter(filterById,'id')
+     if(filterById==''){
+        setTablePage()
+      }
+      setPresentPage(0)
  },[filterById])  
  
 const filterWithParameter=(params,ID)=>{     
@@ -64,10 +77,7 @@ const filterWithParameter=(params,ID)=>{
             }
         })
     }
-    
-
-
-        setFilteredList(filteredList)
+         setFilteredList(filteredList)
 
     }else{
         setFilteredList(allPat)
@@ -103,6 +113,8 @@ const filterWithParameter=(params,ID)=>{
         setPresentPage(presentPage+1)
         }
         setTablePage()
+        setFilterByName('')
+        setFilterById('')
 
     }
     const fastForwardEnd=()=>{
@@ -110,18 +122,24 @@ const filterWithParameter=(params,ID)=>{
         let lastPage= Math.floor((allpat.length)/displayAtOnce)
         setPresentPage(lastPage)
         setTablePage()
+        setFilterByName('')
+        setFilterById('')
     }
     const backWard=()=>{
         if(presentPage!==0){
         setPresentPage(presentPage-1)
         }
         setTablePage()
+        setFilterByName('')
+        setFilterById('')
 
 
     }
     const backWardEnd=()=>{
         setPresentPage(0)
         setTablePage()
+        setFilterByName('')
+        setFilterById('')
     }
     function setTablePage(){
         let pageNumber=presentPage
@@ -154,7 +172,7 @@ const filterWithParameter=(params,ID)=>{
                         <p className='h6'>Patient List</p>
                         </div>
                         <div className=''>
-                            <button className='btn btn-primary m-1' data-target='#addStaff' data-toggle='modal'>Add Patient</button>
+                            <button onClick={()=>setAddPatRoute('staffAddPat')} className='btn btn-primary m-1' data-target='#addStaff' data-toggle='modal'>Add Patient</button>
                             {/* <button className='btn btn-primary m-1'><FontAwesomeIcon icon='plus' /> Import Staff</button> */}
 
                     </div>
@@ -235,16 +253,22 @@ const filterWithParameter=(params,ID)=>{
             </div>
 
             <div  className='row mb-5'>
-                <div className='ml-auto mx-5'>   
-                    <i className='fa fa-angle-double-left mr-2'  onClick={backWardEnd}></i>    
-                     <i  className='fa fa-angle-left' style={{marginRight:'35px'}}  onClick={backWard}></i>
+                <div className='ml-auto mx-5 '> 
+                
+                    <i style={{border:'1px solid black', width:'20px',borderRadius:'4px'}} className={'fa fa-angle-double-left mr-2 text-center'  }  onClick={backWardEnd}></i>
+                    
+                     <i  className='fa fa-angle-left text-center' style={{marginRight:'35px',border:'1px solid black', width:'20px',borderRadius:'4px'}}  onClick={backWard}></i>
                                      
                     <span className='text-center m-auto' style={{marginLeft:'20px'}}>{presentPage+1}</span>
-                    <i className='fa fa-angle-right' style={{marginLeft:'35px'}} onClick={fastForward}></i>
-                    <i className='fa fa-angle-double-right ml-2'  onClick={fastForwardEnd} ></i>
+
+                    <i className='fa fa-angle-right text-center' style={{marginLeft:'35px',border:'1px solid black', width:'20px',borderRadius:'4px'}} onClick={fastForward}></i>
+
+                    <i className='fa fa-angle-double-right ml-2 text-center' style={{border:'1px solid black', width:'20px',borderRadius:'4px'}}  onClick={fastForwardEnd} ></i>
+                    <br/> <span style={{marginTop:'15px',float:'right'}} className='text-danger'>{Math.ceil((allPat.length)/displayAtOnce)} pages</span>
                    
 
                 </div>
+                
             </div>
 
 
@@ -257,7 +281,7 @@ const filterWithParameter=(params,ID)=>{
                                     <button type="button" className="close" data-dismiss="modal" >&times;</button>
                                 </div>
                                 <div className='modal-body'>
-                                    <RegisterPatient/>
+                                    <RegisterPatient staffAddPatRoute={staffAddPatRoute}/>
                                 </div>
                             </div>
                         </div>
