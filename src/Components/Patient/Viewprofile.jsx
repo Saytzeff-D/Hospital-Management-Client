@@ -123,6 +123,7 @@ const ViewProfile=()=>{
                             <div className='col-6 input-group'>
                                 <span  style={{fontSize:'12px'}}class="input-group-text" id="inputGroupPrepend2">Genotype</span>
                                 <select onChange={(e)=>setGenotype(e.target.value)} className='form-control' value={genotype} name='genotype' >
+                                    <option value="NA" >select genotype</option>
                                     <option value="ab" >AB</option>
                                     <option value="a">Type A</option>
                                     <option selected value="o"> Type O  </option>
