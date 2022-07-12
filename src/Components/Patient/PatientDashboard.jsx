@@ -10,7 +10,7 @@ function PatientDashboard(props) {
 
   <div className="card-deck w3-row-padding w3-margin-bottom px-5">
     <div className="w3-quarter">
-      <div className="w3-container w3-red w3-padding-16">
+      <div className="w3-container w3-red w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><i className="fa fa-calendar w3-xxlarge"></i></div>
         <div className="w3-right">
           <h3>52</h3>
@@ -20,7 +20,7 @@ function PatientDashboard(props) {
       </div>
     </div>
     <div className="w3-quarter">
-      <div className="w3-container w3-blue w3-padding-16">
+      <div className="w3-container w3-blue w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><FontAwesomeIcon icon='mortar-pestle' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>99</h3>
@@ -30,7 +30,7 @@ function PatientDashboard(props) {
       </div>
     </div>
     <div className="w3-quarter">
-      <div className="w3-container w3-teal w3-padding-16">
+      <div className="w3-container w3-teal w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><i className="fa fa-ambulance w3-xxlarge"></i></div>
         <div className="w3-right">
           <h3>23</h3>
@@ -40,7 +40,7 @@ function PatientDashboard(props) {
       </div>
     </div>
     <div className="w3-quarter">
-      <div className="w3-container w3-orange w3-text-white w3-padding-16">
+      <div className="w3-container w3-orange w3-text-white w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><FontAwesomeIcon icon='bed' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>50</h3>

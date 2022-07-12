@@ -18,7 +18,7 @@ const  PatientList=()=>{
     let [filterById,setFilterById]=useState('')
     let [image,setImage]=useState('')
     let [staffAddPatRoute,setAddPatRoute]=useState('')
-    const displayAtOnce=3
+    const displayAtOnce = 4
     const [presentPage,setPresentPage]=useState(0)
     useEffect(()=>{
         console.log('refetching')
@@ -43,7 +43,7 @@ useEffect(()=>{
 },[presentPage])
 useEffect(()=>{
    filterWithParameter(filterByName)
-   if(filterByName==''){
+   if(filterByName === ''){
      setTablePage()
    }
    setPresentPage(0)
@@ -52,7 +52,7 @@ useEffect(()=>{
 
 useEffect(()=>{
     filterWithParameter(filterById,'id')
-     if(filterById==''){
+     if(filterById === ''){
         setTablePage()
       }
       setPresentPage(0)
@@ -60,7 +60,7 @@ useEffect(()=>{
  
 const filterWithParameter=(params,ID)=>{     
 
-    if(params!=''){
+    if(params!==''){
         let filteredList=[]
         let allPatients=allPat
         if(!ID){        
@@ -198,8 +198,8 @@ const filterWithParameter=(params,ID)=>{
         <section>
                
             <div className='tableDiv row my-5 w-100 text-center'>
-                <table className='table table-stripped table-bordered border-primary my-4'>
-                    <thead className='table-dark'>
+                <table className='table table-light table-stripped table-bordered border-primary my-4'>
+                    <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">First Name</th>
@@ -218,8 +218,9 @@ const filterWithParameter=(params,ID)=>{
 
                        { filteredList.map( (each,i)=>(
                         <tr key={i}>
-                            <td scope='row'>{i+1+(displayAtOnce*presentPage)}</td>
-                            <td colSpan={2}>{each.fullName}</td>
+                            <td>{i+1+(displayAtOnce*presentPage)}</td>
+                            <td>{each.fullName.split(' ')[0]}</td>
+                            <td>{each.fullName.split(' ')[1]}</td>
                             <td>{each.healthId}</td>
                             <td>{each.gender}</td>
                             <td>{each.phone}</td>
@@ -228,8 +229,8 @@ const filterWithParameter=(params,ID)=>{
                             <td>
                                <div className='row'>
                                 <div className='col-4'><FontAwesomeIcon className='text-success' style={{cursor: 'pointer'}} icon='edit' data-target='#editPat' data-toggle='modal'  onClick={()=>dispatch({type:'viewPatientDetails', payload:each})} /></div>
-                                <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={()=>deletePatient(each,i)} class='text-danger' icon='trash' /></div>        
-                            <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} class='text-warning' icon='image' data-target='#viewPat' data-toggle='modal'
+                                <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={()=>deletePatient(each,i)} className='text-danger' icon='trash' /></div>        
+                            <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} className='text-warning' icon='image' data-target='#viewPat' data-toggle='modal'
                              onClick={()=>setImage(each.photo)} /></div>          
                             </div>          
                                 </td>

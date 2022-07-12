@@ -129,12 +129,12 @@ const StaffSideBar = ()=>{
 
                    {
                    (staffInfo.role === 'Pharmacist') ? 
-                   <NavLink style={{textDecoration: 'none'}} to='/staff/medicineDetails' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='tablets' />  Medicine Details</NavLink> : ''
+                   <NavLink style={{textDecoration: 'none'}} to='/staff/medStock' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='tablets' />  Medicine Stock</NavLink> : ''
                    }
-                  { 
+                  {/* { 
                   (staffInfo.role === 'Pharmacist') ?
                   <NavLink style={{textDecoration: 'none'}} to='/staff/supllierList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='list-check' />  Supplier List</NavLink> : ''
-                  }
+                  } */}
 
                    { 
                    (staffInfo.role === 'Doctor' || staffInfo.role ==='Pharmacist') ?

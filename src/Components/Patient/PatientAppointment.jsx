@@ -67,15 +67,29 @@ function PatientAppointment(props) {
             setSlot('24/7')
         }
     }
+    const details = {payment: {paymentRef: Math.ceil(Math.random()*1000000000), paymentType: 'Appointment', amount: 500, healthId: patient.healthId, created: new Date().toUTCString}, appointment: {appointmentNo: ''}}
+
+    const handlePaystackSuccessAction = (ref)=>{
+        axios.post(`${url}patient/payAppointment`, details).then((res)=>{
+            navigate(0)
+        }).catch((err)=>{
+            alert('Your Payment was received but due to network error, we could not save your payment records. Please, do well to contact our customer care')
+        })
+    }
+    const handlePaystackCloseAction = ()=>{
+        console.log('Close Paystack')
+    }
 
     const config = {
-    reference: (new Date()).getTime().toString(),
+    reference: details.payment.paymentRef,
     email: patient.email,
     amount: 50000,
     publicKey: 'pk_test_bfe3a2fb617743847ecf6d9ea96e3153e2a1186d',
   }
-  const handlePaystackSuccessAction = (reference) =>{}
-  const handlePaystackCloseAction = () => {}
+  const getAppointmentNo = (appNo)=>{
+    details.appointment.appointmentNo = appNo
+    console.log(appNo)
+  }
   const componentProps = {
     ...config,
     text: '',
@@ -155,9 +169,10 @@ function PatientAppointment(props) {
                                                 <th>Priority</th>
                                                 <th>Specialist</th>
                                                 <th>Doctor</th>
-                                                <th>Status</th>
-                                                <th>Message</th>
-                                                <th>FutherAction</th>
+                                                <th>Approval Status</th>
+                                                <th>YourMessage</th>
+                                                <th>Payment Status</th>
+                                                <th>FurtherAction</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -170,11 +185,23 @@ function PatientAppointment(props) {
                                                     <td>{appointment.appointmentPriority}</td>
                                                     <td>{appointment.specialist}</td>
                                                     <td>{appointment.doctorName}</td>
-                                                    <td>{appointment.status ? <span className='bg-success rounded-pill h6 p-1'>Approved</span> : <span className='rounded-pill bg-warning h6 p-1'>Pending</span>}</td>
+                                                    <td>{appointment.approvalStatus ? <span className='bg-success rounded-pill h6 p-1'>Approved</span> : <span className='rounded-pill bg-warning h6 p-1'>Pending</span>}</td>
                                                     <td>{appointment.message}</td>
+                                                    <td>{appointment.paymentStatus ? <span className='font-weight-bold'>PAID</span> : <span className='font-weight-bold'>YET TO PAY</span>}</td>
                                                     <td>
                                                         <div className='d-flex justify-content-between'>
-                                                        <PaystackButton {...componentProps} className='btn'><FontAwesomeIcon className='text-primary cursor-pointer' icon='money-check' /></PaystackButton> <button className='btn'><FontAwesomeIcon className='cursor-pointer text-warning' icon='bars' /></button> <button className='btn'><FontAwesomeIcon className='text-danger cursor-pointer' icon='trash' /></button>
+                                                        {
+                                                            appointment.paymentStatus
+                                                            ?
+                                                            ''
+                                                            :
+                                                            (<div onClick={()=>{getAppointmentNo(appointment._id)}}>
+                                                            <PaystackButton {...componentProps} className='btn'><FontAwesomeIcon className='text-primary cursor-pointer' icon='money-check' />
+                                                            </PaystackButton> 
+                                                            </div>)
+                                                        }
+                                                        <button className='btn'><FontAwesomeIcon className='cursor-pointer text-warning' icon='bars' /></button> 
+                                                        <button className='btn'><FontAwesomeIcon className='text-danger cursor-pointer' icon='trash' /></button>
                                                         </div> 
                                                     </td>                                                    
                                                 </tr>
