@@ -23,6 +23,7 @@ import PatientPharmacy from './Components/Patient/PatientPharmacy';
 import PatientAmbulance from './Components/Patient/PatientAmbulance';
 import GeneratePharmacyBill from './Components/Staff/GeneratePharmacyBill';
 import RegisterStaff from './Components/Staff/RegisterStaff';
+import AppointmentList from './Components/Staff/Appointmentlist';
 library.add(fas, faTwitter, faFontAwesome)
 
 
@@ -53,6 +54,8 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
           <Route path='/staff/staffList' element={<AllStaff />} />
           <Route path='/staff/patientList' element={<PatientList />} />
           <Route path='/staff/livechat' element={<Chat />} />
+          <Route path='/staff/appointment' element={<AppointmentList/>} />
+
         </Route>
       </Routes>
     </>

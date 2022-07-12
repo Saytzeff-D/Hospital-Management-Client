@@ -198,7 +198,7 @@ const filterWithParameter=(params,ID)=>{
         <section>
                
             <div className='tableDiv row my-5 w-100 text-center'>
-                <table className='table table-stripped table-bordered border-primary my-4'>
+                <table className='table table-stripped  table-bordered border-primary my-4 table-responsive'>
                     <thead className='table-dark'>
                         <tr>
                             <th scope="col">#</th>
