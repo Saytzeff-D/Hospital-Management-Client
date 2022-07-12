@@ -1,6 +1,5 @@
 const initState = {
-    patientDetails: {},
-    appointmentTray: [],
+    patientDetails: {}
 }
 
 const PatientReducer = (state=initState, action)=>{
