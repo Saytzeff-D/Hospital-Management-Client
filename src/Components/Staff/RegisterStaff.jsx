@@ -31,7 +31,7 @@ function RegisterStaff() {
          
         },
         validationSchema: Yup.object({
-            fname: Yup.string().required('Full Name is required'),
+            fname: Yup.string('').required('Full Name is required'),
             email: Yup.string().email('Enter a valid E-Mail Address').required('E-mail is required'),
             phone: Yup.number().typeError('That doesnt look like a number').min(10).required('Phone Number is required'),
             address: Yup.string().required('Address is required'),
@@ -45,6 +45,8 @@ function RegisterStaff() {
 
         }),
         onSubmit: (values)=>{
+            console.log(values)
+            alert(555)
             if(photo === ''){
                 setPhotoError('Upload a photo')
             }else{
@@ -80,6 +82,11 @@ function RegisterStaff() {
         reader.onload = ()=>{
             setPhoto(reader.result)
         }
+    }
+    const testButton=()=>{
+        alert(501)
+        console.log(formik.values)
+
     }
     return (
         <div>
@@ -184,7 +191,7 @@ function RegisterStaff() {
                             {photo === '' ? <div className='text-danger'>{photoError}</div> : null}
                         </div>
                     </div>
-                    <button className='btn btn-warning btn-block' type='submit'>{spinner.text} <span className={spinner.spin}></span></button>
+                    <button onClick={testButton} className='btn btn-warning btn-block' type='submit'>{spinner.text} <span className={spinner.spin}></span></button>
             </form>
         </div>
     );

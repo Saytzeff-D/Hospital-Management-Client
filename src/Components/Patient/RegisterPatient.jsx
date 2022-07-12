@@ -6,7 +6,8 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 function RegisterPatient(props) {
-    
+    let {staffAddPatRoute}=props
+    console.log(staffAddPatRoute)
     sessionStorage.removeItem('Id')
     const url = useSelector(state=>state.UrlReducer.url)
     
@@ -51,7 +52,14 @@ function RegisterPatient(props) {
                     console.log(res.data)
                     if(res.data.message === 'Success'){
                         sessionStorage.setItem('Id', res.data.healthId)
+                        if(!staffAddPatRoute){
                         navigate('/views/patientLogin')
+                        }
+                        else{
+                            alert('Patient added. Please close the modal')
+                            setSpinner({spin: '', text: 'Saved Patient'})
+
+                        }
                     }else{
                         setError(res.data.message)
                         setSpinner({spin: '', text: 'Register'})
