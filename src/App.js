@@ -55,6 +55,8 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
           <Route path='/staff/staffList' element={<AllStaff />} />
           <Route path='/staff/patientList' element={<PatientList />} />
           <Route path='/staff/livechat' element={<Chat />} />
+          <Route path='/staff/appointment' element={<AppointmentList/>} />
+
         </Route>
       </Routes>
     </>
