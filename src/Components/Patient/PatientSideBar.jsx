@@ -67,17 +67,25 @@ const PatientSideBar = ()=>{
             <nav className="w3-sidebar w3-collapse w3-white w3-animate-left" style={mySidebarStyle}>
                 <br />
                 <div className="w3-container w3-row">
-                    <div className="w3-col s4">
-                    <img src={loggedInPatient.photo} alt='photoNow' className="rounded-circle" style={{width: '80px', height: '80px'}} />
-                    </div>
-                    <div className="w3-col s8 w3-bar">
-                    <span>Welcome, <strong>{loggedInPatient.fullName}</strong></span><br/>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
-                    <br/><br/>
-                  <span className='font-weight-bold text-capitalize'>Patient</span> 
-                    </div>
+                    {
+                        loading
+                        ?
+                        (<div className='d-flex justify-content-center'><span className='spinner-border text-danger'></span></div>)
+                        :
+                        <>
+                            <div className="w3-col s4">
+                            <img src={loggedInPatient.photo} alt='photoNow' className="rounded-circle" style={{width: '80px', height: '80px'}} />
+                            </div>
+                            <div className="w3-col s8 w3-bar">
+                            <span>Welcome, <strong>{loggedInPatient.fullName}</strong></span><br/>
+                            <a href="/" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
+                            <a href="/" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
+                            <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
+                            <br/><br/>
+                        <span className='font-weight-bold text-capitalize'>Patient</span> 
+                            </div>
+                        </>
+                    }
                 </div>
                 <hr />
                 <div className="w3-container">

@@ -30,7 +30,6 @@ function StaffDashboard() {
     allStaffs.forEach((staff,index)=>{
       let role=staff.role
       if(role in count){
-        console.log(role,9999)
         count[role]+=1      
       }  
     })
@@ -47,7 +46,7 @@ function StaffDashboard() {
 
   <div className="w3-row-padding w3-margin-bottom">
     <div className="w3-quarter">
-      <div className="w3-container w3-red w3-padding-16">
+      <div className="w3-container shadow-lg rounded-lg w3-red w3-padding-16" id='box1'>
         <div className="w3-left"><i className="fa fa-calendar w3-xxlarge"></i></div>
         <div className="w3-right">
           <h3>{appointment}</h3>
@@ -56,8 +55,8 @@ function StaffDashboard() {
         <h4>Appointments</h4>
       </div>
     </div>
-    <div className="w3-quarter">
-      <div className="w3-container w3-blue w3-padding-16">
+    <div className="w3-quarter" id='box2'>
+      <div className="w3-container shadow-lg rounded-lg w3-blue w3-padding-16">
         <div className="w3-left"><FontAwesomeIcon icon='capsules' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>99</h3>
@@ -66,8 +65,8 @@ function StaffDashboard() {
         <h4>Pharmacy Bills</h4>
       </div>
     </div>
-    <div className="w3-quarter">
-      <div className="w3-container w3-teal w3-padding-16">
+    <div className="w3-quarter" id='box3' >
+      <div className="w3-container shadow-lg rounded-lg w3-teal w3-padding-16">
         <div className="w3-left"><i className="fa fa-ambulance w3-xxlarge"></i></div>
         <div className="w3-right">
           <h3>23</h3>
@@ -76,8 +75,8 @@ function StaffDashboard() {
         <h4>Ambulance</h4>
       </div>
     </div>
-    <div className="w3-quarter">
-      <div className="w3-container w3-orange w3-text-white w3-padding-16">
+    <div className="w3-quarter" id='box4'>
+      <div className="w3-container shadow-lg rounded-lg w3-orange w3-text-white w3-padding-16">
         <div className="w3-left"><FontAwesomeIcon icon='bed' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>{patNum}</h3>
@@ -90,8 +89,8 @@ function StaffDashboard() {
   <hr />
   {/* Staff Overview */}
   <div className="w3-row-padding w3-margin-bottom">
-    <div className="w3-quarter">
-      <div className="w3-container text-white bg-success w3-padding-16">
+    <div className="w3-quarter" id='box5' >
+      <div className="w3-container shadow-lg rounded-lg text-white bg-success w3-padding-16">
         <div className="w3-left"><i className="fa fa-calendar w3-xxlarge"></i></div>
         <div className="w3-right">
           <h3>{countRole.Admin}</h3>
@@ -100,8 +99,8 @@ function StaffDashboard() {
         <h4>Admin</h4>
       </div>
     </div>
-    <div className="w3-quarter">
-      <div className="w3-container text-white bg-warning w3-padding-16">
+    <div className="w3-quarter" id='box6'>
+      <div className="w3-container shadow-lg rounded-lg text-white bg-warning w3-padding-16">
         <div className="w3-left"><FontAwesomeIcon icon='stethoscope' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>{countRole.Doctor}</h3>
@@ -110,8 +109,8 @@ function StaffDashboard() {
         <h4>Doctor</h4>
       </div>
     </div>
-    <div className="w3-quarter">
-      <div className="w3-container text-white bg-danger w3-padding-16">
+    <div className="w3-quarter" id='box7'>
+      <div className="w3-container shadow-lg rounded-lg text-white bg-danger w3-padding-16">
         <div className="w3-left"><FontAwesomeIcon icon='prescription' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>{countRole.Pharmacist}</h3>
@@ -120,8 +119,8 @@ function StaffDashboard() {
         <h4>Pharmacist</h4>
       </div>
     </div>
-    <div className="w3-quarter">
-      <div className="w3-container text-white w3-orange w3-text-white w3-padding-16">
+    <div className="w3-quarter" id='box8'>
+      <div className="w3-container shadow-lg rounded-lg text-white w3-orange w3-text-white w3-padding-16">
         <div className="w3-left"><FontAwesomeIcon icon='bed' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>{countRole.Nurse}</h3>

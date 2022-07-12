@@ -45,8 +45,6 @@ function RegisterStaff() {
 
         }),
         onSubmit: (values)=>{
-            console.log(values)
-            alert(555)
             if(photo === ''){
                 setPhotoError('Upload a photo')
             }else{
@@ -82,11 +80,6 @@ function RegisterStaff() {
         reader.onload = ()=>{
             setPhoto(reader.result)
         }
-    }
-    const testButton=()=>{
-        alert(501)
-        console.log(formik.values)
-
     }
     return (
         <div>
@@ -169,7 +162,7 @@ function RegisterStaff() {
                                 <option value="Physiotherapist">Physiotherapist</option>
                                 <option value="Nurse">Nurse</option>
                                 <option value="Accountant">Accountant</option>
-                                <option value="admin">Portal ADMIN</option>
+                                <option value="Admin">Portal ADMIN</option>
                             </select>
                             {formik.touched.specialty && <div className='text-danger'>{formik.errors.specialty}</div>}
                         </div>
@@ -191,7 +184,7 @@ function RegisterStaff() {
                             {photo === '' ? <div className='text-danger'>{photoError}</div> : null}
                         </div>
                     </div>
-                    <button onClick={testButton} className='btn btn-warning btn-block' type='submit'>{spinner.text} <span className={spinner.spin}></span></button>
+                    <button className='btn btn-warning btn-block' type='submit'>{spinner.text} <span className={spinner.spin}></span></button>
             </form>
         </div>
     );

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPatientAppointmentList, getStaff } from '../../actions';
 import { useNavigate } from 'react-router';
+import { PaystackButton } from 'react-paystack';
 
 function PatientAppointment(props) {
     const navigate = useNavigate()
@@ -20,14 +21,13 @@ function PatientAppointment(props) {
     const [isLoading, setIsLoading] = useState(false)
     const reducerError = useSelector(state=>state.AppointmentReducer.awaitingResponse)
     useEffect(()=>{
-            dispatch(getPatientAppointmentList(url, patient.healthId))
+            dispatch(getPatientAppointmentList(url, {healthId: patient.healthId}))
     }, [dispatch])
     const formik = useFormik({
         initialValues : {
             appointmentDate: '',
             doctorName: '',
             appointmentPriority: '',
-            slot: '',
             specialist: '',
             shift: '',
             message: ''
@@ -36,8 +36,9 @@ function PatientAppointment(props) {
             setError('')
             setIsLoading(true)
             values.shift = shift
-            values.slot =slot
+            values.timeSlot = slot
             values.specialist = specialist
+            values.healthId = patient.healthId
             console.log(values)
             axios.post(`${url}patient/addAppointment`, values).then((res)=>{
                 if(res.data.status){
@@ -66,10 +67,39 @@ function PatientAppointment(props) {
             setSlot('24/7')
         }
     }
+    const details = {payment: {paymentRef: Math.ceil(Math.random()*1000000000), paymentType: 'Appointment', amount: 500, healthId: patient.healthId, created: new Date().toUTCString}, appointment: {appointmentNo: ''}}
+
+    const handlePaystackSuccessAction = (ref)=>{
+        axios.post(`${url}patient/payAppointment`, details).then((res)=>{
+            navigate(0)
+        }).catch((err)=>{
+            alert('Your Payment was received but due to network error, we could not save your payment records. Please, do well to contact our customer care')
+        })
+    }
+    const handlePaystackCloseAction = ()=>{
+        console.log('Close Paystack')
+    }
+
+    const config = {
+    reference: details.payment.paymentRef,
+    email: patient.email,
+    amount: 50000,
+    publicKey: 'pk_test_bfe3a2fb617743847ecf6d9ea96e3153e2a1186d',
+  }
+  const getAppointmentNo = (appNo)=>{
+    details.appointment.appointmentNo = appNo
+    console.log(appNo)
+  }
+  const componentProps = {
+    ...config,
+    text: '',
+    onSuccess: (reference) => handlePaystackSuccessAction(reference),
+    onClose: handlePaystackCloseAction,
+}
     return (
         <div>
             <div className='row px-5 py-2'>
-                <div className='col-md-3 bg-white py-2'>
+                <div className='col-md-3 bg-white py-2 mt-2'>
                         <div className='d-flex justify-content-center'>
                             <img src={patient.photo} alt='patientPhoto' className='rounded-circle' width='100px' height='100px'  />
                         </div>
@@ -103,7 +133,7 @@ function PatientAppointment(props) {
                             <p className='text-primary h6'>{patient.guardianName}</p>
                         </div>
                 </div>
-                <div className='col-md-9 px-3'>
+                <div className='col-md-9 px-3 mt-2'>
                     <div className='bg-white border p-2'>
                         <div className='d-flex justify-content-between border-bottom py-1 mb-1'>
                             <p className='h6'>My Appointments</p>
@@ -129,30 +159,51 @@ function PatientAppointment(props) {
                                 )
                                 :
                                 (
-                                    <table className='table table-light table-striped table-responsive'>
-                                        <theaad>
+                                    <table className='mt-1 table table-light border border-primary table-striped table-responsive'>
+                                        <thead>
                                             <tr>
                                                 <th>Appointment No</th>
                                                 <th>Appointment Date</th>
+                                                <th>Shift</th>
+                                                <th>AppointmentTime</th>
                                                 <th>Priority</th>
                                                 <th>Specialist</th>
                                                 <th>Doctor</th>
-                                                <th>Status</th>
-                                                <th>Message</th>
-                                                <th>Action</th>
+                                                <th>Approval Status</th>
+                                                <th>YourMessage</th>
+                                                <th>Payment Status</th>
+                                                <th>FurtherAction</th>
                                             </tr>
-                                        </theaad>
+                                        </thead>
                                         <tbody>
                                             {appointmentTray.map((appointment, index)=>(
                                                 <tr key={index}>
                                                     <td>{appointment.appointmentNo}</td>
                                                     <td>{appointment.appointmentDate}</td>
+                                                    <td>{appointment.shift}</td>
+                                                    <td>{appointment.timeSlot}</td>
                                                     <td>{appointment.appointmentPriority}</td>
                                                     <td>{appointment.specialist}</td>
                                                     <td>{appointment.doctorName}</td>
-                                                    <td>{appointment.status ? <span className='bg-success h6 p-1'>Approved</span> : <span className='bg-warning h6 p-1'>Pending</span>}</td>
+                                                    <td>{appointment.approvalStatus ? <span className='bg-success rounded-pill h6 p-1'>Approved</span> : <span className='rounded-pill bg-warning h6 p-1'>Pending</span>}</td>
                                                     <td>{appointment.message}</td>
-                                                    <td><FontAwesomeIcon className='text-primary' icon='credit-card-front' /> <FontAwesomeIcon icon='bars' /> <FontAwesomeIcon icon='trash' /> </td>                                                    
+                                                    <td>{appointment.paymentStatus ? <span className='font-weight-bold'>PAID</span> : <span className='font-weight-bold'>YET TO PAY</span>}</td>
+                                                    <td>
+                                                        <div className='d-flex justify-content-between'>
+                                                        {
+                                                            appointment.paymentStatus
+                                                            ?
+                                                            ''
+                                                            :
+                                                            (<div onClick={()=>{getAppointmentNo(appointment._id)}}>
+                                                            <PaystackButton {...componentProps} className='btn'><FontAwesomeIcon className='text-primary cursor-pointer' icon='money-check' />
+                                                            </PaystackButton> 
+                                                            </div>)
+                                                        }
+                                                        <button className='btn'><FontAwesomeIcon className='cursor-pointer text-warning' icon='bars' /></button> 
+                                                        <button className='btn'><FontAwesomeIcon className='text-danger cursor-pointer' icon='trash' /></button>
+                                                        </div> 
+                                                    </td>                                                    
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -184,7 +235,7 @@ function PatientAppointment(props) {
                                 <div className='form-row'>
                                     <div className='form-group col-md-6'>
                                         <label>Date</label>
-                                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type='date' className='form-control' name='appointmentDate' />
+                                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type='date' className='form-control' name='appointmentDate' min={new Date().toISOString().split('T')[0]} />
                                     </div>
                                     <div className='form-group col-md-6'>
                                         <label>Specialist</label>
@@ -206,7 +257,7 @@ function PatientAppointment(props) {
                                             <option value="">Select</option>
                                             {/* All Doctors will be fetched from the server */}
                                             {staff.filter((each, i)=>(each.specialty === specialist)).map((doctor, i)=>(
-                                                <option key={i} value={doctor.fname + ' ' + doctor.lname}>{doctor.fname} {doctor.lname}</option>
+                                                <option key={i} value={'Dr.' + doctor.fname + ' ' + doctor.lname}>Dr. {doctor.fname} {doctor.lname}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -244,7 +295,7 @@ function PatientAppointment(props) {
                                 </div>
                                 <div typeof='submit' className='modal-footer'>
                                     <button className='btn btn-primary' disabled={isLoading}>{
-                                        isLoading ? (<span className='spinner-border spinner-border-sm text-primary'></span>) : (<span>Save</span>)
+                                        isLoading ? (<span className='spinner-border spinner-border-sm text-white'></span>) : (<span>Save</span>)
                                     }</button>
                                 </div>
                             </form>
