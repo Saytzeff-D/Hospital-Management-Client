@@ -171,3 +171,6 @@ NavLink {
       margin-left:200px;
   }
 }
+.cursor-pointer{
+  cursor: pointer;
+}

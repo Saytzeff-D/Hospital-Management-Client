@@ -26,9 +26,9 @@ export const setPatientDetails = (details)=>{
     payload: details
   }
 }
-export const getPatientAppointmentList = (url, healthId)=>{
+export const getPatientAppointmentList = (url, obj)=>{
   return (dispatch)=>{
-    return axios.post(`${url}patient/fetchAppointments`, healthId).then((res)=>{
+    return axios.post(`${url}patient/fetchAppointments`, obj).then((res)=>{
       dispatch({type: 'loggedInPatientAppointment', payload: res.data.appointments})
     }).catch((err)=>{
       dispatch({type: 'axiosError', payload: 'AxiosError'})

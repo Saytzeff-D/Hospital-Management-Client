@@ -20,6 +20,7 @@
     "react-bootstrap": "^2.4.0",
     "react-dom": "^18.1.0",
     "react-fontawesome": "^1.7.1",
+    "react-paystack": "^3.0.5",
     "react-redux": "^8.0.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",

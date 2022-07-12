@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPatientAppointmentList, getStaff } from '../../actions';
 import { useNavigate } from 'react-router';
+import { PaystackButton } from 'react-paystack';
 
 function PatientAppointment(props) {
     const navigate = useNavigate()
@@ -20,14 +21,13 @@ function PatientAppointment(props) {
     const [isLoading, setIsLoading] = useState(false)
     const reducerError = useSelector(state=>state.AppointmentReducer.awaitingResponse)
     useEffect(()=>{
-            dispatch(getPatientAppointmentList(url, patient.healthId))
+            dispatch(getPatientAppointmentList(url, {healthId: patient.healthId}))
     }, [dispatch])
     const formik = useFormik({
         initialValues : {
             appointmentDate: '',
             doctorName: '',
             appointmentPriority: '',
-            slot: '',
             specialist: '',
             shift: '',
             message: ''
@@ -36,8 +36,9 @@ function PatientAppointment(props) {
             setError('')
             setIsLoading(true)
             values.shift = shift
-            values.slot =slot
+            values.timeSlot = slot
             values.specialist = specialist
+            values.healthId = patient.healthId
             console.log(values)
             axios.post(`${url}patient/addAppointment`, values).then((res)=>{
                 if(res.data.status){
@@ -66,10 +67,25 @@ function PatientAppointment(props) {
             setSlot('24/7')
         }
     }
+
+    const config = {
+    reference: (new Date()).getTime().toString(),
+    email: patient.email,
+    amount: 50000,
+    publicKey: 'pk_test_bfe3a2fb617743847ecf6d9ea96e3153e2a1186d',
+  }
+  const handlePaystackSuccessAction = (reference) =>{}
+  const handlePaystackCloseAction = () => {}
+  const componentProps = {
+    ...config,
+    text: '',
+    onSuccess: (reference) => handlePaystackSuccessAction(reference),
+    onClose: handlePaystackCloseAction,
+}
     return (
         <div>
             <div className='row px-5 py-2'>
-                <div className='col-md-3 bg-white py-2'>
+                <div className='col-md-3 bg-white py-2 mt-2'>
                         <div className='d-flex justify-content-center'>
                             <img src={patient.photo} alt='patientPhoto' className='rounded-circle' width='100px' height='100px'  />
                         </div>
@@ -103,7 +119,7 @@ function PatientAppointment(props) {
                             <p className='text-primary h6'>{patient.guardianName}</p>
                         </div>
                 </div>
-                <div className='col-md-9 px-3'>
+                <div className='col-md-9 px-3 mt-2'>
                     <div className='bg-white border p-2'>
                         <div className='d-flex justify-content-between border-bottom py-1 mb-1'>
                             <p className='h6'>My Appointments</p>
@@ -134,12 +150,14 @@ function PatientAppointment(props) {
                                             <tr>
                                                 <th>Appointment No</th>
                                                 <th>Appointment Date</th>
+                                                <th>Shift</th>
+                                                <th>AppointmentTime</th>
                                                 <th>Priority</th>
                                                 <th>Specialist</th>
                                                 <th>Doctor</th>
                                                 <th>Status</th>
                                                 <th>Message</th>
-                                                <th>Action</th>
+                                                <th>FutherAction</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -147,12 +165,18 @@ function PatientAppointment(props) {
                                                 <tr key={index}>
                                                     <td>{appointment.appointmentNo}</td>
                                                     <td>{appointment.appointmentDate}</td>
+                                                    <td>{appointment.shift}</td>
+                                                    <td>{appointment.timeSlot}</td>
                                                     <td>{appointment.appointmentPriority}</td>
                                                     <td>{appointment.specialist}</td>
                                                     <td>{appointment.doctorName}</td>
                                                     <td>{appointment.status ? <span className='bg-success rounded-pill h6 p-1'>Approved</span> : <span className='rounded-pill bg-warning h6 p-1'>Pending</span>}</td>
                                                     <td>{appointment.message}</td>
-                                                    <td><FontAwesomeIcon className='text-primary' icon='money-check' /> <FontAwesomeIcon className='text-warning' icon='bars' /> <FontAwesomeIcon className='text-danger' icon='trash' /> </td>                                                    
+                                                    <td>
+                                                        <div className='d-flex justify-content-between'>
+                                                        <PaystackButton {...componentProps} className='btn'><FontAwesomeIcon className='text-primary cursor-pointer' icon='money-check' /></PaystackButton> <button className='btn'><FontAwesomeIcon className='cursor-pointer text-warning' icon='bars' /></button> <button className='btn'><FontAwesomeIcon className='text-danger cursor-pointer' icon='trash' /></button>
+                                                        </div> 
+                                                    </td>                                                    
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -184,7 +208,7 @@ function PatientAppointment(props) {
                                 <div className='form-row'>
                                     <div className='form-group col-md-6'>
                                         <label>Date</label>
-                                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type='date' className='form-control' name='appointmentDate' />
+                                        <input onChange={formik.handleChange} onBlur={formik.handleBlur} type='date' className='form-control' name='appointmentDate' min={new Date().toISOString().split('T')[0]} />
                                     </div>
                                     <div className='form-group col-md-6'>
                                         <label>Specialist</label>
@@ -244,7 +268,7 @@ function PatientAppointment(props) {
                                 </div>
                                 <div typeof='submit' className='modal-footer'>
                                     <button className='btn btn-primary' disabled={isLoading}>{
-                                        isLoading ? (<span className='spinner-border spinner-border-sm text-primary'></span>) : (<span>Save</span>)
+                                        isLoading ? (<span className='spinner-border spinner-border-sm text-white'></span>) : (<span>Save</span>)
                                     }</button>
                                 </div>
                             </form>
