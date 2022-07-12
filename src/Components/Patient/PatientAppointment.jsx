@@ -129,8 +129,8 @@ function PatientAppointment(props) {
                                 )
                                 :
                                 (
-                                    <table className='table table-light table-striped table-responsive'>
-                                        <theaad>
+                                    <table className='mt-1 table table-light border border-primary table-striped table-responsive'>
+                                        <thead>
                                             <tr>
                                                 <th>Appointment No</th>
                                                 <th>Appointment Date</th>
@@ -141,7 +141,7 @@ function PatientAppointment(props) {
                                                 <th>Message</th>
                                                 <th>Action</th>
                                             </tr>
-                                        </theaad>
+                                        </thead>
                                         <tbody>
                                             {appointmentTray.map((appointment, index)=>(
                                                 <tr key={index}>
@@ -150,9 +150,9 @@ function PatientAppointment(props) {
                                                     <td>{appointment.appointmentPriority}</td>
                                                     <td>{appointment.specialist}</td>
                                                     <td>{appointment.doctorName}</td>
-                                                    <td>{appointment.status ? <span className='bg-success h6 p-1'>Approved</span> : <span className='bg-warning h6 p-1'>Pending</span>}</td>
+                                                    <td>{appointment.status ? <span className='bg-success rounded-pill h6 p-1'>Approved</span> : <span className='rounded-pill bg-warning h6 p-1'>Pending</span>}</td>
                                                     <td>{appointment.message}</td>
-                                                    <td><FontAwesomeIcon className='text-primary' icon='credit-card-front' /> <FontAwesomeIcon icon='bars' /> <FontAwesomeIcon icon='trash' /> </td>                                                    
+                                                    <td><FontAwesomeIcon className='text-primary' icon='money-check' /> <FontAwesomeIcon className='text-warning' icon='bars' /> <FontAwesomeIcon className='text-danger' icon='trash' /> </td>                                                    
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -206,7 +206,7 @@ function PatientAppointment(props) {
                                             <option value="">Select</option>
                                             {/* All Doctors will be fetched from the server */}
                                             {staff.filter((each, i)=>(each.specialty === specialist)).map((doctor, i)=>(
-                                                <option key={i} value={doctor.fname + ' ' + doctor.lname}>{doctor.fname} {doctor.lname}</option>
+                                                <option key={i} value={'Dr.' + doctor.fname + ' ' + doctor.lname}>Dr. {doctor.fname} {doctor.lname}</option>
                                             ))}
                                         </select>
                                     </div>

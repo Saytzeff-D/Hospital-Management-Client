@@ -28,8 +28,8 @@ export const setPatientDetails = (details)=>{
 }
 export const getPatientAppointmentList = (url, healthId)=>{
   return (dispatch)=>{
-    return axios.post(`${url}patient/fetchAppointment`, healthId).then((res)=>{
-      dispatch({type: 'loggedInPatientAppointment', payload: res.data})
+    return axios.post(`${url}patient/fetchAppointments`, healthId).then((res)=>{
+      dispatch({type: 'loggedInPatientAppointment', payload: res.data.appointments})
     }).catch((err)=>{
       dispatch({type: 'axiosError', payload: 'AxiosError'})
     })
