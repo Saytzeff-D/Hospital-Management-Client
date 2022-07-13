@@ -23,6 +23,7 @@ import PatientPharmacy from './Components/Patient/PatientPharmacy';
 import PatientAmbulance from './Components/Patient/PatientAmbulance';
 import GeneratePharmacyBill from './Components/Staff/GeneratePharmacyBill';
 import RegisterStaff from './Components/Staff/RegisterStaff';
+import AppointmentList from './Components/Staff/Appointmentlist';
 import MedStock from './Components/Staff/MedStock';
 library.add(fas, faTwitter, faFontAwesome)
 
