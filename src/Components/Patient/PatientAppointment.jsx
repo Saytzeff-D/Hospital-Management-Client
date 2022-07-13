@@ -20,9 +20,10 @@ function PatientAppointment(props) {
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const reducerError = useSelector(state=>state.AppointmentReducer.awaitingResponse)
+    const [payloading, setPayloading] = useState(false)
     useEffect(()=>{
             dispatch(getPatientAppointmentList(url, {healthId: patient.healthId}))
-    }, [dispatch])
+    }, [dispatch, url, patient.healthId])
     const formik = useFormik({
         initialValues : {
             appointmentDate: '',
@@ -70,8 +71,10 @@ function PatientAppointment(props) {
     const details = {payment: {paymentRef: Math.ceil(Math.random()*1000000000), paymentType: 'Appointment', amount: 500, healthId: patient.healthId, created: new Date().toUTCString}, appointment: {appointmentNo: ''}}
 
     const handlePaystackSuccessAction = (ref)=>{
+        setPayloading(true)
         axios.post(`${url}patient/payAppointment`, details).then((res)=>{
-            navigate(0)
+            dispatch(getPatientAppointmentList(url, {healthId: patient.healthId}))
+            setPayloading(false)
         }).catch((err)=>{
             alert('Your Payment was received but due to network error, we could not save your payment records. Please, do well to contact our customer care')
         })
@@ -141,9 +144,11 @@ function PatientAppointment(props) {
                         </div>
                         <input className='form-control col-lg-4 col-md-6 col-sm-8' placeholder='Search...'  />
                         {
-                            reducerError === 'Waiting'
+                            reducerError === 'Waiting' || payloading
                             ?
-                            (<span className='spinner-border-sm text-danger'></span>)
+                            (<div className='mt-2'>
+                                <p className='spinner-border text-danger'></p>
+                            </div>)
                             :
                             (
                                 reducerError === 'AxiosError' 
@@ -185,7 +190,7 @@ function PatientAppointment(props) {
                                                     <td>{appointment.appointmentPriority}</td>
                                                     <td>{appointment.specialist}</td>
                                                     <td>{appointment.doctorName}</td>
-                                                    <td>{appointment.approvalStatus ? <span className='bg-success rounded-pill h6 p-1'>Approved</span> : <span className='rounded-pill bg-warning h6 p-1'>Pending</span>}</td>
+                                                    <td>{appointment.approvalStatus ? <span className='bg-success rounded-pill h6 p-2 text-white font-weight-bold'>Approved</span> : <span className='rounded-pill bg-warning h6 p-2 font-weight-bold'>Pending</span>}</td>
                                                     <td>{appointment.message}</td>
                                                     <td>{appointment.paymentStatus ? <span className='font-weight-bold'>PAID</span> : <span className='font-weight-bold'>YET TO PAY</span>}</td>
                                                     <td>

@@ -24,7 +24,7 @@ const AppointmentList=()=>{
             }
         })
 
-    },[actionType])
+    },[actionType, url])
 
     function filterAppointment(allAppointments){
         let oldAppointments=[]
@@ -42,7 +42,7 @@ const AppointmentList=()=>{
         setNewAppointments(newAppointments)
     }
     const checkAppointment=()=>{
-        if(actionType.action=='approve'){
+        if(actionType.action ==='approve'){
             let updateAppointment=actionType.data
             updateAppointment.approvalStatus=true
             axios.post(`${url}staff/checkAppointment`, updateAppointment).then(res=>{
@@ -53,7 +53,7 @@ const AppointmentList=()=>{
         }).catch(err=>console.log(err))
 
         }else{
-            alert('successfully declined')
+            alert('Successfully declined')
         }
         
     }
