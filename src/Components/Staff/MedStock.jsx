@@ -50,7 +50,7 @@ const MedStock = (props)=>{
                             <div className='modal-body'>
                                 <form className='p-3' onSubmit={formik.handleSubmit}>
                                     {
-                                        error === ''
+                                        error !== ''
                                         &&
                                         <div className='alert alert-danger'>
                                             <FontAwesomeIcon icon='triangle-exclamation'/> <b>Error</b> {error}
