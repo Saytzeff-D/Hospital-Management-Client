@@ -8,9 +8,13 @@ import ApprovedAppointments from "./ApprovedAppointments";
 
 const AppointmentList=()=>{
     const url=useSelector(state=>state.UrlReducer.url)
+    const staffDetails=useSelector(state=>state.StaffReducer.staffInfo)
     const [newAppointments,setNewAppointments]=useState([])
     const [oldAppointments,setOldAppointments]=useState([])
     const [actionType,setActionType]=useState({action:'',data:{}})
+    console.log(9)
+    console.log([staffDetails])
+    console.log(10)
 
 
 
@@ -30,9 +34,10 @@ const AppointmentList=()=>{
         let oldAppointments=[]
         let newAppointments=[]
         allAppointments.forEach( (each,index)=>{
-            if(each.approvalStatus){
+            let doctorName='Dr.' + staffDetails.fname + ' ' + staffDetails.lname
+            if(each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin') ){
                 oldAppointments.push(each)
-            }else{
+            }else if(!each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin')) {
                 newAppointments.push(each)
             }
         })
