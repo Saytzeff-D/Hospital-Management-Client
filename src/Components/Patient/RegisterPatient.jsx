@@ -72,10 +72,8 @@ function RegisterPatient(props) {
             }
         }
     })
-    const goToLogin = ()=>{
-        
-        navigate('/views/patientLogin')
-       
+    const goToLogin = ()=>{        
+        navigate('/views/patientLogin')       
     }
     const clickFileInput = ()=>{
         document.getElementById('photo').click()
@@ -91,7 +89,7 @@ function RegisterPatient(props) {
     }
     return (
         <div>
-            <form className='text-white p-4' style={{backgroundColor: '#000000', opacity: '0.8'}} onSubmit={formik.handleSubmit}>
+            <form className='text-white p-5' style={{backgroundColor: '#000000', opacity: '0.8'}} onSubmit={formik.handleSubmit}>
                     <div className='bg-warning text-white h5 text-center p-3'>
                         HOSPITAL MANAGEMENT SOFTWARE
                     </div>
