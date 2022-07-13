@@ -22,10 +22,6 @@ function StaffDashboard() {
       setAppointments(res.data.appointments)
       fetched('fetched')
     })
-    getRoles()
-  },[fetching])
-
-  const getRoles=()=>{
     let count={Admin:0,Pharmacist:0,Nurse:0,Doctor:0}
     allStaffs.forEach((staff,index)=>{
       let role=staff.role
@@ -34,7 +30,11 @@ function StaffDashboard() {
       }  
     })
     setCountRole(count)
-  }
+  },[fetching, url, allStaffs])
+
+  // const getRoles=()=>{
+    
+  // }
   
   console.log(countRole)
   
