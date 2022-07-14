@@ -1,6 +1,7 @@
 const initState = {
     patientPharmBills: [],
-    pharmBillRecords: []
+    pharmBillRecords: [],
+    medicineTray: []
 }
 
 const PharmacyReducer = (state=initState, action)=>{
