@@ -11,7 +11,6 @@ import ViewProfile from './Viewprofile';
 const  PatientList=()=>{
     let dispatch=useDispatch()
     let url=useSelector(state=>state.UrlReducer.url)
-    let allpat=useSelector(state=>state.StaffReducer.patTray)
     let [allPat,setAllPat]=useState([])
     let [filteredList, setFilteredList]=useState([])
     let [filterByName,setFilterByName]=useState('')
@@ -22,22 +21,18 @@ const  PatientList=()=>{
     const [presentPage,setPresentPage]=useState(0)
     useEffect(()=>{
         console.log('refetching')
-        axios.get(`${url}patient/allpat`).then(res=>{
+        axios.get(`${url}patient/allPatient`).then(res=>{
                 console.log(res)
                 sessionStorage.patTray=JSON.stringify(res.data)
-            
                 setAllPat(res.data)
                 setFilteredList(res.data)
-                setTablePage()
-
-                
-    
+                setTablePage()              
         }).catch(err=>{
             console.log(err)
             console.log('cannot connect')
         })
 
-    },[allpat, url])
+    },[url])
 useEffect(()=>{
     setTablePage()
 },[presentPage])
@@ -185,20 +180,8 @@ const filterWithParameter=(params,ID)=>{
                         <input value={filterByName}  onChange={(e)=>setFilterByName(e.target.value)} className='form-control m-1' placeholder='Search Patient by Name' />
                     </div>
              </div>
-        </div>
-    </div>
-       
-
-
-
-
-
-
-        
-        <section>
-               
-            <div className='tableDiv row my-5 w-100 text-center'>
-                <table className='table table-light table-stripped table-bordered border-primary my-4'>
+        <section>               
+                <table className='table table-light table-striped table-bordered border-primary my-4'>
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -210,12 +193,9 @@ const filterWithParameter=(params,ID)=>{
                             <th scope="col">DOB</th>
                             <th scope="col">Genotype</th>
                             <th scope="col">Actions</th>
-
                         </tr>
                     </thead>
-
                     <tbody>
-
                        { filteredList.map( (each,i)=>(
                         <tr key={i}>
                             <td>{i+1+(displayAtOnce*presentPage)}</td>
@@ -234,23 +214,12 @@ const filterWithParameter=(params,ID)=>{
                              onClick={()=>setImage(each.photo)} /></div>          
                             </div>          
                                 </td>
-
-                            {/* <td></td> */}
-
                         </tr> 
 
-                       ))
-                       
-                       
-                        
+                       ))                      
                         }
-
-
                     </tbody>
-
-
                 </table>
-            </div>
 
             <div  className='row mb-5'>
                 <div className='ml-auto mx-5 '> 
@@ -264,15 +233,14 @@ const filterWithParameter=(params,ID)=>{
                     <i className='fa fa-angle-right text-center' style={{marginLeft:'35px',border:'1px solid black', width:'20px',borderRadius:'4px'}} onClick={fastForward}></i>
 
                     <i className='fa fa-angle-double-right ml-2 text-center' style={{border:'1px solid black', width:'20px',borderRadius:'4px'}}  onClick={fastForwardEnd} ></i>
-                    <br/> <span style={{marginTop:'15px',float:'right'}} className='text-danger'>{Math.ceil((allPat.length)/displayAtOnce)} pages</span>
-                   
-
+                    <br/> <span style={{marginTop:'15px',float:'right'}} className='text-danger'>{Math.ceil((allPat.length)/displayAtOnce)} pages</span>                  
                 </div>
-                
             </div>
+        </section>
+        </div>
+    </div>        
 
-
-
+{/* Modals */}
             <div className='modal fade' id="addStaff" data-backdrop="static">
                         <div className='modal-dialog modal-dialog-centered'>
                             <div className='modal-content'>
@@ -320,12 +288,7 @@ const filterWithParameter=(params,ID)=>{
                                 </div>
                             </div>
                         </div>
-                    </div>   
-
-
-
-
-        </section>        
+                    </div>           
         </>
 
 
