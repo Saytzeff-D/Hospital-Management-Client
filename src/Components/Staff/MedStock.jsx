@@ -39,7 +39,7 @@ const MedStock = (props)=>{
                             <input className='form-control' placeholder='Search by Medicine Name' />
                         </div>
                         {
-                            medArray.length == 0
+                            medArray.length === 0
                             ?
                             (
                                 <div>
