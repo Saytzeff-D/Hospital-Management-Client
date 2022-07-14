@@ -50,19 +50,28 @@ function AllStaff(props) {
                     </div>
                 </div>
                 <hr />
-                <div className='row mt-2'>
+                <div className='row mt-2 card-deck'>
                     {
                         allStaff.map((staff, index)=>(
                             <div key={index} className='col-md-3 my-2'>
-                                <div className='border shadow-lg d-flex justify-content-between'>
-                                    <div className='col-md-5 px-0'>
-                                        <img alt='staffPic' src={staff.photo} className='w-100 h-100' />
+                                <div className='flip-container'>
+                                    <div className='flipper'>
+                                        <div className='frontview'>
+                                            <div className='border shadow-lg d-flex justify-content-between'>
+                                                <div className='col-md-5 px-0'>
+                                                    <img alt='staffPic' src={staff.photo} className='w-100 h-100' />
+                                                </div>
+                                                <div className='col-md-7'>
+                                                    <p className='font-weight-bold'>{staff.fname} {staff.lname}</p>
+                                                    <p style={{fontSize: '12px'}}>{staff.phone}</p>
+                                                    <p style={{fontSize: '12px'}}>{staff.address}</p>
+                                                    <div className='h6 rounded-lg bg-primary text-center my-1 text-white text-capitalize'>{staff.role}</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className='col-md-7'>
-                                        <p className='font-weight-bold'>{staff.fname} {staff.lname}</p>
-                                        <p style={{fontSize: '12px'}}>{staff.phone}</p>
-                                        <p style={{fontSize: '12px'}}>{staff.address}</p>
-                                        <div className='h6 rounded-lg bg-primary text-center my-1 text-white text-capitalize'>{staff.role}</div>
+                                    <div className='backView bg-danger p-5'>
+                                        <button className='btn btn-primary'>Edit Staff</button>
                                     </div>
                                 </div>
                             </div>
