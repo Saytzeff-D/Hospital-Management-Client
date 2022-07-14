@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 const MedStock = (props)=>{
     const [error, setError] = useState('')
     const url = useSelector(state=>state.UrlReducer.url)
+    const medArray = useSelector(state=>state.PharmacyReducer.medicineTray)
     const formik = useFormik({
         initialValues: {
             medicineName: '',
@@ -17,6 +18,7 @@ const MedStock = (props)=>{
         },
         onSubmit: (values)=>{
             console.log(values)
+            setError('')
             axios.post(`${url}staff/addMedicine`, values).then((res)=>{
                 console.log(res.data.status)
             }).catch((err)=>{
@@ -36,6 +38,44 @@ const MedStock = (props)=>{
                         <div className='col-lg-4 col-md-6 col-sm-8 my-2'>
                             <input className='form-control' placeholder='Search by Medicine Name' />
                         </div>
+                        {
+                            medArray.length == 0
+                            ?
+                            (
+                                <div>
+                                    <p className='font-weight-bold py-2'>Stocks are empty</p>
+                                </div>
+                            )
+                            :
+                            (
+                                <table className='table table-light table-striped table-responsive'>
+                                    <thead>
+                                        <tr>
+                                            <th>Medicine Name</th>
+                                            <th>Medicine Company</th>
+                                            <th>Medicine Category</th>
+                                            <th>Unit Added to Stock</th>
+                                            <th>Available Qty</th>
+                                            <th>Price Per Unit (#)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            medArray.map((item, index)=>(
+                                                <tr>
+                                                    <td> {item.medicineName} </td>
+                                                    <td> {item.medicineCompany} </td>
+                                                    <td> {item.medicineCategory} </td>
+                                                    <td> {item.unit} </td>
+                                                    <td> {item.availableQty} </td>
+                                                    <td> {item.pricePerUnit} </td>
+                                                </tr>
+                                            ))                                            
+                                        }
+                                    </tbody>
+                                </table>
+                            )
+                        }
                     </div>
                 </div>
 
@@ -45,7 +85,7 @@ const MedStock = (props)=>{
                         <div className='modal-content'>
                             <div className='modal-header'>
                                 <p className='h6'>Add Medicine Details</p>
-                                <button className='close text-primary' data-dismiss='modal'>&times;</button>
+                                <button className='close text-primary' data-dismiss='modal' onClick={()=>{setError('')}}>&times;</button>
                             </div>
                             <div className='modal-body'>
                                 <form className='p-3' onSubmit={formik.handleSubmit}>
@@ -53,8 +93,7 @@ const MedStock = (props)=>{
                                         error !== ''
                                         &&
                                         <div className='alert alert-danger'>
-                                            <FontAwesomeIcon icon='triangle-exclamation'/> <b>Error</b> {error}
-                                            <button className='close' data-dismiss='alert'>&times;</button>
+                                            <FontAwesomeIcon icon='triangle-exclamation'/> <b>{error}</b>
                                         </div>
                                     }
                                     <div className='form-row'>
@@ -64,7 +103,18 @@ const MedStock = (props)=>{
                                     </div>
                                     <div className='form-row'>
                                         <div className='form-group col'>
-                                            <input placeholder='Medicine Category' name='medicineCategory' className='form-control' onChange={formik.handleChange} />
+                                            <select defaultValue='' name='medicineCategory' className='form-control' onChange={formik.handleChange}>  
+                                                <option value='' >Medicine Category</option>                                             
+                                                <option value='Syrup' >Syrup </option>
+                                                <option value='Ointment'>Ointment</option>
+                                                <option value='Injection'>Injection</option>
+                                                <option value='Capsule'>Capsule</option>
+                                                <option value='Tablets'>Tablets</option>
+                                                <option value='Inhalers'>Inhalers</option>
+                                                <option value='Surgical'>Surgical</option>
+                                                <option value='Drops'>Drops</option>
+                                                <option value='Diaper'>Diaper</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div className='form-row'>
@@ -80,7 +130,7 @@ const MedStock = (props)=>{
                                             <input type='number' placeholder='Price Per Units' name='pricePerUnit' className='form-control' onChange={formik.handleChange} />
                                         </div>
                                     </div>
-                                    <button className='btn btn-primary btn-block font-weight-bold'>Save Details</button>
+                                    <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Details</button>
                                 </form>
                             </div>
                         </div>
