@@ -112,7 +112,7 @@ function StaffDashboard() {
   <div className="w3-row-padding w3-margin-bottom">
     <div className="w3-quarter" id='box5' >
       <div className="w3-container shadow-lg rounded-lg text-white bg-success w3-padding-16">
-        <div className="w3-left"><i className="fa fa-calendar w3-xxlarge"></i></div>
+        <div className="w3-left"><FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>
             {
@@ -192,7 +192,7 @@ function StaffDashboard() {
   <div className="w3-row-padding w3-margin-bottom">
     <div className="w3-quarter" id='box5' >
       <div className="w3-container shadow-lg rounded-lg text-white bg-primary w3-padding-16">
-        <div className="w3-left"><i className="fa fa-sack w3-xxlarge"></i></div>
+        <div className="w3-left"><FontAwesomeIcon className='w3-xxlarge' icon='sack-dollar' /></div>
         <div className="w3-right">
           <h3>
             {
@@ -200,7 +200,7 @@ function StaffDashboard() {
               ?
               <span className='spinner-border text-white'></span>
               :
-              <span>$10,000</span>
+              <span><FontAwesomeIcon icon='naira-sign' />10,000</span>
             }
             </h3>
         </div>
@@ -216,9 +216,9 @@ function StaffDashboard() {
             {
               loading
               ?
-              <span className='spinner-border spinner-border-sm text-white'></span>
+              <span className='spinner-border text-white'></span>
               :
-              <span>$6,000</span>
+              <span><FontAwesomeIcon icon='naira-sign' />6,000</span>
             }
           </h3>
         </div>
@@ -236,7 +236,7 @@ function StaffDashboard() {
               ?
               <span className='spinner-border text-white'></span>
               :
-              <span>$4,000</span>
+              <span><FontAwesomeIcon icon='naira-sign' />4,000</span>
             }
           </h3>
         </div>

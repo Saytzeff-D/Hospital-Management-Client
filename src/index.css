@@ -177,3 +177,27 @@ NavLink {
 #box1:hover{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
 }
+.flip-container{
+  perspective: 1000px;
+}
+.flip-container:hover .flipper, .flipper-container.hover .flipper{
+  transform: rotateY(180deg);
+}
+.flipper{
+  transition: .85s;
+	transform-style: preserve-3d;
+}
+.frontView{
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+.backView{
+  background-color: black;
+  transform: rotateY(180deg);
+}
+.frontView, .backView {
+  position: absolute;
+  left: 0;
+  top: 0;
+  backface-visibility: hidden;
+}

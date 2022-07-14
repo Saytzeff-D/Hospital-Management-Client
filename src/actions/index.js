@@ -20,6 +20,13 @@ export const getStaff = (url)=>{
     })
   }
 }
+export const getAllPatient = (url)=>{
+  return (dispatch)=>{
+    return axios.get(`${url}patient/allPatient`).then((res)=>{
+      dispatch({type: 'getAllPatients', payload: res.data})
+    })
+  }
+}
 export const setPatientDetails = (details)=>{
   return{
     type: 'patientDetails',
