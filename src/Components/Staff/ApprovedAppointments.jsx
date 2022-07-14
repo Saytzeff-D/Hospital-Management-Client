@@ -1,20 +1,16 @@
+import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const ApprovedAppointments=(props)=>{
     let {approvedAppointment}=props
-    
+    let url = useSelector(state=>state.UrlReducer.url)    
     let [filterById,setFilterById]=useState('')
     let [filterByName,setFilterByName]=useState('')
     let [filteredList, setFilteredList]=useState([])
-
-
-
-   
-
-
-
+    let [viewPat,setViewPat]=useState({})
     useEffect(()=>{
        setFilteredList(approvedAppointment)
 
@@ -51,6 +47,15 @@ const filterWithParameter=(params,ID)=>{
 
     }
 
+    }
+    const fetchPatientProfile=(healthId)=>{
+        let patientId={healthId}
+        axios.post(`${url}staff/getPat`,patientId).then(res=>{
+            console.log(res.data)
+            setViewPat(res.data.patDetails)            
+        }).then(err=>{
+            console.log(err)            
+        })
     }
 
 
@@ -106,7 +111,7 @@ const filterWithParameter=(params,ID)=>{
                       <td>{each.message}</td>
                       <td>{each.paymentStatus?<span>Paid <i className="fa fa-check text-success mx-1"></i></span>:<span>Pending</span>}</td>
                       <td style={{cursor:'pointer'}} >
-                          <i data-target='#viewProfile' data-toggle='modal' className='fa fa-photo text-warning fa-lg'></i>
+                          <i onClick={()=>fetchPatientProfile(each.healthId)} data-target='#viewProfile' data-toggle='modal' className='fa fa-photo text-warning fa-lg'></i>
                       </td>                      
                   </tr>   
 
@@ -117,19 +122,37 @@ const filterWithParameter=(params,ID)=>{
   </div>
 
 
-  <div className='modal fade big-modal' id="checkApp" data-backdrop="static">
+  <div className='modal fade big-modal' id="viewProfile" data-backdrop="static">
                      <div className='modal-dialog modal-dialog-centered'>
                          <div className='modal-content'>
                               <div className='modal-header'>
-                                  <h4 className='modal-title px-2'>APPOINTMENT ACTION</h4>
+                                  <h4 className='modal-title px-2'>Patient Profile</h4>
                                     <button type="button" className="close text-danger" data-dismiss="modal" >&times;</button>
                                 </div>
                                 
                                 <div className='modal-body border-zero'>
-                                    PROFILE
+                                <div className='col-md-12 my-2'>
+                                <div className='border shadow-lg d-flex justify-content-between'>
+                                    <div className='col-md-5 px-0'>
+                                        <img alt='staffPic' src={viewPat.photo} className='w-100 h-100' />
+                                    </div>
+                                    <div className='col-md-7'>
+                                        <p className=''>{viewPat.fullName} ({viewPat.gender}) </p>
+                                        <p className=''>{viewPat.weight}kg ,  {viewPat.height} cm</p>
+                                        <p style={{fontSize: '12px'}}>{viewPat.phone} {viewPat.email}</p>
+                                        <p style={{fontSize: '12px'}}>DOB: {viewPat.dob}</p>
+                                        <p className="text-capitalize" style={{fontSize: '12px'}}>Blood: Type {viewPat.genotype}</p>
+                                        <p style={{fontSize: '12px'}}>Address: {viewPat.address}</p>
+                                        <div className='h6 rounded-lg bg-primary text-center my-1 text-white text-capitalize'>{viewPat.healthId}</div>
+                                    </div>
+                                </div>
+                            </div>
+
                                 </div>
                                 <div className="modal-footer container">
-                                    <button  className=' btn btn-danger  m-1' data-dismiss='modal'>No, Go Back</button>
+                                    <button  className=' btn btn-danger  m-1' data-dismiss='modal'>
+                                        Close
+                                        </button>
                                 </div>
                             </div>
                         </div>
