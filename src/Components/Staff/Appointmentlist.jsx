@@ -12,9 +12,13 @@ const AppointmentList=()=>{
     const [newAppointments,setNewAppointments]=useState([])
     const [oldAppointments,setOldAppointments]=useState([])
     const [actionType,setActionType]=useState({action:'',data:{}})
-    console.log(9)
-    console.log([staffDetails])
-    console.log(10)
+    let [filterById,setFilterById]=useState('')
+    let [filterByName,setFilterByName]=useState('')
+    let [filteredList, setFilteredList]=useState([])
+
+
+
+   
 
 
 
@@ -22,13 +26,47 @@ const AppointmentList=()=>{
         axios.get(`${url}staff/allAppointments`).then(res=>{
             if(res.data.status){                            
                 filterAppointment(res.data.appointments)
-                console.log(res.data.appointments)
             }else{
                 console.log(res.data.message)
             }
         })
 
     },[actionType, url])
+
+    useEffect(()=>{
+        filterWithParameter(filterByName)
+    },[filterByName])
+    useEffect(()=>{
+    filterWithParameter(filterById,'id')
+    },[filterById])
+    
+const filterWithParameter=(params,ID)=>{     
+
+    if(params!==''){
+        let filteredList=[]
+        let allApp=newAppointments
+        if(!ID){        
+        allApp.forEach( (each,i)=>{
+            if((each.doctorName.toLowerCase()).includes(params.toLowerCase())){
+                filteredList.push(each)
+            }
+        })
+    }else{allApp.forEach((each,i)=>{
+            if((each.appointmentNo.toLowerCase()).includes(params.toLowerCase())){
+                filteredList.push(each)
+            }
+        })
+    }
+         setFilteredList(filteredList)
+
+    }else{
+        setFilteredList(newAppointments)
+
+    }
+
+    }
+
+
 
     function filterAppointment(allAppointments){
         let oldAppointments=[]
@@ -41,10 +79,9 @@ const AppointmentList=()=>{
                 newAppointments.push(each)
             }
         })
-        console.log(allAppointments)
-        console.log(newAppointments)
         setOldAppointments(oldAppointments)
         setNewAppointments(newAppointments)
+        setFilteredList(newAppointments)
     }
     const checkAppointment=()=>{
         if(actionType.action ==='approve'){
@@ -66,33 +103,10 @@ const AppointmentList=()=>{
 
     return(
 
-        <div>
-            
-            <div className='py-3'>
-                <div className='bg-white border p-2'>
-                    <div className='d-flex justify-content-between border-bottom'>
-                        <div>
-                            <p className='h6'>APPOINTMENTS LIST</p>
-                            </div>
-                    </div>
+            <section className="" style={{paddingTop:'5px'}}>          
 
-            <div className='row w-100'>
-                <div className='col-md-6'>
-                    <input className='form-control m-1' placeholder='Search Patient by ID' />
-                </div>
-                <div className='col-md-6'>
-                    <input  className='form-control m-1' placeholder='Search Patient by Name' />
-                    </div>
-                </div>
-            </div>
-            </div>
-            
-            <section>
-           
-
-            <div className="container">
-
-  <ul className="nav nav-pills d-flex justify-content-around mt-4" role="tablist">
+            <div className="container mt-5">
+  <ul className="nav nav-pills d-flex justify-content-around mt-5" role="tablist">
     <li className="nav-item">
       <a className="nav-link active h4" data-toggle="pill" href="#home">Pending Appointments</a>
     </li>
@@ -101,9 +115,31 @@ const AppointmentList=()=>{
     </li>
    
   </ul>
+     
+             
 
   <div className="tab-content mt-4">
     <div id="home" className="w-100 tab-pane active"><br/>
+
+    <div className='py-3'>
+                <div className='bg-white border p-2'>
+                    <div className='d-flex justify-content-between border-bottom'>
+                        <div>
+                            <p className='h6'>APPOINTMENTS LIST</p>
+                            </div>
+                    </div>
+
+            <div className='row w-100 text-center'>
+                <div className='col-sm-6'>
+                    <input value={filterById}  onChange={(e)=>setFilterById(e.target.value)} className='form-control m-1' placeholder='Search Patient by ID' />
+                </div>
+                <div className='col-sm-6'>
+                    <input value={filterByName}  onChange={(e)=>setFilterByName(e.target.value)}  className='form-control m-1' placeholder='Search Patient by Name' />
+                    </div>
+                </div>
+            </div>
+     </div>
+
         <table className="table table-bordered table-stripped  border-primary text-center  ">
             <thead className="table-dark text-white">
                 <tr>
@@ -119,7 +155,7 @@ const AppointmentList=()=>{
                 </tr>
             </thead>
             <tbody>
-                {newAppointments.map((each,index)=>(
+                {filteredList.map((each,index)=>(
                     <tr key={index}>
                         <td>{index+1}</td>
                         <td>{each.appointmentNo}</td>
@@ -176,10 +212,6 @@ const AppointmentList=()=>{
 
                 
             </section>
-
-        </div>
-
-
     )
 
 }
