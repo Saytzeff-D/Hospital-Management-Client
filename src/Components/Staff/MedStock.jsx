@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 
 const MedStock = (props)=>{
     const [error, setError] = useState('')
+    const [success,setSucces]=useState('')
     const url = useSelector(state=>state.UrlReducer.url)
     const medArray = useSelector(state=>state.PharmacyReducer.medicineTray)
     const formik = useFormik({
@@ -20,7 +21,9 @@ const MedStock = (props)=>{
             console.log(values)
             setError('')
             axios.post(`${url}staff/addMedicine`, values).then((res)=>{
-                console.log(res.data.status)
+                if(res.data.status){
+                    setSucces(res.data.message)
+                }
             }).catch((err)=>{
                 setError('An Error has occured')
             })
@@ -90,6 +93,14 @@ const MedStock = (props)=>{
                             <div className='modal-body'>
                                 <form className='p-3' onSubmit={formik.handleSubmit}>
                                     {
+                                        success !== ''
+                                        &&
+                                        <div className='alert alert-success'>
+                                            <b>{success}</b>
+                                        </div>
+                                    }
+
+{
                                         error !== ''
                                         &&
                                         <div className='alert alert-danger'>
