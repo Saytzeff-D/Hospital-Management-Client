@@ -45,7 +45,7 @@ export const getPatientAppointmentList = (url, obj)=>{
 export const allMedicines = (url)=>{
   return (dispatch)=>{
     return axios.get(`${url}staff/allMedicines`).then((res)=>{
-      dispatch({type: 'allMedicines', payload: res.data})
+      dispatch({type: 'allMedicines', payload: res.data.drugs})
     }).catch((err)=>{
       dispatch({type: 'medicineError', payload: 'MedError'})
     })

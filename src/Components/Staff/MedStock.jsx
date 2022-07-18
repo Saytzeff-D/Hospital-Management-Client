@@ -56,7 +56,7 @@ const MedStock = (props)=>{
                             <input className='form-control' placeholder='Search by Medicine Name' />
                         </div>
                         {
-                            reducerError === ''
+                            reducerError === 'Loading'
                             ?
                             (<div className='mt-2'>
                                 <p className='spinner-border text-danger'></p>
@@ -84,7 +84,8 @@ const MedStock = (props)=>{
                                                 <th>Medicine Category</th>
                                                 <th>Unit Added to Stock</th>
                                                 <th>Available Qty</th>
-                                                <th>Price Per Unit (#)</th>
+                                                <th>Price Per Unit (<FontAwesomeIcon icon='naira-sign' />)</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -97,6 +98,12 @@ const MedStock = (props)=>{
                                                         <td> {item.unit} </td>
                                                         <td> {item.availableQty} </td>
                                                         <td> {item.pricePerUnit} </td>
+                                                        <td> 
+                                                            <div className='d-flex justify-content-between'>
+                                                                <button className='btn btn-success m-1'>Update</button>
+                                                                <button className='btn btn-danger m-1'>Delete</button>
+                                                            </div> 
+                                                        </td>
                                                     </tr>
                                                 ))                                            
                                             }
