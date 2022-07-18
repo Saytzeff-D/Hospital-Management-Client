@@ -12,6 +12,7 @@ const MedStock = (props)=>{
     const [success,setSucces]=useState('')
     const url = useSelector(state=>state.UrlReducer.url)
     const medArray = useSelector(state=>state.PharmacyReducer.medicineTray)
+    console.log(medArray)
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const formik = useFormik({
         initialValues: {
