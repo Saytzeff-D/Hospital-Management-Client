@@ -17,7 +17,7 @@ const MedStock = (props)=>{
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const [disableBtn, setDisableBtn] = useState(false)
     const [medId, setMedId] = useState('')
-    const [edittedMed, setEddittedMed] = useState({medicineName: '', medicineCategory: '', medicineCompany: '', unit: '', pricePerUnit: ''})
+    const [edittedMed, setEddittedMed] = useState({})
     const formik = useFormik({
         initialValues: {
             medicineName: '',
@@ -56,8 +56,8 @@ const MedStock = (props)=>{
     useEffect(()=>{
         dispatch(allMedicines(url))
     }, [dispatch])
-    const updateMed = (index)=>{
-        setEddittedMed({...edittedMed, medicineName: medArray[index].medicineName, medicineCategory: medArray[index].medicineCategory, medicineCompany: medArray[index].medicineCompany, unit: medArray[index].unit, pricePerUnit: medArray[index].pricePerUnit}) 
+    const updateMed = (item)=>{
+        setEddittedMed(item)
     }
     const handleEditChange = (e)=>{
         setEddittedMed({...edittedMed, [e.target.name]: e.target.value})
@@ -69,7 +69,7 @@ const MedStock = (props)=>{
         axios.post(`${url}staff/updateMed`, edittedMed).then((res)=>{
             setDisableBtn(false)
             setSucces(res.data.message)
-            setEddittedMed({medicineName: '', medicineCategory: '', medicineCompany: '', unit: '', pricePerUnit: ''})
+            setEddittedMed({})
         }).catch((err)=>{
             setDisableBtn(false)
             setError('An Error has occured, pls try again.')
@@ -133,7 +133,7 @@ const MedStock = (props)=>{
                                                         <td> 
                                                             <div className='d-flex justify-content-between'>
                                                                 {/* <button id='openEditModal' data-target='#editMedModal' data-toggle='modal' >Open Edit Modal</button> */}
-                                                                <button data-target='#editMedModal' data-toggle='modal' className='btn btn-success m-1' onClick={()=>updateMed(index)}>Update</button>
+                                                                <button data-target='#editMedModal' data-toggle='modal' className='btn btn-success m-1' onClick={()=>updateMed(item)}>Update</button>
                                                                 <button className='btn btn-danger m-1'>Delete</button>
                                                             </div> 
                                                         </td>
@@ -259,7 +259,6 @@ const MedStock = (props)=>{
                                                 <option value='Ointment'>Ointment</option>
                                                 <option value='Injection'>Injection</option>
                                                 <option value='Capsule'>Capsule</option>
-                                                <option value='Tablets'>Tablets</option>
                                                 <option value='Inhalers'>Inhalers</option>
                                                 <option value='Surgical'>Surgical</option>
                                                 <option value='Drops'>Drops</option>
@@ -275,8 +274,8 @@ const MedStock = (props)=>{
                                     </div>
                                     <div className='form-row'>
                                         <div className='form-group col-md-6'>
-                                        <label className='font-weight-bold' >Unit</label>
-                                            <input type='number' value={edittedMed.unit} placeholder='Units' name='unit' className='form-control' onChange={handleEditChange} />
+                                        <label className='font-weight-bold' >Available Qty</label>
+                                            <input type='number' value={edittedMed.availableQty} placeholder='Available Qty' name='availableQty' className='form-control' onChange={handleEditChange} />
                                         </div>
                                         <div className='form-group col-md-6'>
                                         <label className='font-weight-bold' >Price Per Unit</label>
