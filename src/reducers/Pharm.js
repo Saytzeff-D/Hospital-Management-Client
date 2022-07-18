@@ -2,7 +2,7 @@ const initState = {
     patientPharmBills: [],
     pharmBillRecords: [],
     medicineTray: [],
-    reducerError: ''
+    reducerError: 'Loading'
 }
 
 const PharmacyReducer = (state=initState, action)=>{
@@ -10,7 +10,7 @@ const PharmacyReducer = (state=initState, action)=>{
         case 'getAllPharmBills':
             return state
         case 'allMedicines':
-            return {...state, medicineTray: action.payload}
+            return {...state, medicineTray: action.payload, reducerError: ''}
         case 'medicineError':
             return {...state, reducerError: action.payload}
     
