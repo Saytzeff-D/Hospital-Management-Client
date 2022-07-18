@@ -1,14 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
+import * as Yup from 'yup'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { allMedicines } from '../../actions'
 
 const MedStock = (props)=>{
+    const dispatch = useDispatch()
     const [error, setError] = useState('')
     const [success,setSucces]=useState('')
     const url = useSelector(state=>state.UrlReducer.url)
     const medArray = useSelector(state=>state.PharmacyReducer.medicineTray)
+    const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const formik = useFormik({
         initialValues: {
             medicineName: '',
@@ -17,6 +21,13 @@ const MedStock = (props)=>{
             unit: '',
             pricePerUnit: ''
         },
+        validationSchema: Yup.object({
+            medicineName: Yup.string().required('Medicine Name is required'),
+            medicineCategory: Yup.string().required('Medicine Category is required'),
+            medicineCompany: Yup.string().required('Manufacturing Company is required'),
+            unit: Yup.string().required('Unit of Medicine Added is required'),
+            pricePerUnit: Yup.string().required('Price is required')
+        }),
         onSubmit: (values)=>{
             console.log(values)
             setError('')
@@ -28,6 +39,9 @@ const MedStock = (props)=>{
                 setError('An Error has occured')
             })
         }
+    })
+    useEffect(()=>{
+        dispatch(allMedicines(url))
     })
     return (
         <>
@@ -42,41 +56,53 @@ const MedStock = (props)=>{
                             <input className='form-control' placeholder='Search by Medicine Name' />
                         </div>
                         {
-                            medArray.length === 0
+                            reducerError === ''
                             ?
-                            (
-                                <div>
-                                    <p className='font-weight-bold py-2'>Stocks are empty</p>
-                                </div>
-                            )
+                            (<div className='mt-2'>
+                                <p className='spinner-border text-danger'></p>
+                            </div>)
                             :
                             (
-                                <table className='table table-light table-striped table-responsive'>
-                                    <thead>
-                                        <tr>
-                                            <th>Medicine Name</th>
-                                            <th>Medicine Company</th>
-                                            <th>Medicine Category</th>
-                                            <th>Unit Added to Stock</th>
-                                            <th>Available Qty</th>
-                                            <th>Price Per Unit (#)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            medArray.map((item, index)=>(
-                                                <tr>
-                                                    <td> {item.medicineName} </td>
-                                                    <td> {item.medicineCompany} </td>
-                                                    <td> {item.medicineCategory} </td>
-                                                    <td> {item.unit} </td>
-                                                    <td> {item.availableQty} </td>
-                                                    <td> {item.pricePerUnit} </td>
-                                                </tr>
-                                            ))                                            
-                                        }
-                                    </tbody>
-                                </table>
+                                reducerError === 'MedError'
+                                ?
+                                <div className='alert alert-danger h6 my-2'> <FontAwesomeIcon icon='triangle-exclamation'/> Unable to fetch from the server</div>
+                                :
+                                medArray.length === 0
+                                ?
+                                (
+                                    <div>
+                                        <p className='font-weight-bold py-2'>Stocks are empty</p>
+                                    </div>
+                                )
+                                :
+                                (
+                                    <table className='table table-light table-striped table-responsive'>
+                                        <thead>
+                                            <tr>
+                                                <th>Medicine Name</th>
+                                                <th>Medicine Company</th>
+                                                <th>Medicine Category</th>
+                                                <th>Unit Added to Stock</th>
+                                                <th>Available Qty</th>
+                                                <th>Price Per Unit (#)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                medArray.map((item, index)=>(
+                                                    <tr>
+                                                        <td> {item.medicineName} </td>
+                                                        <td> {item.medicineCompany} </td>
+                                                        <td> {item.medicineCategory} </td>
+                                                        <td> {item.unit} </td>
+                                                        <td> {item.availableQty} </td>
+                                                        <td> {item.pricePerUnit} </td>
+                                                    </tr>
+                                                ))                                            
+                                            }
+                                        </tbody>
+                                    </table>
+                                )
                             )
                         }
                     </div>
@@ -109,7 +135,8 @@ const MedStock = (props)=>{
                                     }
                                     <div className='form-row'>
                                         <div className='form-group col'>
-                                            <input placeholder='Medicine Name' name='medicineName' onChange={formik.handleChange} className='form-control' />
+                                            <input onBlur={formik.handleBlur} placeholder='Medicine Name' name='medicineName' onChange={formik.handleChange} className='form-control' />
+                                            {formik.touched.medicineName && <div className='text-danger'>{formik.errors.medicineName}</div>}
                                         </div>
                                     </div>
                                     <div className='form-row'>
@@ -126,19 +153,23 @@ const MedStock = (props)=>{
                                                 <option value='Drops'>Drops</option>
                                                 <option value='Diaper'>Diaper</option>
                                             </select>
+                                            {formik.touched.medicineCategory && <div className='text-danger'>{formik.errors.medicineCategory}</div>}
                                         </div>
                                     </div>
                                     <div className='form-row'>
                                         <div className='form-group col'>
-                                            <input placeholder='Medicine Company' name='medicineCompany' className='form-control' onChange={formik.handleChange} />
+                                            <input onBlur={formik.handleBlur} placeholder='Medicine Company' name='medicineCompany' className='form-control' onChange={formik.handleChange} />
+                                            {formik.touched.medicineCompany && <div className='text-danger'>{formik.errors.medicineCompany}</div>}
                                         </div>
                                     </div>
                                     <div className='form-row'>
                                         <div className='form-group col-md-6'>
-                                            <input type='number' placeholder='Units' name='unit' className='form-control' onChange={formik.handleChange} />
+                                            <input onBlur={formik.handleBlur} type='number' placeholder='Units' name='unit' className='form-control' onChange={formik.handleChange} />
+                                            {formik.touched.unit && <div className='text-danger'>{formik.errors.unit}</div>}
                                         </div>
                                         <div className='form-group col-md-6'>
-                                            <input type='number' placeholder='Price Per Units' name='pricePerUnit' className='form-control' onChange={formik.handleChange} />
+                                            <input onBlur={formik.handleBlur} type='number' placeholder='Price Per Units' name='pricePerUnit' className='form-control' onChange={formik.handleChange} />
+                                            {formik.touched.pricePerUnit && <div className='text-danger'>{formik.errors.pricePerUnit}</div>}
                                         </div>
                                     </div>
                                     <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Details</button>
