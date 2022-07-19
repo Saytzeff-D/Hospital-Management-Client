@@ -1,8 +1,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector }  from 'react-redux'
 
 const AddPrescription = (props)=>{
+    const patientTray = useSelector(state=>state.PatientReducer.patientTray)
+    const medicineTray = useSelector(state=>state.PharmacyReducer.medicineTray)
+    const staff = useSelector(state=>state.StaffReducer.staffInfo)
     const [testInputArr, setTestInputArr] = useState([0])
+    const [prescribeMed, setPrescribeMed] = useState([])
+    const [prescriptionObj, setPresciptionObj]= useState({healthId: '', patientName: '', doctorName: '', illness: ''})
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
 
     const moreInput = ()=>{
         setTestInputArr([...testInputArr, 1])
@@ -10,9 +18,39 @@ const AddPrescription = (props)=>{
     const lessInput = ()=>{
        setTestInputArr(testInputArr.slice(1))
     }
-    const addPrescription = ()=>{
+    const clickPrescribe = ()=>{
         document.getElementById('submitForm').click()
     }
+    const handleChange = (e)=>{
+        setPresciptionObj({...prescriptionObj, [e.target.name]: e.target.value})
+        if(e.target.name === 'healthId'){
+            let patient = patientTray.find((each, i)=>(each.healthId === e.target.value))
+            if(patient === undefined){
+                setError('Patient Record not found, pls enter a valid Health Id')
+            }else{
+                setPresciptionObj({...prescriptionObj, patientName: patient.fullName})
+                setError('')
+            }
+        }else{}
+    }
+    const handleMedicineChange = (e,i)=>{
+        prescribeMed[i] = e.target.value
+        setPrescribeMed(prescribeMed)
+        let med = medicineTray.find((each, i)=>(each.medicineName === e.target.value))
+        if(med === undefined){
+            setError(`${e.target.value} could not be found in stock`)
+        }else{
+            setError('')
+        }
+    }
+    const addPrescription = (e)=>{
+        e.preventDefault()
+        console.log(prescriptionObj, prescribeMed)
+    }
+    useEffect(()=>{
+        setPresciptionObj({...prescriptionObj, doctorName: `Dr. ${staff.fname} ${staff.lname}`})
+    }, [])
+
     return(
         <>
             <div className='row p-2'>
@@ -20,30 +58,38 @@ const AddPrescription = (props)=>{
                     {/* Top Header */}
                     <div className='d-flex justify-content-between py-2 border-bottom'>
                         <p className='font-weight-bold h6'>Add Prescription</p>
-                        <button className='btn btn-primary' onClick={addPrescription}>Add Prescription</button>
+                        <button className='btn btn-primary' onClick={clickPrescribe}>Add Prescription</button>
                     </div>
                     {/* Top Header */}
                     {/* Body */}
+                        {
+                            error !== '' &&
+                            <div className='alert alert-danger mt-1'><FontAwesomeIcon icon='triangle-exclamation' /><b>Error! </b>{error}</div>
+                        }
+                        {
+                            success !== '' &&
+                            <div className='alert alert-success mt-1'><FontAwesomeIcon icon='check' /><b>Success! </b>{success}</div>
+                        }
                     <div className='py-2'>
-                        <form className='border p-3'>
+                        <form className='border p-3' onSubmit={addPrescription}>
                             <div className='form-row'>
                                 <div className='form-group col-6'>
                                     <label className='h6'>HealthId</label>
-                                    <input className='form-control' name='' />
+                                    <input onChange={handleChange} className='form-control' name='healthId' />
                                 </div>
                                 <div className='form-group col-6'>
                                     <label className='h6'>Patient Name</label>
-                                    <input className='form-control' name='' disabled />
+                                    <input onChange={handleChange} className='form-control' value={prescriptionObj.patientName} name='patientName' disabled />
                                 </div>
                             </div>
                             <div className='form-row border-bottom'>
                                 <div className='form-group col-6'>
                                     <label className='h6'>What's the Illness?</label>
-                                    <input className='form-control' name='' />
+                                    <input onChange={handleChange} className='form-control' name='illness' />
                                 </div>
                                 <div className='form-group col-6'>
                                     <label className='h6'>Doctor's Name</label>
-                                    <input className='form-control' name='' disabled />
+                                    <input onChange={handleChange} className='form-control' value={prescriptionObj.doctorName} name='doctorName' disabled />
                                 </div>
                             </div>
                             <label className='h6 mt-4'>Prescribed Medicines</label>
@@ -52,18 +98,15 @@ const AddPrescription = (props)=>{
                                     testInputArr.map((each,i)=>(
                                         <>
                                             <div className='form-group col-6'>
-                                                <input className='form-control' name='' />
-                                            </div>
-                                            <div className='form-group col-6'>
-                                                <input className='form-control' name='' />
+                                                <input onChange={(e)=>handleMedicineChange(e,i)} className='form-control' name={`med${i}`} />
                                             </div>
                                         </>
                                     ))
                                 }
+                            </div>
                                 <div className='btn btn-dark mx-1' onClick={moreInput}><FontAwesomeIcon icon='plus' /> More Input</div>
                                 <div className='btn btn-light mx-1' onClick={lessInput}><FontAwesomeIcon icon='minus' /> Less Input</div>
-                            </div>
-                            <button type='submit' id='submitForm'>Submit Form</button>
+                            <button type='submit' id='submitForm' className='d-none'>Submit Form</button>
                         </form>
                     </div>
                 </div>
