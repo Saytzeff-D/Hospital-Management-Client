@@ -1,13 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useFormik } from 'formik'
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios'
 
 function DeathRecords(props) {
     const [error, setError] = useState('')
+    const[success,setSuccess]=useState('')
+    const url= useSelector(state=>state.UrlReducer.url)
     const patientTray = useSelector(state=>state.PatientReducer.patientTray)
-    const deathTray = useSelector(state=>state.RecordsReducer.deathRecords)
+    const [filteredList,setList] = useState([])
+    const [deathTray,setDeathTray] = useState([])
     const [patientName, setPatientName] = useState('')
+    const [guardianName,setGuardianName]=useState('')
+    useEffect(()=>{
+        axios.get(`${url}staff/getDeath`).then(res=>{
+            if(res.data.status){
+                setDeathTray(res.data.result)
+                setList(res.data.result)
+            }
+        }).catch(err=>console.log(err))
+    },[success,error])
+
+
+
     const formik = useFormik({
         initialValues: {
             healthId: '',
@@ -17,10 +33,32 @@ function DeathRecords(props) {
             report: ''
         },
         onSubmit: (values)=>{
-            console.log(values)
+            console.log(values.patientName)
+            axios.post(`${url}staff/addDeath`,values).then(res=>{
+                if(res.data.status){
+                    setSuccess(res.data.message)
+                    setError('')
+                    console.log(res.data)
+                }else{
+                    setError(res.data.message)
+                    setSuccess('')
+                }
+            }).catch(err=> console.log(err))
         }
     })
-    const getPatientName = (healthId)=>{}
+    const getPatientName = (healthId)=>{
+        const patient = patientTray.find((patient, i)=>(patient.healthId === healthId))
+        if(patient === undefined){
+            setPatientName('Record not found...')
+            setGuardianName('Record not found...')
+        }else{
+            formik.values.healthId = healthId
+            formik.values.patientName = patient.fullName
+            formik.values.guardianName=patient.guardianName
+            setPatientName(patient.fullName)
+            setGuardianName(patient.guardianName)
+        }
+    }
     return (
         <>
              <div className='container-fluid p-3'>
@@ -91,6 +129,10 @@ function DeathRecords(props) {
                                             <FontAwesomeIcon icon='triangle-exclamation'/> <b>{error}</b>
                                         </div>
                                     }
+                                                                    
+                                    {success!==''&& <div className='alert alert-success'>
+                                        <FontAwesomeIcon icon='check'/> <b>{success}</b>                                
+                                        </div>}
                                     <div className='form-row'>
                                         <div className='form-group col-sm-4'>
                                             <label>Health Id</label>
@@ -108,7 +150,7 @@ function DeathRecords(props) {
                                     <div className='form-row'>
                                     <div className='form-group col-sm-4'>
                                             <label>Guardian's Name</label>
-                                            <input name='guardianName' className='form-control' onChange={formik.handleChange} />
+                                            <input disabled name='guardianName' className='form-control' onChange={formik.handleChange} value={guardianName} />
                                         </div>
                                         <div className='form-group col-sm-8'>
                                             <label>Report</label>

@@ -2,12 +2,28 @@ import React, { useState } from 'react'
 import { useFormik }  from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useSelector } from 'react-redux'
+import axios from 'axios'
+import { useEffect } from 'react'
 
 const BirthRecords = (props)=>{
     const [error, setError] = useState('')
-    const birthTray = useSelector(state=>state.RecordsReducer.birthRecords)
+    const url= useSelector(state=>state.UrlReducer.url)
+    const [birthTray,setBirthTray] = useState([])
+    const [filteredList,setList] = useState([])
     const patientTray = useSelector(state=>state.PatientReducer.patientTray)
     const [motherName, setMotherName] = useState('')
+    const [success,setSuccess]=useState('')
+    const [searchText,setText]=useState('')
+
+    useEffect(()=>{
+        axios.get(`${url}staff/getBirth`).then(res=>{
+            if(res.data.status){
+                setBirthTray(res.data.babies)
+                setList(res.data.babies)
+            }
+        }).catch(err=>console.log(err))
+    },[success,error])
+
     const formik = useFormik({
         initialValues: {
             childName: '',
@@ -18,23 +34,23 @@ const BirthRecords = (props)=>{
             motherHealthId: '',
             motherName: '',
             fatherName: '',
-            report: '', 
-            childPhoto: ''
+            report: ''
         },
         onSubmit: (values)=>{
-            console.log(values)
+            axios.post(`${url}staff/addBirth`,values).then(res=>{
+                if(res.data.status){
+                    setSuccess(res.data.message)
+                    setError('')
+                    console.log(res.data)
+                }else{
+                    setError(res.data.message)
+                    setSuccess('')
+                }
+            }).catch(err=> console.log(err))
+
         }
     })
-    const clickFileInput = ()=>{
-        document.getElementById('childPhoto').click()
-    }
-    const pickFile = (file)=>{
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = ()=>{
-            formik.values.childPhoto = reader.result
-        }
-    }
+    
     const getMotherName = (motherId)=>{
         const mother = patientTray.find((patient, i)=>(patient.healthId === motherId))
         if(mother === undefined){
@@ -43,6 +59,26 @@ const BirthRecords = (props)=>{
             formik.values.motherHealthId = motherId
             formik.values.motherName = mother.fullName
             setMotherName(mother.fullName)
+        }
+    }
+    useEffect(()=>{
+        filterBaby(searchText)
+        
+    },[searchText])
+
+    const filterBaby=(text)=>{
+        let allBabes=birthTray
+        let filteredList=[]
+        if(text==''){
+            setList(birthTray)
+        }else{
+            allBabes.forEach((each,i)=>{
+                if((each.childName.toLowerCase()).includes(text.toLowerCase()) || (each.motherName.toLowerCase()).includes(text.toLowerCase()) || (each.fatherName.toLowerCase()).includes(text.toLowerCase()) || (each.recordsId.toLowerCase()).includes(text.toLowerCase())){
+                    filteredList.push(each)
+                    console.log('yes')
+                }
+            })
+            setList(filteredList)                       
         }
 
     }
@@ -56,7 +92,7 @@ const BirthRecords = (props)=>{
                             <button className='btn btn-primary' data-target='#birthModal' data-toggle='modal'><FontAwesomeIcon icon='plus' /> Add Birth Record</button>
                         </div>
                         <div className='col-lg-4 col-md-6 col-sm-8 my-2'>
-                            <input className='form-control' placeholder='Search...' />
+                            <input onChange={(e)=>setText(e.target.value)} className='form-control' placeholder='Search...' />
                         </div>
                         {
                             birthTray.length === 0
@@ -82,7 +118,7 @@ const BirthRecords = (props)=>{
                                     </thead>
                                     <tbody>
                                         {
-                                            birthTray.map((item, index)=>(
+                                            filteredList.map((item, index)=>(
                                                 <tr>
                                                     <td> {item.recordsId} </td>
                                                     <td> {item.childName} </td>
@@ -118,6 +154,9 @@ const BirthRecords = (props)=>{
                                             <FontAwesomeIcon icon='triangle-exclamation'/> <b>{error}</b>
                                         </div>
                                     }
+                                    {success!==''&& <div className='alert alert-success'>
+                                        <FontAwesomeIcon icon='check'/> <b>{success}</b>                                
+                                        </div>}
                                     <div className='form-row'>
                                         <div className='form-group col-sm-4'>
                                             <label>Child Name</label>
@@ -161,15 +200,11 @@ const BirthRecords = (props)=>{
                                         </div>
                                     </div>
                                     <div className='form-row'>
-                                        <div className='form-group col-md-8'>
+                                        <div className='form-group col-md-12'>
                                             <label>Report</label>
                                             <textarea type='text' name='report' className='form-control' onChange={formik.handleChange} />
                                         </div>
-                                        <div className='form-group col-md-4'>
-                                            <label>Child's Photo</label>
-                                            <input onChange={(e)=>pickFile(e.target.files[0])} type='file' name='childPhoto' id='childPhoto' className='form-control d-none' />
-                                            <div onClick={clickFileInput} className='btn btn-primary btn-block font-weight-bold'><span><i className='fa fa-upload'></i></span> Click to drop a file</div>
-                                        </div>
+                                       
                                     </div>
                                     <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Records</button>
                                 </form>
