@@ -16,7 +16,6 @@ const MedStock = (props)=>{
     const medArray = useSelector(state=>state.PharmacyReducer.medicineTray)
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const [disableBtn, setDisableBtn] = useState(false)
-    const [medId, setMedId] = useState('')
     const [edittedMed, setEddittedMed] = useState({})
     const formik = useFormik({
         initialValues: {
@@ -39,6 +38,7 @@ const MedStock = (props)=>{
             setError('')
             axios.post(`${url}staff/addMedicine`, values).then((res)=>{
                 if(res.data.status){
+                    dispatch(allMedicines(url))
                     setDisableBtn(false)
                     setSucces(res.data.message)
                     formik.values.medicineName = ''
@@ -53,6 +53,10 @@ const MedStock = (props)=>{
             })
         }
     })
+    const closeModal = ()=>{
+        setError('') 
+        setSucces('')
+    }
     useEffect(()=>{
         dispatch(allMedicines(url))
     }, [dispatch])
@@ -69,12 +73,14 @@ const MedStock = (props)=>{
         axios.post(`${url}staff/updateMed`, edittedMed).then((res)=>{
             setDisableBtn(false)
             setSucces(res.data.message)
-            setEddittedMed({})
+            setEddittedMed({...edittedMed, medicineName: '', medicineCompany: '', medicineCategory: '', availableQty: '', pricePerUnit: ''})
+            dispatch(allMedicines(url))
         }).catch((err)=>{
             setDisableBtn(false)
             setError('An Error has occured, pls try again.')
         })
     }
+    
     return (
         <>
             <div className='container-fluid p-3'>
@@ -132,7 +138,6 @@ const MedStock = (props)=>{
                                                         <td> {item.pricePerUnit} </td>
                                                         <td> 
                                                             <div className='d-flex justify-content-between'>
-                                                                {/* <button id='openEditModal' data-target='#editMedModal' data-toggle='modal' >Open Edit Modal</button> */}
                                                                 <button data-target='#editMedModal' data-toggle='modal' className='btn btn-success m-1' onClick={()=>updateMed(item)}>Update</button>
                                                                 <button className='btn btn-danger m-1'>Delete</button>
                                                             </div> 
@@ -187,7 +192,7 @@ const MedStock = (props)=>{
                                                 <option value='Ointment'>Ointment</option>
                                                 <option value='Injection'>Injection</option>
                                                 <option value='Capsule'>Capsule</option>
-                                                <option value='Tablets'>Tablets</option>
+                                                <option value='Liquids'>Liquids</option>
                                                 <option value='Inhalers'>Inhalers</option>
                                                 <option value='Surgical'>Surgical</option>
                                                 <option value='Drops'>Drops</option>
@@ -225,7 +230,7 @@ const MedStock = (props)=>{
                         <div className='modal-content'>
                             <div className='modal-header'>
                                 <p className='h6'>Edit Medicine Details</p>
-                                <button className='close text-primary' data-dismiss='modal' onClick={()=>{(error !== '' && setError('')) (success !== '' && setSucces(''))}}>&times;</button>
+                                <button className='close text-primary' data-dismiss='modal' onClick={closeModal}>&times;</button>
                             </div>
                             <div className='modal-body'>
                                 <form className='p-3' onSubmit={editMed}>
@@ -259,6 +264,7 @@ const MedStock = (props)=>{
                                                 <option value='Ointment'>Ointment</option>
                                                 <option value='Injection'>Injection</option>
                                                 <option value='Capsule'>Capsule</option>
+                                                <option value='Liquids'>Liquids</option>
                                                 <option value='Inhalers'>Inhalers</option>
                                                 <option value='Surgical'>Surgical</option>
                                                 <option value='Drops'>Drops</option>
