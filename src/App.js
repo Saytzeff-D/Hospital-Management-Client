@@ -27,6 +27,7 @@ import AppointmentList from './Components/Staff/Appointmentlist';
 import MedStock from './Components/Staff/MedStock';
 import BirthRecords from './Components/Staff/BirthRecords';
 import DeathRecords from './Components/Staff/DeathRecords';
+import AddPrescription from './Components/Staff/AddPrescription';
 library.add(fas, faTwitter, faFontAwesome)
 
 
@@ -61,6 +62,7 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
           <Route path='/staff/appointment' element={<AppointmentList />} />
           <Route path='/staff/birthRecords' element={<BirthRecords />} />
           <Route path='/staff/deathRecords' element={<DeathRecords />} />
+          <Route path='/staff/addPrescription' element={<AddPrescription />} />
         </Route>
       </Routes>
     </>
