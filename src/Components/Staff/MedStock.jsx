@@ -14,18 +14,14 @@ const MedStock = (props)=>{
     const [success,setSucces]=useState('')
     const url = useSelector(state=>state.UrlReducer.url)
     const medArray = useSelector(state=>state.PharmacyReducer.medicineTray)
-    const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
-<<<<<<< HEAD
+    const [reducerError,setReducerError] = useState('Loading')
     const [deleteDrug,setDrug]=useState({})
     const [deleteInfo,setDeleteInfo]=useState('')
     const [searchText,setText]=useState('')
     const [filteredList,setList]=useState()
-    // console.log(filteredList)
-=======
     const [disableBtn, setDisableBtn] = useState(false)
     const [medId, setMedId] = useState('')
     const [edittedMed, setEddittedMed] = useState({})
->>>>>>> refs/remotes/origin/main
     const formik = useFormik({
         initialValues: {
             medicineName: '',
@@ -62,20 +58,19 @@ const MedStock = (props)=>{
         }
     })
     useEffect(()=>{
+        dispatch(allMedicines(url))
         axios.get(`${url}staff/allMedicines`).then((res)=>{
             if(res.data.status){
+                console.log(res.data.drugs)
                 setList(res.data.drugs)
+                setReducerError('')
             }
         }).catch((err)=>{
             setError('An Error has occured')
         })
 
-    },[])
+    },[deleteInfo,success])
 
-    useEffect(()=>{
-        dispatch(allMedicines(url))
-<<<<<<< HEAD
-    })
     useEffect(()=>{
         filterDrug(searchText)
         
@@ -104,6 +99,7 @@ const MedStock = (props)=>{
         axios.post(`${url}staff/delMedicine`,deleteDrug).then((res=>{
             if(res.data.status){
                 setDeleteInfo('Item removed succesfully, please close the modal.')
+
             }else{
                 setDeleteInfo('an error occured, please try again')
 
@@ -113,8 +109,6 @@ const MedStock = (props)=>{
     }
 
 
-=======
-    }, [dispatch])
     const updateMed = (item)=>{
         setEddittedMed(item)
     }
@@ -134,7 +128,6 @@ const MedStock = (props)=>{
             setError('An Error has occured, pls try again.')
         })
     }
->>>>>>> refs/remotes/origin/main
     return (
         <>
             <div className='container-fluid p-3'>
@@ -159,7 +152,7 @@ const MedStock = (props)=>{
                                 ?
                                 <div className='alert alert-danger h6 my-2'> <FontAwesomeIcon icon='triangle-exclamation'/> Unable to fetch from the server</div>
                                 :
-                                medArray.length === 0
+                                filteredList.length === 0
                                 ?
                                 (
                                     <div>
@@ -181,11 +174,7 @@ const MedStock = (props)=>{
                                         </thead>
                                         <tbody>
                                             {
-<<<<<<< HEAD
                                                 filteredList.map((item, index)=>(
-=======
-                                                medArray.map((item, index)=>(
->>>>>>> refs/remotes/origin/main
                                                     <tr key={index}>
                                                         <td> {item.medicineName} </td>
                                                         <td> {item.medicineCompany} </td>
@@ -195,14 +184,8 @@ const MedStock = (props)=>{
                                                         <td> {item.pricePerUnit} </td>
                                                         <td> 
                                                             <div className='d-flex justify-content-between'>
-<<<<<<< HEAD
-                                                                <button className='btn btn-success m-1'>Update</button>
-                                                                <button  data-target='#delmed' data-toggle='modal' className='btn btn-danger m-1' onClick={()=>setDrug(item)}>Delete</button>
-=======
-                                                                {/* <button id='openEditModal' data-target='#editMedModal' data-toggle='modal' >Open Edit Modal</button> */}
                                                                 <button data-target='#editMedModal' data-toggle='modal' className='btn btn-success m-1' onClick={()=>updateMed(item)}>Update</button>
-                                                                <button className='btn btn-danger m-1'>Delete</button>
->>>>>>> refs/remotes/origin/main
+                                                                <button  data-target='#delmed' data-toggle='modal' className='btn btn-danger m-1' onClick={()=>setDrug(item)}>Delete</button>
                                                             </div> 
                                                         </td>
                                                     </tr>
