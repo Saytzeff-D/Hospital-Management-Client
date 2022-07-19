@@ -16,6 +16,7 @@ function DeathRecords(props) {
     useEffect(()=>{
         axios.get(`${url}staff/getDeath`).then(res=>{
             if(res.data.status){
+                console.log(res.data.result)
                 setDeathTray(res.data.result)
                 setList(res.data.result)
             }
@@ -29,21 +30,25 @@ function DeathRecords(props) {
             healthId: '',
             patientName: '',
             deathDate: '',
+            gender: '',
+            age: '',
             guardianName: '',
             report: ''
         },
         onSubmit: (values)=>{
-            console.log(values.patientName)
-            axios.post(`${url}staff/addDeath`,values).then(res=>{
-                if(res.data.status){
-                    setSuccess(res.data.message)
-                    setError('')
-                    console.log(res.data)
-                }else{
-                    setError(res.data.message)
-                    setSuccess('')
-                }
-            }).catch(err=> console.log(err))
+            const patient = patientTray.find((patient, i)=>(patient.healthId === values.healthId))
+            values.age = new Date(values.deathDate) - new Date(patient.dob)/(1000 * 60 * 60 * 24)
+            console.log(values.age)
+            // axios.post(`${url}staff/addDeath`,values).then(res=>{
+            //     if(res.data.status){
+            //         setSuccess(res.data.message)
+            //         setError('')
+            //         console.log(res.data)
+            //     }else{
+            //         setError(res.data.message)
+            //         setSuccess('')
+            //     }
+            // }).catch(err=> console.log(err))
         }
     })
     const getPatientName = (healthId)=>{
@@ -54,6 +59,7 @@ function DeathRecords(props) {
         }else{
             formik.values.healthId = healthId
             formik.values.patientName = patient.fullName
+            formik.gender = patient.gender
             formik.values.guardianName=patient.guardianName
             setPatientName(patient.fullName)
             setGuardianName(patient.guardianName)
@@ -88,6 +94,7 @@ function DeathRecords(props) {
                                             <th>Patient Name</th>
                                             <th>Gender</th>
                                             <th>Death Date</th>
+                                            <th>Age</th>
                                             <th>Guardian Name</th>
                                             <th>Report</th>
                                         </tr>
@@ -100,6 +107,7 @@ function DeathRecords(props) {
                                                     <td> {item.patientName} </td>
                                                     <td> {item.gender} </td>
                                                     <td> {item.deathDate} </td>
+                                                    <td> {item.age} </td>
                                                     <td> {item.guardianName} </td>
                                                     <td> {item.report} </td>
                                                 </tr>
@@ -144,7 +152,7 @@ function DeathRecords(props) {
                                         </div>
                                         <div className='form-group col-sm-4'>
                                             <label>Death Date</label>
-                                            <input type='date' name='birthDate' className='form-control' onChange={formik.handleChange} max={new Date().toISOString().split('T')[0]} />
+                                            <input type='date' name='deathDate' className='form-control' onChange={formik.handleChange} max={new Date().toISOString().split('T')[0]} />
                                         </div>
                                     </div>
                                     <div className='form-row'>
