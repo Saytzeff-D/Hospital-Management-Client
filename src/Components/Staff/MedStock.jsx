@@ -12,8 +12,12 @@ const MedStock = (props)=>{
     const [success,setSucces]=useState('')
     const url = useSelector(state=>state.UrlReducer.url)
     const medArray = useSelector(state=>state.PharmacyReducer.medicineTray)
-    console.log(medArray)
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
+    const [deleteDrug,setDrug]=useState({})
+    const [deleteInfo,setDeleteInfo]=useState('')
+    const [searchText,setText]=useState('')
+    const [filteredList,setList]=useState()
+    // console.log(filteredList)
     const formik = useFormik({
         initialValues: {
             medicineName: '',
@@ -42,8 +46,56 @@ const MedStock = (props)=>{
         }
     })
     useEffect(()=>{
+        axios.get(`${url}staff/allMedicines`).then((res)=>{
+            if(res.data.status){
+                setList(res.data.drugs)
+            }
+        }).catch((err)=>{
+            setError('An Error has occured')
+        })
+
+    },[])
+
+    useEffect(()=>{
         dispatch(allMedicines(url))
     })
+    useEffect(()=>{
+        filterDrug(searchText)
+        
+    },[searchText])
+    
+    
+
+    const filterDrug=(text)=>{
+        let allMed=medArray
+        let filteredList=[]
+        if(text==''){
+            setList(medArray)
+        }else{
+            allMed.forEach((each,i)=>{
+                if((each.medicineName.toLowerCase()).includes(text.toLowerCase())){
+                    filteredList.push(each)
+                    console.log('yes')
+                }
+            })
+            setList(filteredList)                       
+        }
+
+    }
+    const deleteMed=()=>{
+        console.log(deleteDrug)
+        axios.post(`${url}staff/delMedicine`,deleteDrug).then((res=>{
+            if(res.data.status){
+                setDeleteInfo('Item removed succesfully, please close the modal.')
+            }else{
+                setDeleteInfo('an error occured, please try again')
+
+            }
+        })).then(err=>console.log(err))
+
+    }
+
+
     return (
         <>
             <div className='container-fluid p-3'>
@@ -54,7 +106,7 @@ const MedStock = (props)=>{
                             <button className='btn btn-primary' data-target='#medicineModal' data-toggle='modal'><FontAwesomeIcon icon='plus' /> Add Medicine Details</button>
                         </div>
                         <div className='col-lg-4 col-md-6 col-sm-8 my-2'>
-                            <input className='form-control' placeholder='Search by Medicine Name' />
+                            <input onChange={(e)=>setText(e.target.value)} className='form-control' placeholder='Search by Medicine Name' />
                         </div>
                         {
                             reducerError === 'Loading'
@@ -83,7 +135,6 @@ const MedStock = (props)=>{
                                                 <th>Medicine Name</th>
                                                 <th>Medicine Company</th>
                                                 <th>Medicine Category</th>
-                                                <th>Unit Added to Stock</th>
                                                 <th>Available Qty</th>
                                                 <th>Price Per Unit (<FontAwesomeIcon icon='naira-sign' />)</th>
                                                 <th>Action</th>
@@ -91,18 +142,18 @@ const MedStock = (props)=>{
                                         </thead>
                                         <tbody>
                                             {
-                                                medArray.map((item, index)=>(
-                                                    <tr>
+                                                filteredList.map((item, index)=>(
+                                                    <tr key={index}>
                                                         <td> {item.medicineName} </td>
                                                         <td> {item.medicineCompany} </td>
                                                         <td> {item.medicineCategory} </td>
-                                                        <td> {item.unit} </td>
+                                                        
                                                         <td> {item.availableQty} </td>
                                                         <td> {item.pricePerUnit} </td>
                                                         <td> 
                                                             <div className='d-flex justify-content-between'>
                                                                 <button className='btn btn-success m-1'>Update</button>
-                                                                <button className='btn btn-danger m-1'>Delete</button>
+                                                                <button  data-target='#delmed' data-toggle='modal' className='btn btn-danger m-1' onClick={()=>setDrug(item)}>Delete</button>
                                                             </div> 
                                                         </td>
                                                     </tr>
@@ -114,6 +165,29 @@ const MedStock = (props)=>{
                             )
                         }
                     </div>
+                </div>
+                {/* DELETE MODAL */}
+                <div className='modal fade big-modal ' id='delmed' data-backdrop="static">
+                    <div className='modal-dialog modal-dialog-centered'>
+                        <div className='modal-content'>
+                            <div className='modal-header'>
+                                <h4 className='modal-title px-2 text-danger'>Remove Drug</h4>
+                                <button onClick={()=>setDeleteInfo('')} type="button" className="close text-danger" data-dismiss="modal" >&times;</button>                             
+                            </div>
+                            <div className='modal-body border-zero'>
+                                <div>
+                                    <p className='h5 text-warning text-center'>{deleteInfo}</p>
+                                </div><br/>
+                                <p>Are you sure you want to Delete this Item?</p>   
+                                
+                            </div>
+                            <div className='modal-footer d-flex'>
+                                <button onClick={deleteMed} className='btn btn-danger m-1'>Yes, I'm sure</button>
+                                <button  onClick={()=>setDeleteInfo('')} className='btn btn-success m-1' data-dismiss="modal">No, I'm not</button>         
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 {/* Add Medicine Modal */}
