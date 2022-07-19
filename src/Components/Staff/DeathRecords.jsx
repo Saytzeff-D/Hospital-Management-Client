@@ -33,7 +33,7 @@ function DeathRecords(props) {
             report: ''
         },
         onSubmit: (values)=>{
-            console.log(values.patientName)
+            console.log(values)
             axios.post(`${url}staff/addDeath`,values).then(res=>{
                 if(res.data.status){
                     setSuccess(res.data.message)
@@ -144,7 +144,7 @@ function DeathRecords(props) {
                                         </div>
                                         <div className='form-group col-sm-4'>
                                             <label>Death Date</label>
-                                            <input type='date' name='birthDate' className='form-control' onChange={formik.handleChange} max={new Date().toISOString().split('T')[0]} />
+                                            <input type='date' name='deathDate' className='form-control' onChange={formik.handleChange} max={new Date().toISOString().split('T')[0]} />
                                         </div>
                                     </div>
                                     <div className='form-row'>
