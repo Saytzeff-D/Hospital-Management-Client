@@ -40,23 +40,24 @@ function DeathRecords(props) {
             report: ''
         },
         onSubmit: (values)=>{
-            const patient = patientTray.find((patient, i)=>(patient.healthId === values.healthId))
-            values.age = new Date(values.deathDate) - new Date(patient.dob)/(1000 * 60 * 60 * 24)
-            console.log(values.age)
-            // axios.post(`${url}staff/addDeath`,values).then(res=>{
-            //     if(res.data.status){
-            //         setSuccess(res.data.message)
-            //         setError('')
-            //         console.log(res.data)
-            //     }else{
-            //         setError(res.data.message)
-            //         setSuccess('')
-            //     }
-            // }).catch(err=> console.log(err))
+            const patient = patientTray.find((patient, i)=>( (patient.healthId).toLowerCase() === (values.healthId).toLowerCase() ))
+            values.age = Math.floor((new Date(values.deathDate) - new Date(patient.dob))/(1000 * 60 * 60 * 24*365))
+            values.gender=patient.gender
+            values._id=patient._id
+            axios.post(`${url}staff/addDeath`,values).then(res=>{
+                if(res.data.status){
+                    setSuccess(res.data.message)
+                    setError('')
+                    console.log(res.data)
+                }else{
+                    setError(res.data.message)
+                    setSuccess('')
+                }
+            }).catch(err=> console.log(err))
         }
     })
     const getPatientName = (healthId)=>{
-        const patient = patientTray.find((patient, i)=>(patient.healthId === healthId))
+        const patient = patientTray.find((patient, i)=>( (patient.healthId).toLowerCase() === (healthId).toLowerCase()))
         if(patient === undefined){
             setPatientName('Record not found...')
             setGuardianName('Record not found...')
@@ -114,7 +115,7 @@ function DeathRecords(props) {
                                     <tbody>
                                         {
                                             deathTray.map((item, index)=>(
-                                                <tr>
+                                                <tr key={index}>
                                                     <td> {item.recordsId} </td>
                                                     <td> {item.patientName} </td>
                                                     <td> {item.gender} </td>
