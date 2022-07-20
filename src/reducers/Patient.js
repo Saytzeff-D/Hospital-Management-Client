@@ -1,6 +1,7 @@
 const initState = {
     patientDetails: {},
-    patientTray: []
+    patientTray: [],
+    editMessage:''
 }
 
 const PatientReducer = (state=initState, action)=>{
@@ -9,7 +10,6 @@ const PatientReducer = (state=initState, action)=>{
             return {...state, patientDetails: action.payload}
         case 'getAllPatients':
             return {...state, patientTray: action.payload}
-    
         default:
             return state
     }
