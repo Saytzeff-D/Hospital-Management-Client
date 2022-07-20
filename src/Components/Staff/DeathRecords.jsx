@@ -13,14 +13,18 @@ function DeathRecords(props) {
     const [deathTray,setDeathTray] = useState([])
     const [patientName, setPatientName] = useState('')
     const [guardianName,setGuardianName]=useState('')
+    const [loading, setLoading] = useState(true)
     useEffect(()=>{
         axios.get(`${url}staff/getDeath`).then(res=>{
             if(res.data.status){
                 console.log(res.data.result)
                 setDeathTray(res.data.result)
                 setList(res.data.result)
+                setLoading(false)
             }
-        }).catch(err=>console.log(err))
+        }).catch((err)=>{
+            setError('AxiosError')
+        })
     },[success,error])
 
 
@@ -78,6 +82,14 @@ function DeathRecords(props) {
                             <input className='form-control' placeholder='Search...' />
                         </div>
                         {
+                            loading 
+                            ?
+                            (<div className='mt-2'><p className='spinner-border text-danger'></p></div>)
+                            :
+                            error === 'AxiosError'
+                            ?
+                            <div className='alert alert-danger'>Server Error</div>
+                            :
                             deathTray.length === 0
                             ?
                             (

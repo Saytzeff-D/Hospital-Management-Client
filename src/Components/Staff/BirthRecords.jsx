@@ -14,14 +14,19 @@ const BirthRecords = (props)=>{
     const [motherName, setMotherName] = useState('')
     const [success,setSuccess]=useState('')
     const [searchText,setText]=useState('')
+    const [loading, setLoading] = useState(true)
 
     useEffect(()=>{
         axios.get(`${url}staff/getBirth`).then(res=>{
             if(res.data.status){
                 setBirthTray(res.data.babies)
                 setList(res.data.babies)
+                setLoading(false)
             }
-        }).catch(err=>console.log(err))
+        }).catch(err=>{
+            console.log(err)
+            setError('AxiosError')
+        })
     },[success,error])
 
     const formik = useFormik({
@@ -95,6 +100,14 @@ const BirthRecords = (props)=>{
                             <input onChange={(e)=>setText(e.target.value)} className='form-control' placeholder='Search...' />
                         </div>
                         {
+                            loading 
+                            ?
+                            (<div className='mt-2'><p className='spinner-border text-danger'></p></div>)
+                            :
+                            error === 'AxiosError'
+                            ?
+                            <div className='alert alert-danger'>Server Error</div>
+                            :
                             birthTray.length === 0
                             ?
                             (
