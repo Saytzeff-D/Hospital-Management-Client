@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { useFormik } from 'formik'
+import * as Yup from 'yup'
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios'
@@ -13,6 +14,8 @@ function DeathRecords(props) {
     const [deathTray,setDeathTray] = useState([])
     const [patientName, setPatientName] = useState('')
     const [guardianName,setGuardianName]=useState('')
+    const [loading, setLoading] = useState({btn: 'Save Records', loadStyle: ''})
+   
     useEffect(()=>{
         axios.get(`${url}staff/getDeath`).then(res=>{
             if(res.data.status){
@@ -35,14 +38,28 @@ function DeathRecords(props) {
             guardianName: '',
             report: ''
         },
+        validationSchema: Yup.object({
+            healthId: Yup.string().required('This field is required '),
+            // patientName: Yup.string().required('this field is required'),
+            deathDate: Yup.date().required('This field is required'),
+            gender: Yup.string().required('Address is required'),
+            age: Yup.string().required('mother Health Id  is required'),
+            // guardianName: Yup.string().required('this field is required'),
+            report: Yup.string().required('This field is required'),
+            birthDate: Yup.string().required('This field is required')
+               
+        }),
         onSubmit: (values)=>{
-            const patient = patientTray.find((patient, i)=>(patient.healthId === values.healthId))
-            values.age = new Date(values.deathDate) - new Date(patient.dob)/(1000 * 60 * 60 * 24)
-            console.log(values.age)
+            console.log("hello")
+            // const patient = patientTray.find((patient, i)=>(patient.healthId === values.healthId))
+            // values.age = new Date(values.deathDate) - new Date(patient.dob)/(1000 * 60 * 60 * 24)
+            // console.log(values.age)
+            // setLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
             // axios.post(`${url}staff/addDeath`,values).then(res=>{
             //     if(res.data.status){
             //         setSuccess(res.data.message)
             //         setError('')
+            //         setLoading({btn: 'Login', loadStyle: ''})
             //         console.log(res.data)
             //     }else{
             //         setError(res.data.message)
@@ -144,7 +161,8 @@ function DeathRecords(props) {
                                     <div className='form-row'>
                                         <div className='form-group col-sm-4'>
                                             <label>Health Id</label>
-                                            <input name='' className='form-control' onChange={(e)=>getPatientName(e.target.value)} />
+                                            <input name='healthId' className='form-control' onChange={(e)=>getPatientName(e.target.value)} onBlur={formik.handleBlur} />
+                                            {formik.touched.healthId && <div className='text-danger'>{formik.errors.healthId}</div>}
                                         </div>
                                         <div className='form-group col-sm-4'>
                                             <label>Patient Name's</label>
@@ -152,19 +170,24 @@ function DeathRecords(props) {
                                         </div>
                                         <div className='form-group col-sm-4'>
                                             <label>Death Date</label>
-                                            <input type='date' name='deathDate' className='form-control' onChange={formik.handleChange} max={new Date().toISOString().split('T')[0]} />
+                                            <input type='date' name='deathDate' className='form-control' onChange={formik.handleChange} max={new Date().toISOString().split('T')[0]} onBlur={formik.handleBlur}/>
+                                            {formik.touched.deathDate && <div className='text-danger'>{formik.errors.deathDate}</div>}
+                                            
                                         </div>
                                     </div>
                                     <div className='form-row'>
                                     <div className='form-group col-sm-4'>
                                             <label>Guardian's Name</label>
-                                            <input disabled name='guardianName' className='form-control' onChange={formik.handleChange} value={guardianName} />
+                                            <input disabled name='guardianName' className='form-control' onChange={formik.handleChange} value={guardianName}  />
+
                                         </div>
                                         <div className='form-group col-sm-8'>
                                             <label>Report</label>
-                                            <input type='text' name='report' className='form-control' onChange={formik.handleChange} />
+                                            <input type='text' name='report' className='form-control' onChange={formik.handleChange} onBlur={formik.handleBlur} />
+                                            {formik.touched.report && <div className='text-danger'>{formik.errors.report}</div>}
                                         </div>
                                     </div>
+                                    {/* <button className='btn btn-primary btn-block mb-1' type='submit'>{loading.btn} <span className={loading.loadStyle}></span></button> */}
                                     <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Records</button>
                                 </form>
                             </div>
