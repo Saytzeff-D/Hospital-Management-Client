@@ -47,7 +47,7 @@ const AddPrescription = (props)=>{
     }
     const addPrescription = (e)=>{
         e.preventDefault()
-        prescriptionObj.medArray = prescribeMed
+        prescriptionObj.prescribedMedicine=prescribeMed
         console.log(prescriptionObj)
         setLoading(true)
         axios.post(`${url}staff/addPrescription`, prescriptionObj).then((res)=>{
