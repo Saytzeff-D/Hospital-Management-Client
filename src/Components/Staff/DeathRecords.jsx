@@ -16,6 +16,7 @@ function DeathRecords(props) {
     useEffect(()=>{
         axios.get(`${url}staff/getDeath`).then(res=>{
             if(res.data.status){
+                console.log(res.data.result)
                 setDeathTray(res.data.result)
                 setList(res.data.result)
             }
@@ -29,11 +30,16 @@ function DeathRecords(props) {
             healthId: '',
             patientName: '',
             deathDate: '',
+            gender: '',
+            age: '',
             guardianName: '',
             report: ''
         },
         onSubmit: (values)=>{
-            console.log(values)
+            const patient = patientTray.find((patient, i)=>( (patient.healthId).toLowerCase() === (values.healthId).toLowerCase() ))
+            values.age = Math.floor((new Date(values.deathDate) - new Date(patient.dob))/(1000 * 60 * 60 * 24*365))
+            values.gender=patient.gender
+            values._id=patient._id
             axios.post(`${url}staff/addDeath`,values).then(res=>{
                 if(res.data.status){
                     setSuccess(res.data.message)
@@ -47,13 +53,14 @@ function DeathRecords(props) {
         }
     })
     const getPatientName = (healthId)=>{
-        const patient = patientTray.find((patient, i)=>(patient.healthId === healthId))
+        const patient = patientTray.find((patient, i)=>( (patient.healthId).toLowerCase() === (healthId).toLowerCase()))
         if(patient === undefined){
             setPatientName('Record not found...')
             setGuardianName('Record not found...')
         }else{
             formik.values.healthId = healthId
             formik.values.patientName = patient.fullName
+            formik.gender = patient.gender
             formik.values.guardianName=patient.guardianName
             setPatientName(patient.fullName)
             setGuardianName(patient.guardianName)
@@ -88,6 +95,7 @@ function DeathRecords(props) {
                                             <th>Patient Name</th>
                                             <th>Gender</th>
                                             <th>Death Date</th>
+                                            <th>Age</th>
                                             <th>Guardian Name</th>
                                             <th>Report</th>
                                         </tr>
@@ -95,11 +103,12 @@ function DeathRecords(props) {
                                     <tbody>
                                         {
                                             deathTray.map((item, index)=>(
-                                                <tr>
+                                                <tr key={index}>
                                                     <td> {item.recordsId} </td>
                                                     <td> {item.patientName} </td>
                                                     <td> {item.gender} </td>
                                                     <td> {item.deathDate} </td>
+                                                    <td> {item.age} </td>
                                                     <td> {item.guardianName} </td>
                                                     <td> {item.report} </td>
                                                 </tr>
