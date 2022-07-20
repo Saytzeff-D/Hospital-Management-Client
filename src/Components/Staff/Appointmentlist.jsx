@@ -12,23 +12,80 @@ const AppointmentList=()=>{
     const [newAppointments,setNewAppointments]=useState([])
     const [oldAppointments,setOldAppointments]=useState([])
     const [actionType,setActionType]=useState({action:'',data:{}})
-    console.log(9)
-    console.log([staffDetails])
-    console.log(10)
+    let [filterById,setFilterById]=useState('')
+    let [filterByName,setFilterByName]=useState('')
+    let [filteredList, setFilteredList]=useState([])
+    let [appointmentDate,setNewDate]=useState('')
+    let [shift,setShift]=useState('')
+    let [viewPat,setViewPat]=useState({})
 
+
+    
 
 
     useEffect(()=>{
         axios.get(`${url}staff/allAppointments`).then(res=>{
             if(res.data.status){                            
                 filterAppointment(res.data.appointments)
-                console.log(res.data.appointments)
             }else{
                 console.log(res.data.message)
             }
         })
 
     },[actionType, url])
+
+    useEffect(()=>{
+        filterWithParameter(filterByName)
+    },[filterByName])
+    useEffect(()=>{
+    filterWithParameter(filterById,'id')
+    },[filterById])
+    
+const filterWithParameter=(params,ID)=>{     
+
+    if(params!==''){
+        let filteredList=[]
+        let allApp=newAppointments
+        if(!ID){        
+        allApp.forEach( (each,i)=>{
+            if((each.doctorName.toLowerCase()).includes(params.toLowerCase())){
+                filteredList.push(each)
+            }
+        })
+    }else{allApp.forEach((each,i)=>{
+            if((each.appointmentNo.toLowerCase()).includes(params.toLowerCase())){
+                filteredList.push(each)
+            }
+        })
+    }
+         setFilteredList(filteredList)
+
+    }else{
+        setFilteredList(newAppointments)
+
+    }}
+    const updateAppointment=()=>{
+        let timeSlot=''
+        if (shift === 'Morning') {
+            timeSlot='08:00 - 11:00 AM'
+        } else if(shift === 'Afternoon') {
+            timeSlot='01:00 - 04:00 PM'
+        }else{
+            timeSlot='24/7'
+        }
+        let updateDetails={_id:actionType.data._id,appointmentDate,shift,timeSlot}
+        console.log(updateDetails)
+        axios.post(`${url}staff/updateApp`,updateDetails).then(res=>{
+            console.log(res.data)
+            setNewDate('')
+            setShift('')
+            setActionType({action:'decline',data:{}})
+            alert('update succesful. close the modal')
+
+        }).catch(err=> console.log(err))
+    }
+
+
 
     function filterAppointment(allAppointments){
         let oldAppointments=[]
@@ -41,10 +98,9 @@ const AppointmentList=()=>{
                 newAppointments.push(each)
             }
         })
-        console.log(allAppointments)
-        console.log(newAppointments)
         setOldAppointments(oldAppointments)
         setNewAppointments(newAppointments)
+        setFilteredList(newAppointments)
     }
     const checkAppointment=()=>{
         if(actionType.action ==='approve'){
@@ -60,39 +116,32 @@ const AppointmentList=()=>{
         }else{
             alert('Successfully declined')
         }
-        
     }
+    const reschedule=(each)=>{
+        setActionType({action:'decline',data:each})
+        setNewDate(each.appointmentDate)
+        setShift(each.shift)
+               
+    }
+
+    const fetchPatientProfile=(healthId)=>{
+        let patientId={healthId}
+        axios.post(`${url}staff/getPat`,patientId).then(res=>{
+            console.log(res.data)
+            setViewPat(res.data.patDetails)            
+        }).then(err=>{
+            console.log(err)            
+        })
+    }
+
   
 
     return(
 
-        <div>
-            
-            <div className='py-3'>
-                <div className='bg-white border p-2'>
-                    <div className='d-flex justify-content-between border-bottom'>
-                        <div>
-                            <p className='h6'>APPOINTMENTS LIST</p>
-                            </div>
-                    </div>
+            <section className="" style={{paddingTop:'5px'}}>          
 
-            <div className='row w-100'>
-                <div className='col-md-6'>
-                    <input className='form-control m-1' placeholder='Search Patient by ID' />
-                </div>
-                <div className='col-md-6'>
-                    <input  className='form-control m-1' placeholder='Search Patient by Name' />
-                    </div>
-                </div>
-            </div>
-            </div>
-            
-            <section>
-           
-
-            <div className="container">
-
-  <ul className="nav nav-pills d-flex justify-content-around mt-4" role="tablist">
+            <div className="container mt-5">
+  <ul className="nav nav-pills d-flex justify-content-around mt-5" role="tablist">
     <li className="nav-item">
       <a className="nav-link active h4" data-toggle="pill" href="#home">Pending Appointments</a>
     </li>
@@ -101,9 +150,31 @@ const AppointmentList=()=>{
     </li>
    
   </ul>
+     
+             
 
   <div className="tab-content mt-4">
     <div id="home" className="w-100 tab-pane active"><br/>
+
+    <div className='py-3'>
+                <div className='bg-white border p-2'>
+                    <div className='d-flex justify-content-between border-bottom'>
+                        <div>
+                            <p className='h6'>APPOINTMENTS LIST</p>
+                            </div>
+                    </div>
+
+            <div className='row w-100 text-center'>
+                <div className='col-sm-6'>
+                    <input value={filterById}  onChange={(e)=>setFilterById(e.target.value)} className='form-control m-1' placeholder='Search Patient by ID' />
+                </div>
+                <div className='col-sm-6'>
+                    <input value={filterByName}  onChange={(e)=>setFilterByName(e.target.value)}  className='form-control m-1' placeholder='Search Patient by Name' />
+                    </div>
+                </div>
+            </div>
+     </div>
+
         <table className="table table-bordered table-stripped  border-primary text-center  ">
             <thead className="table-dark text-white">
                 <tr>
@@ -119,7 +190,7 @@ const AppointmentList=()=>{
                 </tr>
             </thead>
             <tbody>
-                {newAppointments.map((each,index)=>(
+                {filteredList.map((each,index)=>(
                     <tr key={index}>
                         <td>{index+1}</td>
                         <td>{each.appointmentNo}</td>
@@ -132,9 +203,12 @@ const AppointmentList=()=>{
                         <td style={{cursor:'pointer'}} >
                             <div className="d-flex justify-content-between">
                              <div>
-                            <button disabled={!each.paymentStatus} onClick={()=>setActionType({action:'approve',data:each})} title="Accept Appointment" className="btn btn-success text-white " data-target='#checkApp' data-toggle='modal'>Accept</button></div>
+                            <button style={{fontSize:'10px'}} disabled={!each.paymentStatus} onClick={()=>setActionType({action:'approve',data:each})} title="Accept Appointment" className="btn btn-success text-white " data-target='#checkApp' data-toggle='modal'>Accept</button></div>
                                 <div>
-                            <button onClick={()=>setActionType({action:'decline',data:each})} title="Remove" className="btn btn-danger  text-white ml-2" data-target='#checkApp' data-toggle='modal'>Decline</button></div>
+                            <button style={{fontSize:'10px'}}  onClick={()=>reschedule(each)} title="Remove" className="btn btn-danger  text-white ml-1" data-target='#checkApp' data-toggle='modal'>Reschedule</button></div>                            
+                            <div>
+                                <button style={{fontSize:'10px'}}  className="btn bg-white ml-1" onClick={()=>fetchPatientProfile(each.healthId)}><i data-target='#viewProfile' data-toggle='modal' className='fa fa-photo text-warning fa-lg'></i>
+                            </button></div>
                             </div>
                         </td>
                         
@@ -154,17 +228,77 @@ const AppointmentList=()=>{
                                     <button type="button" className="close text-danger" data-dismiss="modal" >&times;</button>
                                 </div>
                                 
-                                <div className='modal-body border-zero'>
-                                    <CheckAppointment actionType={actionType} />  
+                                <div className='modal-body border-zero text-center m-auto'>
+                                    {actionType.action=='approve'?<CheckAppointment actionType={actionType}/>:
+                                    <div className='row text-center'>
+                                        <div className="col-md-6 input-group">
+                                        <label class="input-group-text" id="inputGroupPrepend2">Date</label>
+                                        <input value={appointmentDate} onChange={(e)=>setNewDate(e.target.value)} type='date' className='form-control' name='appointmentDate' min={new Date().toISOString().split('T')[0]} />
+                                        </div>
+                                        
+
+                                        <div className='col-md-6 input-group'>
+                                        <label class="input-group-text" id="inputGroupPrepend2">Shift</label>
+                                        <select value={shift}  onChange={(e)=>setShift(e.target.value)} className='form-control'>
+                                            <option value=''>Select</option>
+                                            <option value='Morning'>Morning</option>
+                                            <option value='Afternoon'>Afternoon</option>
+                                            <option value='Emergency'>Emergency</option>
+                                        </select>
+                                    </div>
+
+                                    <button onClick={updateAppointment} style={{marginLeft:'20%'}} className="btn btn-secondary w-50 mt-4">Update</button>
+
+                                    </div>
+                                    
+                                    
+                                    } 
                                 </div>
                                 <div className="modal-footer container">
-                                <button onClick={checkAppointment} className='btn btn-success m-1' data-dismiss='modal'>Yes, I'm sure</button>
+                                <button hidden={actionType.action=='decline'} onClick={checkAppointment} className='btn btn-success m-1' data-dismiss='modal'>Yes, I'm sure</button>
 
                                  <button  className=' btn btn-danger  m-1' data-dismiss='modal'>No, Go Back</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
+  <div className='modal fade big-modal' id="viewProfile" data-backdrop="static">
+                     <div className='modal-dialog modal-dialog-centered'>
+                         <div className='modal-content'>
+                              <div className='modal-header'>
+                                  <h4 className='modal-title px-2'>Patient Profile</h4>
+                                    <button type="button" className="close text-danger" data-dismiss="modal" >&times;</button>
+                                </div>
+                                
+                                <div className='modal-body border-zero'>
+                                <div className='col-md-12 my-2'>
+                                <div className='border shadow-lg d-flex justify-content-between'>
+                                    <div className='col-md-5 px-0'>
+                                        <img alt='staffPic' src={viewPat.photo} className='w-100 h-100' />
+                                    </div>
+                                    <div className='col-md-7'>
+                                        <p className=''>{viewPat.fullName} ({viewPat.gender}) </p>
+                                        <p className=''>{viewPat.weight}kg ,  {viewPat.height} cm</p>
+                                        <p style={{fontSize: '12px'}}>{viewPat.phone} {viewPat.email}</p>
+                                        <p style={{fontSize: '12px'}}>DOB: {viewPat.dob}</p>
+                                        <p className="text-capitalize" style={{fontSize: '12px'}}>Blood: Type {viewPat.genotype}</p>
+                                        <p style={{fontSize: '12px'}}>Address: {viewPat.address}</p>
+                                        <div className='h6 rounded-lg bg-primary text-center my-1 text-white text-capitalize'>{viewPat.healthId}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                                </div>
+                                <div className="modal-footer container">
+                                    <button  className=' btn btn-danger  m-1' data-dismiss='modal'>
+                                        Close
+                                        </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
 
 
@@ -176,10 +310,6 @@ const AppointmentList=()=>{
 
                 
             </section>
-
-        </div>
-
-
     )
 
 }

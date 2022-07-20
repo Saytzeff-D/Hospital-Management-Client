@@ -180,7 +180,7 @@ function RegisterStaff() {
                         </div>
                     <div className='form-group col-md-6'>
                             <input onChange={pickFile} type="file" className='form-control d-none' name='photo' id='photo' />
-                            <div className='btn btn-dark btn-block btn-light text-warning' onClick={clickFileInput} ><span><i className='fa fa-upload'></i></span> Click to Pick a Passport</div>
+                            <div className='btn btn-dark btn-block text-warning' onClick={clickFileInput} ><span><i className='fa fa-upload'></i></span> Click to Pick a Passport</div>
                             {photo === '' ? <div className='text-danger'>{photoError}</div> : null}
                         </div>
                     </div>

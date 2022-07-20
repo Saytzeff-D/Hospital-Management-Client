@@ -49,9 +49,9 @@ function StaffLogin() {
                 }
             })
             .catch((err)=>{
-                console.log(err)
-                setError(err.response.data.message)
                 setLoading({btn: 'Login', loadStyle: ''})
+                console.log(err)
+                setError('An Error has occurred, pls try again')
             })
         }
      

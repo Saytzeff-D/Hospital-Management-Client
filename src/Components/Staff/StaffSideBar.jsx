@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { setStaff } from '../../actions';
+import { allMedicines, getAllPatient, setStaff } from '../../actions';
 import LogoutMessage from '../Container/LogoutMessage'
 
 const StaffSideBar = ()=>{
@@ -27,6 +27,8 @@ const StaffSideBar = ()=>{
         if(res.data.status){
             console.log(res.data.staffDetails)
           dispatch(setStaff(res.data.staffDetails))
+          dispatch(getAllPatient(url))
+          dispatch(allMedicines(url))
           setIsLoading(false)
         }
         else{

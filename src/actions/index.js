@@ -20,6 +20,13 @@ export const getStaff = (url)=>{
     })
   }
 }
+export const getAllPatient = (url)=>{
+  return (dispatch)=>{
+    return axios.get(`${url}patient/allPatient`).then((res)=>{
+      dispatch({type: 'getAllPatients', payload: res.data})
+    })
+  }
+}
 export const setPatientDetails = (details)=>{
   return{
     type: 'patientDetails',
@@ -32,6 +39,15 @@ export const getPatientAppointmentList = (url, obj)=>{
       dispatch({type: 'loggedInPatientAppointment', payload: res.data.appointments})
     }).catch((err)=>{
       dispatch({type: 'axiosError', payload: 'AxiosError'})
+    })
+  }
+}
+export const allMedicines = (url)=>{
+  return (dispatch)=>{
+    return axios.get(`${url}staff/allMedicines`).then((res)=>{
+      dispatch({type: 'allMedicines', payload: res.data.drugs})
+    }).catch((err)=>{
+      dispatch({type: 'medicineError', payload: 'MedError'})
     })
   }
 }
