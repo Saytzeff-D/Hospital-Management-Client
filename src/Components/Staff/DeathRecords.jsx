@@ -54,6 +54,7 @@ function DeathRecords(props) {
                
         }),
         onSubmit: (values)=>{
+            alert(90)
             const patient = patientTray.find((patient, i)=>( (patient.healthId).toLowerCase() === (values.healthId).toLowerCase() ))
             values.age = Math.floor((new Date(values.deathDate) - new Date(patient.dob))/(1000 * 60 * 60 * 24*365))
             values.gender=patient.gender
@@ -63,9 +64,11 @@ function DeathRecords(props) {
                 if(res.data.status){
                     setSuccess(res.data.message)
                     setError('')
+                    setBtnLoading({btn: 'Save Records', loadStyle: ''})
                     console.log(res.data)
                 }else{
                     setError(res.data.message)
+                    setBtnLoading({btn: 'Save Records', loadStyle: ''})
                     setSuccess('')
                 }
             }).catch(err=> console.log(err))
@@ -198,9 +201,9 @@ function DeathRecords(props) {
                                             {formik.touched.report && <div className='text-danger'>{formik.errors.report}</div>}
                                         </div>
                                     </div>
-                                    <button className='btn btn-primary btn-block mb-1' type='submit'>{loading.btn} <span className={btnLoading.loadStyle}></span></button>
-                                    {/* <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Records</button>
-                                </form> */}
+                                    {/* <button className='btn btn-primary btn-block mb-1' type='submit'>{btnLoading.btn} <span className={btnLoading.loadStyle}></span></button> */}
+                                    <button type='submit' onClick={formik.handleSubmit} className='btn btn-primary btn-block font-weight-bold'>Save Records</button>
+                                </form>
                             </div>
                         </div>
                     </div>

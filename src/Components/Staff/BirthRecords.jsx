@@ -60,10 +60,11 @@ const BirthRecords = (props)=>{
                 if(res.data.status){
                     setSuccess(res.data.message)
                     setError('')
-                    setLoading({btn: 'Save Records', loadStyle: ''})
+                    setBtnLoading({btn: 'Save Records', loadStyle: ''})
                     console.log(res.data)
                 }else{
                     setError(res.data.message)
+                    setBtnLoading({btn: 'Save Records', loadStyle: ''})
                     setSuccess('')
                 }
             }).catch(err=> console.log(err))
@@ -243,7 +244,7 @@ const BirthRecords = (props)=>{
                                        
                                     </div>
                                     {/* <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Records</button> */}
-                                     <button className='btn btn-primary btn-block mb-1' type='submit'>{loading.btn} <span className={btnLoading.loadStyle}></span></button>
+                                     <button className='btn btn-primary btn-block mb-1' type='submit'>{btnLoading.btn} <span className={btnLoading.loadStyle}></span></button>
                                 </form>
                             </div>
                         </div>
