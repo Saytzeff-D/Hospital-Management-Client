@@ -1,0 +1,85 @@
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+const PrescriptionList = () => {
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState('')
+    const [list, setList] = useState([])
+    const url = useSelector(state=>state.UrlReducer.url)
+    useEffect(()=>{
+        axios.get(`${url}staff/allPrescription`).then((res)=>{
+            setList(res.data.result)
+            setIsLoading(false)
+        }).catch((err)=>{
+            setIsLoading(false)
+            setError('AxiosError')
+        })
+    }, [])
+    return (
+        <div>
+            <div className='row p-2'>
+                <div className='col-12 bg-white border'>
+                <div className='border-bottom py-2'>
+                    <p className='h6'>Prescription List</p>
+                </div>
+                <div className='col-lg-4 col-md-6 col-sm-8 my-2'>
+                    <input className='form-control' placeholder='Search...' />
+                </div>
+                {
+                    isLoading
+                    ?
+                    (
+                        <div className='my-2'>
+                            <span className='spinner-border text-danger'></span>
+                        </div>
+                    )
+                    :
+                    error === 'AxiosError'
+                    ?
+                    (
+                        <div className='alert alert-danger'>Server Error</div>
+                    )
+                    :
+                    (
+                        list.length === 0
+                        ?
+                        <div className='my-2'>
+                            <p>Very much empty !</p>
+                        </div>
+                        :
+                        <table className='table table-light table-striped'>
+                            <thead>
+                                <tr>
+                                    <th>Prescription Id</th>
+                                    <th>Patient Name</th>
+                                    <th>Illness</th>
+                                    <th>Physician Name</th>
+                                    <th>Prescribed Medicine</th>
+                                    <th>FurtherAction</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    list.map((each, i)=>(
+                                        <tr>
+                                            <td> {each.prescriptionId} </td>
+                                            <td> {each.patientName} </td>
+                                            <td> {each.illness} </td>
+                                            <td> {each.doctorName} </td>
+                                            <td> {each.prescribedMedicine} </td>
+                                            <td> <button className='btn btn-warning'>Bill Now</button> </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
+                    )
+                }
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default PrescriptionList;
