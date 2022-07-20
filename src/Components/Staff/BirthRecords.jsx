@@ -15,15 +15,20 @@ const BirthRecords = (props)=>{
     const [motherName, setMotherName] = useState('')
     const [success,setSuccess]=useState('')
     const [searchText,setText]=useState('')
-    const [loading, setLoading] = useState({btn: 'Save Records', loadStyle: ''})
+    const [btnLoading, setBtnLoading] = useState({btn: 'Save Records', loadStyle: ''})
+    const [loading, setLoading] = useState(true)
 
     useEffect(()=>{
         axios.get(`${url}staff/getBirth`).then(res=>{
             if(res.data.status){
                 setBirthTray(res.data.babies)
                 setList(res.data.babies)
+                setLoading(false)
             }
-        }).catch(err=>console.log(err))
+        }).catch(err=>{
+            console.log(err)
+            setError('AxiosError')
+        })
     },[success,error])
 
     const formik = useFormik({
@@ -50,7 +55,7 @@ const BirthRecords = (props)=>{
                
         }),
         onSubmit: (values)=>{
-            setLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
+            setBtnLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
             axios.post(`${url}staff/addBirth`,values).then(res=>{
                 if(res.data.status){
                     setSuccess(res.data.message)
@@ -110,6 +115,14 @@ const BirthRecords = (props)=>{
                             <input onChange={(e)=>setText(e.target.value)} className='form-control' placeholder='Search...' />
                         </div>
                         {
+                            loading 
+                            ?
+                            (<div className='mt-2'><p className='spinner-border text-danger'></p></div>)
+                            :
+                            error === 'AxiosError'
+                            ?
+                            <div className='alert alert-danger'>Server Error</div>
+                            :
                             birthTray.length === 0
                             ?
                             (
@@ -230,7 +243,7 @@ const BirthRecords = (props)=>{
                                        
                                     </div>
                                     {/* <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Records</button> */}
-                                     <button className='btn btn-primary btn-block mb-1' type='submit'>{loading.btn} <span className={loading.loadStyle}></span></button>
+                                     <button className='btn btn-primary btn-block mb-1' type='submit'>{loading.btn} <span className={btnLoading.loadStyle}></span></button>
                                 </form>
                             </div>
                         </div>

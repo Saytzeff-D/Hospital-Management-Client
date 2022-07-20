@@ -14,16 +14,20 @@ function DeathRecords(props) {
     const [deathTray,setDeathTray] = useState([])
     const [patientName, setPatientName] = useState('')
     const [guardianName,setGuardianName]=useState('')
-    const [loading, setLoading] = useState({btn: 'Save Records', loadStyle: ''})
+    const [btnLoading, setBtnLoading] = useState({btn: 'Save Records', loadStyle: ''})
    
+    const [loading, setLoading] = useState(true)
     useEffect(()=>{
         axios.get(`${url}staff/getDeath`).then(res=>{
             if(res.data.status){
                 console.log(res.data.result)
                 setDeathTray(res.data.result)
                 setList(res.data.result)
+                setLoading(false)
             }
-        }).catch(err=>console.log(err))
+        }).catch((err)=>{
+            setError('AxiosError')
+        })
     },[success,error])
 
 
@@ -50,26 +54,25 @@ function DeathRecords(props) {
                
         }),
         onSubmit: (values)=>{
-            console.log("hello")
-            // const patient = patientTray.find((patient, i)=>(patient.healthId === values.healthId))
-            // values.age = new Date(values.deathDate) - new Date(patient.dob)/(1000 * 60 * 60 * 24)
-            // console.log(values.age)
-            // setLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
-            // axios.post(`${url}staff/addDeath`,values).then(res=>{
-            //     if(res.data.status){
-            //         setSuccess(res.data.message)
-            //         setError('')
-            //         setLoading({btn: 'Login', loadStyle: ''})
-            //         console.log(res.data)
-            //     }else{
-            //         setError(res.data.message)
-            //         setSuccess('')
-            //     }
-            // }).catch(err=> console.log(err))
+            const patient = patientTray.find((patient, i)=>( (patient.healthId).toLowerCase() === (values.healthId).toLowerCase() ))
+            values.age = Math.floor((new Date(values.deathDate) - new Date(patient.dob))/(1000 * 60 * 60 * 24*365))
+            values.gender=patient.gender
+            values._id=patient._id
+            setBtnLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
+            axios.post(`${url}staff/addDeath`,values).then(res=>{
+                if(res.data.status){
+                    setSuccess(res.data.message)
+                    setError('')
+                    console.log(res.data)
+                }else{
+                    setError(res.data.message)
+                    setSuccess('')
+                }
+            }).catch(err=> console.log(err))
         }
     })
     const getPatientName = (healthId)=>{
-        const patient = patientTray.find((patient, i)=>(patient.healthId === healthId))
+        const patient = patientTray.find((patient, i)=>( (patient.healthId).toLowerCase() === (healthId).toLowerCase()))
         if(patient === undefined){
             setPatientName('Record not found...')
             setGuardianName('Record not found...')
@@ -95,6 +98,14 @@ function DeathRecords(props) {
                             <input className='form-control' placeholder='Search...' />
                         </div>
                         {
+                            loading 
+                            ?
+                            (<div className='mt-2'><p className='spinner-border text-danger'></p></div>)
+                            :
+                            error === 'AxiosError'
+                            ?
+                            <div className='alert alert-danger'>Server Error</div>
+                            :
                             deathTray.length === 0
                             ?
                             (
@@ -119,7 +130,7 @@ function DeathRecords(props) {
                                     <tbody>
                                         {
                                             deathTray.map((item, index)=>(
-                                                <tr>
+                                                <tr key={index}>
                                                     <td> {item.recordsId} </td>
                                                     <td> {item.patientName} </td>
                                                     <td> {item.gender} </td>
@@ -187,9 +198,9 @@ function DeathRecords(props) {
                                             {formik.touched.report && <div className='text-danger'>{formik.errors.report}</div>}
                                         </div>
                                     </div>
-                                    {/* <button className='btn btn-primary btn-block mb-1' type='submit'>{loading.btn} <span className={loading.loadStyle}></span></button> */}
-                                    <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Records</button>
-                                </form>
+                                    <button className='btn btn-primary btn-block mb-1' type='submit'>{loading.btn} <span className={btnLoading.loadStyle}></span></button>
+                                    {/* <button type='submit' className='btn btn-primary btn-block font-weight-bold'>Save Records</button>
+                                </form> */}
                             </div>
                         </div>
                     </div>

@@ -1,16 +1,19 @@
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { useSelector }  from 'react-redux'
 
 const AddPrescription = (props)=>{
+    const url = useSelector(state=>state.UrlReducer.url)
     const patientTray = useSelector(state=>state.PatientReducer.patientTray)
     const medicineTray = useSelector(state=>state.PharmacyReducer.medicineTray)
     const staff = useSelector(state=>state.StaffReducer.staffInfo)
     const [testInputArr, setTestInputArr] = useState([0])
     const [prescribeMed, setPrescribeMed] = useState([])
-    const [prescriptionObj, setPresciptionObj]= useState({healthId: '', patientName: '', doctorName: '', illness: ''})
+    const [prescriptionObj, setPrescriptionObj]= useState({healthId: '', patientName: '', doctorName: '', illness: ''})
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const moreInput = ()=>{
         setTestInputArr([...testInputArr, 1])
@@ -22,16 +25,7 @@ const AddPrescription = (props)=>{
         document.getElementById('submitForm').click()
     }
     const handleChange = (e)=>{
-        setPresciptionObj({...prescriptionObj, [e.target.name]: e.target.value})
-        if(e.target.name === 'healthId'){
-            let patient = patientTray.find((each, i)=>(each.healthId === e.target.value))
-            if(patient === undefined){
-                setError('Patient Record not found, pls enter a valid Health Id')
-            }else{
-                setPresciptionObj({...prescriptionObj, patientName: patient.fullName})
-                setError('')
-            }
-        }else{}
+        setPrescriptionObj({...prescriptionObj, [e.target.name]: e.target.value})
     }
     const handleMedicineChange = (e,i)=>{
         prescribeMed[i] = e.target.value
@@ -43,12 +37,29 @@ const AddPrescription = (props)=>{
             setError('')
         }
     }
+    const getPatientName = (patientId)=>{
+        const patient = patientTray.find((patient, i)=>(patient.healthId === patientId))
+        if(patient === undefined){
+            setPrescriptionObj({...prescriptionObj, patientName: 'Record not found...'})
+        }else{
+            setPrescriptionObj({...prescriptionObj, healthId: patientId, patientName: patient.fullName})
+        }
+    }
     const addPrescription = (e)=>{
         e.preventDefault()
-        console.log(prescriptionObj, prescribeMed)
+        prescriptionObj.medArray = prescribeMed
+        console.log(prescriptionObj)
+        setLoading(true)
+        axios.post(`${url}staff/addPrescription`, prescriptionObj).then((res)=>{
+            setLoading(false)
+            setSuccess(res.data.message)
+        }).catch((err)=>{
+            setLoading(false)
+            setError('An error has occured...')
+        })
     }
     useEffect(()=>{
-        setPresciptionObj({...prescriptionObj, doctorName: `Dr. ${staff.fname} ${staff.lname}`})
+        setPrescriptionObj({...prescriptionObj, doctorName: `Dr. ${staff.fname} ${staff.lname}`})
     }, [])
 
     return(
@@ -58,7 +69,7 @@ const AddPrescription = (props)=>{
                     {/* Top Header */}
                     <div className='d-flex justify-content-between py-2 border-bottom'>
                         <p className='font-weight-bold h6'>Add Prescription</p>
-                        <button className='btn btn-primary' onClick={clickPrescribe}>Add Prescription</button>
+                        <button className='btn btn-primary' onClick={clickPrescribe}>{loading ? (<span className='spinner-border spinner-border-sm text-white'></span>) : 'Add Prescription' }</button>
                     </div>
                     {/* Top Header */}
                     {/* Body */}
@@ -75,7 +86,7 @@ const AddPrescription = (props)=>{
                             <div className='form-row'>
                                 <div className='form-group col-6'>
                                     <label className='h6'>HealthId</label>
-                                    <input onChange={handleChange} className='form-control' name='healthId' />
+                                    <input onChange={(e)=>getPatientName(e.target.value)} className='form-control' name='healthId' />
                                 </div>
                                 <div className='form-group col-6'>
                                     <label className='h6'>Patient Name</label>
