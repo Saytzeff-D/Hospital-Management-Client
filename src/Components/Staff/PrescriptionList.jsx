@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const PrescriptionList = () => {
+    const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [list, setList] = useState([])
@@ -16,6 +18,7 @@ const PrescriptionList = () => {
             setError('AxiosError')
         })
     }, [])
+<<<<<<< HEAD
     const returnClassName=(length)=>{
         if(length>4){
             console.log(10)
@@ -25,6 +28,12 @@ const PrescriptionList = () => {
             return 'bg bg-danger'
         }
 
+=======
+    const billNow = (prescription)=>{
+        console.log(prescription)
+        sessionStorage.setItem('prescription', JSON.stringify(prescription))
+        navigate('/staff/pharmacy')
+>>>>>>> refs/remotes/origin/main
     }
     return (
         <div>
