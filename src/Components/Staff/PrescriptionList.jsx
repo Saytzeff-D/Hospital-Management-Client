@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const PrescriptionList = () => {
+    const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
     const [list, setList] = useState([])
@@ -16,6 +18,11 @@ const PrescriptionList = () => {
             setError('AxiosError')
         })
     }, [])
+    const billNow = (prescription)=>{
+        console.log(prescription)
+        sessionStorage.setItem('prescription', JSON.stringify(prescription))
+        navigate('/staff/pharmacy')
+    }
     return (
         <div>
             <div className='row p-2'>
@@ -68,7 +75,7 @@ const PrescriptionList = () => {
                                             <td> {each.illness} </td>
                                             <td> {each.doctorName} </td>
                                             <td> {each.prescribedMedicine} </td>
-                                            <td> <button className='btn btn-warning'>Bill Now</button> </td>
+                                            <td> <button onClick={()=>billNow(each)} className='btn btn-warning'>Bill Now</button> </td>
                                         </tr>
                                     ))
                                 }
