@@ -18,22 +18,10 @@ const PrescriptionList = () => {
             setError('AxiosError')
         })
     }, [])
-<<<<<<< HEAD
-    const returnClassName=(length)=>{
-        if(length>4){
-            console.log(10)
-            return 'display-drugs'
-        }else{
-            console.log(9)
-            return 'bg bg-danger'
-        }
-
-=======
     const billNow = (prescription)=>{
         console.log(prescription)
         sessionStorage.setItem('prescription', JSON.stringify(prescription))
         navigate('/staff/pharmacy')
->>>>>>> refs/remotes/origin/main
     }
     return (
         <div>
