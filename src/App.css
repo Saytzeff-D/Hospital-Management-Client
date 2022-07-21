@@ -61,6 +61,13 @@
   .modal-dialog{
     width:100%
   }
+  .display-drugs{
+    background-color: #eee;
+    width: 200px;
+    height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto
+  }
   /* .big-modal */
 
   

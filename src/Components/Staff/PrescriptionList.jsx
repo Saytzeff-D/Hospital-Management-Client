@@ -16,6 +16,16 @@ const PrescriptionList = () => {
             setError('AxiosError')
         })
     }, [])
+    const returnClassName=(length)=>{
+        if(length>4){
+            console.log(10)
+            return 'display-drugs'
+        }else{
+            console.log(9)
+            return 'bg bg-danger'
+        }
+
+    }
     return (
         <div>
             <div className='row p-2'>
@@ -67,7 +77,22 @@ const PrescriptionList = () => {
                                             <td> {each.patientName} </td>
                                             <td> {each.illness} </td>
                                             <td> {each.doctorName} </td>
-                                            <td> {each.prescribedMedicine} </td>
+
+                                            <td style={{height:'10px'}}> { each.prescribedMedicine.length>3 && <div className='display-drugs'><ol>                                               
+                                                {each.prescribedMedicine.map((each,index)=>(
+                                                    <li key={index}>{each}</li>
+                                                ))}
+                                                
+                                                </ol></div>}{ each.prescribedMedicine.length<=3 && <div className=''><ol>                                               
+                                                {each.prescribedMedicine.map((each,index)=>(
+                                                    <li key={index}>{each}</li>
+                                                ))}
+                                                
+                                                </ol></div>}
+                                                
+                                                
+                                                
+                                                </td>
                                             <td> <button className='btn btn-warning'>Bill Now</button> </td>
                                         </tr>
                                     ))
