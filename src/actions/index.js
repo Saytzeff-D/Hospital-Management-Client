@@ -13,6 +13,7 @@ export const setStaff=(params)=>{
     payload:params
   }
 }
+
 export const getStaff = (url)=>{
   return (dispatch)=>{
     return axios.get(`${url}staff/allStaffs`).then((res)=>{

@@ -1,9 +1,11 @@
 import axios from 'axios'
 import React,{ useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { updatePatient } from '../../actions'
 
 
-const ViewProfile=()=>{
+const ViewProfile=(props)=>{
+    let {setEdit}=props
     const patientDetails=useSelector(state=>state.StaffReducer.viewPatientDetails)
     const url=useSelector(state=>state.UrlReducer.url)
     let dispatch=useDispatch()
@@ -46,7 +48,7 @@ const ViewProfile=()=>{
             console.log(res)
             if(res.data.status){
                 alert('updated, please close the modal')
-                dispatch({type:'updatePatient', payload:[]})
+                setEdit()
                 setSpinner({spin: 'fa fa-save mx-2', text: 'Save'})
             }
             else{

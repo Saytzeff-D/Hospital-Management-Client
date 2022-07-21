@@ -74,8 +74,23 @@ const PrescriptionList = () => {
                                             <td> {each.patientName} </td>
                                             <td> {each.illness} </td>
                                             <td> {each.doctorName} </td>
-                                            <td> {each.prescribedMedicine} </td>
-                                            <td> <button onClick={()=>billNow(each)} className='btn btn-warning'>Bill Now</button> </td>
+
+                                            <td style={{height:'10px'}}> { each.prescribedMedicine.length>3 && <div className='display-drugs'><ol>                                               
+                                                {each.prescribedMedicine.map((each,index)=>(
+                                                    <li key={index}>{each}</li>
+                                                ))}
+                                                
+                                                </ol></div>}{ each.prescribedMedicine.length<=3 && <div className=''><ol>                                               
+                                                {each.prescribedMedicine.map((each,index)=>(
+                                                    <li key={index}>{each}</li>
+                                                ))}
+                                                
+                                                </ol></div>}
+                                                
+                                                
+                                                
+                                                </td>
+                                            <td> <button className='btn btn-warning'>Bill Now</button> </td>
                                         </tr>
                                     ))
                                 }

@@ -19,6 +19,7 @@ const  PatientList=()=>{
     let [staffAddPatRoute,setAddPatRoute]=useState('')
     const displayAtOnce = 4
     const [presentPage,setPresentPage]=useState(0)
+    const [editsuccess,setEditMessage]=useState('')
     useEffect(()=>{
         console.log('refetching')
         axios.get(`${url}patient/allPatient`).then(res=>{
@@ -32,7 +33,7 @@ const  PatientList=()=>{
             console.log('cannot connect')
         })
 
-    },[url])
+    },[url,editsuccess])
 useEffect(()=>{
     setTablePage()
 },[presentPage])
@@ -72,12 +73,9 @@ const filterWithParameter=(params,ID)=>{
         })
     }
          setFilteredList(filteredList)
-
     }else{
         setFilteredList(allPat)
-
     }
-
     }
 
     const deletePatient=(obj,index)=>{
@@ -147,11 +145,11 @@ const filterWithParameter=(params,ID)=>{
             }
 
         })
-
         setFilteredList(filteredList)
-
     }
-
+    const setEdit=()=>{
+        setEditMessage('updated')
+    }
     
 
 
@@ -284,7 +282,7 @@ const filterWithParameter=(params,ID)=>{
                                 </div>
                                 
                                 <div className='modal-body'>
-                                   <ViewProfile/>
+                                   <ViewProfile setEdit={setEdit}/>
                                 </div>
                             </div>
                         </div>
