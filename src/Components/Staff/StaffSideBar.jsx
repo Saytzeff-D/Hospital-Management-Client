@@ -109,7 +109,11 @@ const StaffSideBar = ()=>{
                     }
                     {  
                     (staffInfo.role === 'Admin' || staffInfo.role === 'Pharmacist' || staffInfo.role ==='Accountant' ) && 
-                    <NavLink style={{textDecoration: 'none'}} to='/staff/pharmacy' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Pharmacy</NavLink> 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/pharmacy' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Generate Pharmacy Bills</NavLink> 
+                    }
+                    {  
+                    (staffInfo.role === 'Admin' || staffInfo.role === 'Pharmacist' || staffInfo.role ==='Accountant' ) && 
+                    <NavLink style={{textDecoration: 'none'}} to='/staff/pharmacyBills' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><i className="fa fa-users fa-fw"></i>  Pharmacy Bills</NavLink> 
                     }
                    {
                     (staffInfo.role === 'Admin' || staffInfo.role ==='Doctor' || staffInfo.role ==='Accountant') &&
