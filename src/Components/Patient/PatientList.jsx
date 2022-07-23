@@ -27,6 +27,8 @@ const  PatientList=()=>{
                 sessionStorage.patTray=JSON.stringify(res.data)
                 setAllPat(res.data)
                 setFilteredList(res.data)
+                localStorage.allPat=JSON.stringify
+                (res.data)
                 setTablePage()              
         }).catch(err=>{
             console.log(err)
