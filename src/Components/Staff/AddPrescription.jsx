@@ -94,17 +94,20 @@ const AddPrescription = (props)=>{
 
     const filterDrugArray=(meds)=>{
         let drugsNotFound=''
+        let drugsArr=[]
         meds.forEach((each,i)=>{
             let med = medicineTray.find((drug, i)=>((drug.medicineName).toLowerCase() ===(each).toLowerCase()))
             if(med === undefined){
                 drugsNotFound+=`${each}, `
+                drugsArr.push(each)
             }  
           })
           if(drugsNotFound==''){
             return true
           }else{
             setError('')
-            setErrorTray({status:false,message:`${drugsNotFound} are not available in Pharmacy`})
+            
+            setErrorTray({status:false,message:`${drugsNotFound.slice(0,drugsNotFound.length-2)} ${drugsArr.length>1? `are`:`is`} not available in Pharmacy`})
             return false
           }
     }

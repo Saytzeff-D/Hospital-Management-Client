@@ -1,7 +1,24 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import React from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 function PatientDashboard(props) {
+  const [patInfo,setPatInfo]=useState({AppNo:'',presNo:""})
+  const url= useSelector(state=>state.UrlReducer.url)
+  const patientDetails=useSelector(state=>state.PatientReducer.patientDetails)
+  useEffect(()=>{
+    axios.post(`${url}patient/getInfo`,patientDetails).then(res=>{
+      if(res.data.status){
+        let data=res.data
+        console.log(data.AppNo,data.presNo)
+        setPatInfo({...patInfo,AppNo:data.AppNo,presNo:data.presNo})
+        console.log(patInfo)
+      }
+    })
+  },[])
     return (
         <div>
             <header className="w3-container" style={{paddingTop: '22px'}}>
@@ -13,7 +30,10 @@ function PatientDashboard(props) {
       <div className="w3-container w3-red w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><i className="fa fa-calendar w3-xxlarge"></i></div>
         <div className="w3-right">
-          <h3>52</h3>
+          <h3>{(patInfo.AppNo==''  && patInfo.AppNo!==0 )?  
+              <span className='spinner-border text-white'></span>:patInfo.AppNo
+          
+        }</h3>
         </div>
         <div className="w3-clear py-3"></div>
         <h4>My Appointment</h4>
@@ -23,7 +43,10 @@ function PatientDashboard(props) {
       <div className="w3-container w3-blue w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><FontAwesomeIcon icon='mortar-pestle' className='w3-xxlarge' /></div>
         <div className="w3-right">
-          <h3>99</h3>
+        <h3>{(patInfo.presNo=='' && patInfo.presNo!==0 ) ?  
+              <span className='spinner-border text-white'></span>:patInfo.presNo
+          
+        }</h3>
         </div>
         <div className="w3-clear py-3"></div>
         <h4>Pharmacy Bills</h4>

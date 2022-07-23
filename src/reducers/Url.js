@@ -1,6 +1,6 @@
 const initstate={
-   url: 'https://hospital-software-server.herokuapp.com/'
-   // url: 'http://localhost:4000/',
+   // url: 'https://hospital-software-server.herokuapp.com/'
+   url: 'http://localhost:4000/'
 
 }
 
