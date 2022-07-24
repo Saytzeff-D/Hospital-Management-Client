@@ -90,7 +90,7 @@ const PrescriptionList = () => {
                                                 
                                                 
                                                 </td>
-                                            <td> <button className='btn btn-warning'>Bill Now</button> </td>
+                                            <td> <button onClick={()=>billNow(each)} className='btn btn-warning'>Bill Now</button> </td>
                                         </tr>
                                     ))
                                 }
