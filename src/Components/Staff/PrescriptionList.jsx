@@ -55,7 +55,7 @@ const PrescriptionList = () => {
                             <p>Very much empty !</p>
                         </div>
                         :
-                        <table className='table table-light table-striped'>
+                        <table className='table table-light table-striped table-responsive'>
                             <thead>
                                 <tr>
                                     <th>Prescription Id</th>
@@ -69,7 +69,7 @@ const PrescriptionList = () => {
                             <tbody>
                                 {
                                     list.map((each, i)=>(
-                                        <tr>
+                                        <tr key={i}>
                                             <td> {each.prescriptionId} </td>
                                             <td> {each.patientName} </td>
                                             <td> {each.illness} </td>
