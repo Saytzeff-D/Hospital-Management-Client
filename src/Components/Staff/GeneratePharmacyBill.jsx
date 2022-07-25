@@ -1,44 +1,79 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const GeneratePharmacyBill = (props)=> {
+    const url=useSelector(state=>state.UrlReducer.url)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
-    const [testInputArr, setTestInputArr] = useState([0])
+    const [totalPrice,setTotalPrice]=useState(0)
+    const [price,setPrice]=useState(0)
     const [prescription, setPrescription] = useState({prescribedMedicine: []})
     const allMedicines = useSelector(state=>state.PharmacyReducer.medicineTray)
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const [medicine, setMedicine] = useState([])
     const [pharmBill, setPharmBill] = useState({})
-
+    const [sendRequest,setRequest]=useState(true)
     const clickGenerate = ()=>{
         document.getElementById('submitForm').click()
     }
     const generateBill = (e)=>{
         e.preventDefault()
-        prescription.prescribedMedicine.forEach((med, i)=>{
-            let obj = {medicineName: med, medicineCategory: allMedicines.find((each)=>(each.medicineName.toLowerCase() === med.toLowerCase())).medicineCategory}            
-            // setPharmBill({...pharmBill, medicine: [...pharmBill.medicine, obj]})
-            setMedicine([...medicine, obj])
-            console.log(medicine)
+        let medicineTray=[]
+        prescription.prescribedMedicine.forEach((each,i)=>{
+            let drug;
+            let drug_id;
+            console.log(drug_id,5)
+            
+            medicine.forEach((drugs,index)=>{
+                allMedicines.forEach((medicines,k)=>{
+                    if(medicines.medicineName.toLowerCase()==each.toLowerCase() &&medicines.medicineCategory.toLowerCase()==drugs.category.toLowerCase()){
+                        drug_id=medicines._id
+                        setError('')
+                    }
+                })
+                drugs.drug_id=drug_id
+                drug=drugs
+            })            
+            medicineTray.push({medicineName:each,...drug})            
+            drug_id=''
         })
+       
+        let billData={healthId:prescription.healthId,prescriptionId:prescription.prescriptionId,amount:totalPrice,doctorName:prescription.doctorName,medicineTray,illness:prescription.illness}
+        console.log(billData)
+        
     }
 
     useEffect(()=>{
         let prescribe = JSON.parse(sessionStorage.getItem('prescription'))
         setPrescription({...prescription, ...prescribe})
-        
+        console.log(prescription)
+        let medicine=[]
+        let pres;
+        for(pres in prescribe){
+            if(medicine.length<prescribe.prescribedMedicine.length){
+                 medicine.push({unit: '', priceTag:'',category:''})
+            }
+        }
+        setMedicine(medicine)
     }, [])
     const handleUnitChange = (value, drugs, index)=>{
-        prescription.prescribedMedicine[index].unit = value
+        let unitPrice = allMedicines.find((each)=>(each.medicineName.toLowerCase() === drugs.toLowerCase())).pricePerUnit
+        medicine[index].unit = value
+        medicine[index].priceTag = unitPrice * value
+        setMedicine([...medicine])
+
+        let TotalPrice=0
+        medicine.forEach((each,i)=>{
+            TotalPrice+=(each.priceTag)
+            setTotalPrice(TotalPrice)    
+        })
     }
-    const handlePriceChange = (value, drugs, index)=>{
-        let unitPrice = allMedicines.find((each)=>(each.medicineName === drugs)).pricePerUnit
-
+    const handleCategoryChange=(cat,i)=>{
+        medicine[i].category=cat
+        setMedicine([...medicine])
     }
-
-
     return (
         <div>
             <div className='row p-2'>
@@ -101,15 +136,24 @@ const GeneratePharmacyBill = (props)=> {
                                                 {
                                                     prescription.prescribedMedicine.map((drugs,i)=>(
                                                         <>
-                                                            <div className='form-group col-3'>
+                                                            <div className='form-group col-3' key={i}>
                                                                 <label>Diagnosed Medicine</label>
                                                                 <input className='form-control' value={drugs} name={`med${i}`} />
                                                             </div>
                                                             <div className='form-group col-3'>
                                                                 <label>Medicine Category</label>
-                                                                <input className='form-control' value={
-                                                                    allMedicines.find((each)=>(each.medicineName.toLowerCase() === drugs.toLowerCase())).medicineCategory
-                                                                } name={`med${i}`} />
+                                                                <select  name='medicineCategory' className='form-control' onChange={(e)=>handleCategoryChange(e.target.value,i)}>  
+                                                <option value='' >Medicine Category</option>                                             
+                                                <option value='Syrup' >Syrup </option>
+                                                <option value='Ointment'>Ointment</option>
+                                                <option value='Injection'>Injection</option>
+                                                <option value='Capsule'>Capsule</option>
+                                                <option value='Liquids'>Liquids</option>
+                                                <option value='Inhalers'>Inhalers</option>
+                                                <option value='Surgical'>Surgical</option>
+                                                <option value='Drops'>Drops</option>
+                                                <option value='Diaper'>Diaper</option>
+                                            </select>
                                                             </div>
                                                             <div className='form-group col-3'>
                                                                 <label className='d-flex justify-content-between'><span>Unit</span> <span>Stock Qty</span></label>
@@ -127,7 +171,7 @@ const GeneratePharmacyBill = (props)=> {
                                                             <div className='form-group col-3'>
                                                                 <label className='d-flex justify-content-between'><span>Price Tag</span> <span>PricePerUnit</span></label>
                                                                 <div className='input-group'>
-                                                                    <input className='form-control' disabled name={`med${i}`} value='' />
+                                                                    <input className='form-control' disabled name={`med${i}`} value={medicine[i].priceTag} />
                                                                     <div className='input-group-append'>
                                                                         <p className='input-group-text'>
                                                                             {
@@ -142,7 +186,7 @@ const GeneratePharmacyBill = (props)=> {
                                                 }
                                             </div>
                                             <div className='d-flex justify-content-end'>
-                                                <p>Net Price:</p>
+                                                <p>Net Price: {totalPrice}</p>
                                             </div>
                                             <button type='submit' id='submitForm' className='d-none'>Submit Form</button>
                                         </form>
