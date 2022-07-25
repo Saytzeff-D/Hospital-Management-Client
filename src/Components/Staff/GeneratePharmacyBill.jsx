@@ -20,12 +20,7 @@ const GeneratePharmacyBill = (props)=> {
     useEffect(()=>{
         let prescribe = JSON.parse(sessionStorage.getItem('prescription'))
         setPrescription({...prescription, ...prescribe})
-        if(allMedicines.length !== 0){
-            prescription.prescribedMedicine.map((each)=>(
-                setMedicine([...medicine, {unit: '', priceTag: ''}])
-            ))
-        }else{}
-        console.log(prescription, medicine)
+        console.log(prescription, prescribe)
     }, [])
     const handleUnitChange = (value, drugs, index)=>{
         medicine[index].unit = value
@@ -108,8 +103,7 @@ const GeneratePharmacyBill = (props)=> {
                                                             <div className='form-group col-3'>
                                                                 <label>Medicine Category</label>
                                                                 <input className='form-control' value={
-                                                                    allMedicines.find((each)=>(each.medicineName === drugs)).medicineCategory
-                                                                    // (console.log('MedCategory'))
+                                                                    allMedicines.find((each)=>(each.medicineName.toLowerCase() === drugs.toLowerCase())).medicineCategory
                                                                 } name={`med${i}`} />
                                                             </div>
                                                             <div className='form-group col-3'>
@@ -119,8 +113,7 @@ const GeneratePharmacyBill = (props)=> {
                                                                     <div className='input-group-append'>
                                                                         <p className='input-group-text'>
                                                                             {
-                                                                                allMedicines.find((each)=>(each.medicineName === drugs)).availableQty
-                                                                                // (console.log('Available Qty'))
+                                                                                allMedicines.find((each)=>(each.medicineName.toLowerCase() === drugs.toLowerCase())).availableQty
                                                                             }
                                                                         </p>
                                                                     </div>
@@ -133,8 +126,7 @@ const GeneratePharmacyBill = (props)=> {
                                                                     <div className='input-group-append'>
                                                                         <p className='input-group-text'>
                                                                             {
-                                                                                allMedicines.find((each)=>(each.medicineName === drugs)).pricePerUnit
-                                                                                // (console.log('pricePerUnit'))
+                                                                                allMedicines.find((each)=>(each.medicineName.toLowerCase() === drugs.toLowerCase())).pricePerUnit
                                                                             }
                                                                         </p>
                                                                     </div>
