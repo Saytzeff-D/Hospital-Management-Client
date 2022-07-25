@@ -123,7 +123,7 @@ const GeneratePharmacyBill = (props)=> {
                                                             <div className='form-group col-3'>
                                                                 <label className='d-flex justify-content-between'><span>Price Tag</span> <span>PricePerUnit</span></label>
                                                                 <div className='input-group'>
-                                                                    <input className='form-control' disabled name={`med${i}`} value={medicine[i].priceTag} />
+                                                                    <input className='form-control' disabled name={`med${i}`}  />
                                                                     <div className='input-group-append'>
                                                                         <p className='input-group-text'>
                                                                             {
