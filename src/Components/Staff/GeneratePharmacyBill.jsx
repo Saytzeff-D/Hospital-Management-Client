@@ -18,14 +18,20 @@ const GeneratePharmacyBill = (props)=> {
     const generateBill = ()=>{}
 
     useEffect(()=>{
-        console.log(allMedicines)
         let prescribe = JSON.parse(sessionStorage.getItem('prescription'))
         setPrescription({...prescription, ...prescribe})
-        console.log(prescription)
+        if(allMedicines.length !== 0){
+            prescription.prescribedMedicine.map((each)=>(
+                setMedicine([...medicine, {unit: '', priceTag: ''}])
+            ))
+        }else{}
+        console.log(prescription, medicine)
     }, [])
     const handleUnitChange = (value, drugs, index)=>{
         medicine[index].unit = value
         setMedicine(medicine)
+    }
+    const handlePriceChange = (value, drugs, index)=>{
         let unitPrice = allMedicines.find((each)=>(each.medicineName === drugs)).pricePerUnit
         medicine[index].priceTag = unitPrice * value
         setMedicine(medicine)
@@ -123,7 +129,7 @@ const GeneratePharmacyBill = (props)=> {
                                                             <div className='form-group col-3'>
                                                                 <label className='d-flex justify-content-between'><span>Price Tag</span> <span>PricePerUnit</span></label>
                                                                 <div className='input-group'>
-                                                                    <input className='form-control' disabled name={`med${i}`} value={medicine[i].priceTag} />
+                                                                    <input className='form-control' disabled name={`med${i}`} value='' />
                                                                     <div className='input-group-append'>
                                                                         <p className='input-group-text'>
                                                                             {
