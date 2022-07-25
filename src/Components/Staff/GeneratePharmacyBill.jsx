@@ -9,28 +9,33 @@ const GeneratePharmacyBill = (props)=> {
     const [prescription, setPrescription] = useState({prescribedMedicine: []})
     const allMedicines = useSelector(state=>state.PharmacyReducer.medicineTray)
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
-    const [medicine, setMedicine] = useState([{unit: '', priceTag: ''}])
+    const [medicine, setMedicine] = useState([])
     const [pharmBill, setPharmBill] = useState({})
 
     const clickGenerate = ()=>{
         document.getElementById('submitForm').click()
     }
-    const generateBill = ()=>{}
+    const generateBill = (e)=>{
+        e.preventDefault()
+        prescription.prescribedMedicine.forEach((med, i)=>{
+            let obj = {medicineName: med, medicineCategory: allMedicines.find((each)=>(each.medicineName.toLowerCase() === med.toLowerCase())).medicineCategory}            
+            // setPharmBill({...pharmBill, medicine: [...pharmBill.medicine, obj]})
+            setMedicine([...medicine, obj])
+            console.log(medicine)
+        })
+    }
 
     useEffect(()=>{
         let prescribe = JSON.parse(sessionStorage.getItem('prescription'))
         setPrescription({...prescription, ...prescribe})
-        console.log(prescription, prescribe)
+        
     }, [])
     const handleUnitChange = (value, drugs, index)=>{
-        medicine[index].unit = value
-        setMedicine(medicine)
+        prescription.prescribedMedicine[index].unit = value
     }
     const handlePriceChange = (value, drugs, index)=>{
         let unitPrice = allMedicines.find((each)=>(each.medicineName === drugs)).pricePerUnit
-        medicine[index].priceTag = unitPrice * value
-        setMedicine(medicine)
-        console.log(medicine)
+
     }
 
 
