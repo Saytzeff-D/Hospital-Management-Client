@@ -62,7 +62,6 @@ const MedStock = (props)=>{
         setSucces('')
     }
     useEffect(()=>{
-        dispatch(allMedicines(url))
         axios.get(`${url}staff/allMedicines`).then((res)=>{
             if(res.data.status){
                 console.log(res.data.drugs)
@@ -187,7 +186,7 @@ const MedStock = (props)=>{
                                                         <td> {item.medicineCategory} </td>
                                                         
                                                         <td> {item.availableQty} </td>
-                                                        <td> {item.pricePerUnit} </td>
+                                                        <td> <FontAwesomeIcon icon='naira-sign' />{item.pricePerUnit} </td>
                                                         <td> 
                                                             <div className='d-flex justify-content-between'>
                                                                 <button data-target='#editMedModal' data-toggle='modal' className='btn btn-success m-1' onClick={()=>updateMed(item)}>Update</button>
