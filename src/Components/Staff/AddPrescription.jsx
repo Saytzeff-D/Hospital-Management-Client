@@ -51,10 +51,10 @@ const AddPrescription = (props)=>{
         if(med === undefined){
             setError(`${e.target.value} could not be found in stock`)            
             setErrorTray({...errorTray,message:''})
-        }else{
+        }else if(e.target.value === ''){
             setError('')
         }
-        if(e.target.value==''){
+        else{
             setError('')
         }
     }
