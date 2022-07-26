@@ -49,7 +49,7 @@ const AddPrescription = (props)=>{
             setPrescribeMed(prescribeMed)        
         let med = medicineTray.find((each, i)=>((each.medicineName).toLowerCase() === (e.target.value).toLowerCase()))
         if(med === undefined){
-            setError(`${e.target.value} could not be found in stock`)            
+            setError(`${e.target.value} could not be found in Pharmacy`)            
             setErrorTray({...errorTray,message:''})
         }else if(e.target.value === ''){
             setError('')
@@ -59,12 +59,12 @@ const AddPrescription = (props)=>{
         }
     }
 
-    const getPatientName = (patientId)=>{
-        const patient = patientTray.find((patient, i)=>(patient.healthId === patientId))
+    const getPatientName = (healthId)=>{
+        const patient = patientTray.find((patient, i)=>(patient.healthId === healthId))
         if(patient === undefined){
             setPrescriptionObj({...prescriptionObj, patientName:'Record not found...',})
         }else{
-            setPrescriptionObj({...prescriptionObj, healthId: patientId, patientName: patient.fullName})
+            setPrescriptionObj({...prescriptionObj, healthId: healthId, patientName: patient.fullName})
         }
         
     }
@@ -102,7 +102,7 @@ const AddPrescription = (props)=>{
                 drugsArr.push(each)
             }  
           })
-          if(drugsNotFound==''){
+          if(drugsNotFound ===''){
             return true
           }else{
             setError('')
@@ -113,7 +113,7 @@ const AddPrescription = (props)=>{
     }
     useEffect(()=>{
         setPrescriptionObj({...prescriptionObj, doctorName: `Dr. ${staff.fname} ${staff.lname}`})
-    }, [])
+    }, [staff])
 
     return(
         <>
