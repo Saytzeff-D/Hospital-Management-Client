@@ -2,8 +2,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const GeneratePharmacyBill = (props)=> {
+    const navigate=useNavigate()
     const url=useSelector(state=>state.UrlReducer.url)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
@@ -14,7 +16,7 @@ const GeneratePharmacyBill = (props)=> {
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const [medicine, setMedicine] = useState([])
     const [pharmBill, setPharmBill] = useState({})
-    const [sendRequest,setRequest]=useState(true)
+    const [sendRequest, setSendRequest]=useState(false)
     const clickGenerate = ()=>{
         document.getElementById('submitForm').click()
     }
@@ -24,27 +26,51 @@ const GeneratePharmacyBill = (props)=> {
         prescription.prescribedMedicine.forEach((each,i)=>{
             let drug;
             let drug_id;
-            console.log(drug_id,5)
-            
             medicine.forEach((drugs,index)=>{
-                allMedicines.forEach((medicines,k)=>{
-                    if(medicines.medicineName.toLowerCase()==each.toLowerCase() &&medicines.medicineCategory.toLowerCase()==drugs.category.toLowerCase()){
-                        drug_id=medicines._id
-                        setError('')
-                    }
-                })
-                drugs.drug_id=drug_id
-                drug=drugs
-            })            
-            medicineTray.push({medicineName:each,...drug})            
-            drug_id=''
+                if(i==index){
+                    allMedicines.forEach((medicines,k)=>{
+                        if(medicines.medicineName.toLowerCase()==each.toLowerCase() &&medicines.medicineCategory.toLowerCase()==drugs.category.toLowerCase()){
+                            drug_id=medicines._id
+                            setError('')
+                        }
+                    })
+                    drugs.drug_id=drug_id
+                    drug=drugs
+                }
+
+            })         
+            medicineTray.push({medicineName:each,...drug})
         })
        
         let billData={healthId:prescription.healthId,prescriptionId:prescription.prescriptionId,amount:totalPrice,doctorName:prescription.doctorName,medicineTray,illness:prescription.illness}
-        console.log(billData)
-        
-    }
 
+        if(validations(billData.medicineTray)){
+            axios.post(`${url}staff/createPharmBill`, billData).then((res)=>{
+                console.log(res.data)
+                navigate('/staff/prescriptionList')
+            }).catch((err)=>{
+                console.log(err)
+                setSendRequest(false)
+                err.message === "Request failed with status code 300" ? setError(err.response.data.message) : setError(err.message)
+            })
+        }
+       
+    }
+    function validations(alldrugs,totalPrice){
+        console.log(totalPrice,NaN)
+        alldrugs.forEach((each,i)=>{
+            if(!each.drug_id){
+                setError(`Please select the correct Category for ${each.medicineName}`)
+                return false
+            }
+            if( each.unit==0 || isNaN(each.unit)){
+                setError(`Please type a correct quantity for ${each.medicineName}`)
+                return false
+            }
+                setError('')
+        })
+        return true
+    }
     useEffect(()=>{
         let prescribe = JSON.parse(sessionStorage.getItem('prescription'))
         setPrescription({...prescription, ...prescribe})
@@ -62,6 +88,7 @@ const GeneratePharmacyBill = (props)=> {
         let unitPrice = allMedicines.find((each)=>(each.medicineName.toLowerCase() === drugs.toLowerCase())).pricePerUnit
         medicine[index].unit = value
         medicine[index].priceTag = unitPrice * value
+        console.log(medicine)
         setMedicine([...medicine])
 
         let TotalPrice=0
