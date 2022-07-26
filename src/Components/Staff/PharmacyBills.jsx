@@ -10,6 +10,7 @@ const PharmacyBills = () => {
 
     useEffect(()=>{
         dispatch(allPharmBillRecords(url))
+        console.log(pharmBill)
     }, [dispatch])
     return (
         <div>
@@ -61,7 +62,7 @@ const PharmacyBills = () => {
                                                 <td> {bills.paidAmount} </td>
                                                 <td> {bills.amount - bills.paidAmount} </td>
                                                 <td>
-                                                        <button classname='btn btn-dark'> <FontAwesomeIcon icon='bars' /> </button>
+                                                        <button className='btn btn-dark'> <FontAwesomeIcon icon='bars' /> </button>
                                                 </td>
                                             </tr>
                                         ))
