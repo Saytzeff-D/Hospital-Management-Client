@@ -52,3 +52,21 @@ export const allMedicines = (url)=>{
     })
   }
 }
+export const allPharmBillRecords = (url)=>{
+  return (dispatch)=>{
+    return axios.get(`${url}staff/pharmacyBills`).then((res)=>{
+      dispatch({type: 'getAllPharmBills', payload: res.data.bills})
+    }).catch((err)=>{
+      dispatch({type: 'billError', payload: 'AxiosError'})
+    })
+  }
+}
+export const patientPharmBill = (url, healthIdObj)=>{
+  return (dispatch)=>{
+    return axios.post(`${url}patient/pharmacyBills`, healthIdObj).then((res)=>{
+      dispatch({type: 'patientPharmBill', payload: res.data.bill})
+    }).catch((err)=>{
+      dispatch({type: 'billError', payload: 'AxiosError'})
+    })
+  }
+}
