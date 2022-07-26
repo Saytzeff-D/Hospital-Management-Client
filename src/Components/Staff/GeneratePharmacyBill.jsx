@@ -2,46 +2,54 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const GeneratePharmacyBill = (props)=> {
+    const navigate = useNavigate()
     const url=useSelector(state=>state.UrlReducer.url)
     const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
     const [totalPrice,setTotalPrice]=useState(0)
-    const [price,setPrice]=useState(0)
     const [prescription, setPrescription] = useState({prescribedMedicine: []})
     const allMedicines = useSelector(state=>state.PharmacyReducer.medicineTray)
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const [medicine, setMedicine] = useState([])
-    const [pharmBill, setPharmBill] = useState({})
-    const [sendRequest,setRequest]=useState(true)
+    const [sendRequest, setSendRequest]=useState(false)
+
     const clickGenerate = ()=>{
         document.getElementById('submitForm').click()
     }
     const generateBill = (e)=>{
+        setError('')
         e.preventDefault()
         let medicineTray=[]
-        prescription.prescribedMedicine.forEach((each,i)=>{
-            let drug;
-            let drug_id;
-            console.log(drug_id,5)
-            
-            medicine.forEach((drugs,index)=>{
-                allMedicines.forEach((medicines,k)=>{
-                    if(medicines.medicineName.toLowerCase()==each.toLowerCase() &&medicines.medicineCategory.toLowerCase()==drugs.category.toLowerCase()){
-                        drug_id=medicines._id
-                        setError('')
-                    }
-                })
-                drugs.drug_id=drug_id
-                drug=drugs
-            })            
-            medicineTray.push({medicineName:each,...drug})            
-            drug_id=''
-        })
+        setSendRequest(true)
+        // prescription.prescribedMedicine.forEach((each,i)=>{
+        //     let drug;
+        //     let drug_id            
+        //     medicine.forEach((drugs,index)=>{
+        //         allMedicines.forEach((medicines,k)=>{
+        //             if(medicines.medicineName.toLowerCase() === each.toLowerCase() &&medicines.medicineCategory.toLowerCase() === drugs.category.toLowerCase()){
+        //                 drug_id=medicines._id
+        //                 setError('')
+        //             }
+        //         })
+        //         drugs.drug_id=drug_id
+        //         drug=drugs
+        //     })            
+        //     medicineTray.push({medicineName:each,...drug})            
+        //     drug_id=''
+        // })
        
-        let billData={healthId:prescription.healthId,prescriptionId:prescription.prescriptionId,amount:totalPrice,doctorName:prescription.doctorName,medicineTray,illness:prescription.illness}
+        let billData = { healthId: prescription.healthId, prescriptionId: prescription.prescriptionId, amount: totalPrice, doctorName: prescription.doctorName, medicineTray: medicine,illness: prescription.illness }
         console.log(billData)
+        axios.post(`${url}staff/createPharmBill`, billData).then((res)=>{
+            console.log(res.data)
+            navigate('/staff/prescriptionList')
+        }).catch((err)=>{
+            console.log(err)
+            setSendRequest(false)
+            err.message === "Request failed with status code 300" ? setError(err.response.data.message) : setError(err.message)
+        })
         
     }
 
@@ -53,7 +61,7 @@ const GeneratePharmacyBill = (props)=> {
         let pres;
         for(pres in prescribe){
             if(medicine.length<prescribe.prescribedMedicine.length){
-                 medicine.push({unit: '', priceTag:'',category:''})
+                 medicine.push({medicineName: '', unit: '', priceTag:'',category:'', drug_id: ''})
             }
         }
         setMedicine(medicine)
@@ -70,9 +78,13 @@ const GeneratePharmacyBill = (props)=> {
             setTotalPrice(TotalPrice)    
         })
     }
-    const handleCategoryChange=(cat,i)=>{
-        medicine[i].category=cat
-        setMedicine([...medicine])
+    const handleCategoryChange=(drug, cat,i)=>{
+        medicine[i].medicineName = drug
+        medicine[i].category = cat
+        let findId = allMedicines.find((each)=>(each.medicineName.toLowerCase() === drug.toLowerCase() && each.medicineCategory.toLowerCase() === cat.toLowerCase()))
+        findId === undefined ? medicine[i].drug_id = undefined : medicine[i].drug_id = findId._id
+        setMedicine(medicine)
+        console.log(medicine)
     }
     return (
         <div>
@@ -80,15 +92,19 @@ const GeneratePharmacyBill = (props)=> {
                 <div className='col-12 bg-white border'>
                     <div className='d-flex justify-content-between border-bottom p-2'>
                         <p className='h6'>Generate Pharmacy Bill</p>
-                        <button onClick={clickGenerate} className='btn btn-primary'><FontAwesomeIcon icon='plus' /> Generate Bill</button>
+                        <button onClick={clickGenerate} className='btn btn-primary'>
+                            {
+                                sendRequest
+                                ?
+                                (<span className='spinner-border spinner-border-sm text-white'></span>)
+                                :
+                                (<span><FontAwesomeIcon icon='plus' /> Generate Bill</span>)
+                            } 
+                        </button>
                     </div>
-                    {
+                        {
                             error !== '' &&
                             <div className='alert alert-danger mt-1'><FontAwesomeIcon icon='triangle-exclamation' /><b>Error! </b>{error}</div>
-                        }
-                        {
-                            success !== '' &&
-                            <div className='alert alert-success mt-1'><FontAwesomeIcon icon='check' /><b>Success! </b>{success}</div>
                         }
                         {
                             reducerError === 'Loading'
@@ -108,25 +124,25 @@ const GeneratePharmacyBill = (props)=> {
                                     <div className='py-2'>
                                         <form className='border p-3' onSubmit={generateBill}>
                                             <div className='form-row'>
-                                            <div className='form-group col-4'>
+                                            <div className='form-group col-md-4 col-6'>
                                                     <label className='h6'>PrescriptionId</label>
                                                     <input className='form-control' disabled value={prescription.prescriptionId} name='healthId' />
                                                 </div>
-                                                <div className='form-group col-4'>
+                                                <div className='form-group col-md-4 col-6'>
                                                     <label className='h6'>HealthId</label>
                                                     <input className='form-control' disabled value={prescription.healthId} name='healthId' />
                                                 </div>
-                                                <div className='form-group col-4'>
+                                                <div className='form-group col-md-4'>
                                                     <label className='h6'>Patient Name</label>
                                                     <input  className='form-control' value={prescription.patientName} name='patientName' disabled />
                                                 </div>
                                             </div>
                                             <div className='form-row border-bottom'>
-                                                <div className='form-group col-6'>
+                                                <div className='form-group col-md-6'>
                                                     <label className='h6'>Diagnosed Illness</label>
                                                     <input  className='form-control' value={prescription.illness} disabled name='illness' />
                                                 </div>
-                                                <div className='form-group col-6'>
+                                                <div className='form-group col-md-6'>
                                                     <label className='h6'>Physician's Name</label>
                                                     <input  className='form-control' value={prescription.doctorName} name='doctorName' disabled />
                                                 </div>
@@ -136,26 +152,26 @@ const GeneratePharmacyBill = (props)=> {
                                                 {
                                                     prescription.prescribedMedicine.map((drugs,i)=>(
                                                         <>
-                                                            <div className='form-group col-3' key={i}>
+                                                            <div className='form-group col-md-3 col-6' key={i}>
                                                                 <label>Diagnosed Medicine</label>
                                                                 <input className='form-control' value={drugs} name={`med${i}`} />
                                                             </div>
-                                                            <div className='form-group col-3'>
+                                                            <div className='form-group col-md-3 col-5'>
                                                                 <label>Medicine Category</label>
-                                                                <select  name='medicineCategory' className='form-control' onChange={(e)=>handleCategoryChange(e.target.value,i)}>  
-                                                <option value='' >Medicine Category</option>                                             
-                                                <option value='Syrup' >Syrup </option>
-                                                <option value='Ointment'>Ointment</option>
-                                                <option value='Injection'>Injection</option>
-                                                <option value='Capsule'>Capsule</option>
-                                                <option value='Liquids'>Liquids</option>
-                                                <option value='Inhalers'>Inhalers</option>
-                                                <option value='Surgical'>Surgical</option>
-                                                <option value='Drops'>Drops</option>
-                                                <option value='Diaper'>Diaper</option>
-                                            </select>
+                                                                <select  name='medicineCategory' className='form-control' onChange={(e)=>handleCategoryChange(drugs, e.target.value,i)}>  
+                                                                    <option value='' >Medicine Category</option>                                             
+                                                                    <option value='Syrup' >Syrup </option>
+                                                                    <option value='Ointment'>Ointment</option>
+                                                                    <option value='Injection'>Injection</option>
+                                                                    <option value='Capsule'>Capsule</option>
+                                                                    <option value='Liquids'>Liquids</option>
+                                                                    <option value='Inhalers'>Inhalers</option>
+                                                                    <option value='Surgical'>Surgical</option>
+                                                                    <option value='Drops'>Drops</option>
+                                                                    <option value='Diaper'>Diaper</option>
+                                                                </select>
                                                             </div>
-                                                            <div className='form-group col-3'>
+                                                            <div className='form-group col-md-3 col-6'>
                                                                 <label className='d-flex justify-content-between'><span>Unit</span> <span>Stock Qty</span></label>
                                                                 <div className='input-group'>
                                                                     <input className='form-control' name={`med${i}`} onChange={(e)=>handleUnitChange(e.target.value, drugs, i)} />
@@ -168,7 +184,7 @@ const GeneratePharmacyBill = (props)=> {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div className='form-group col-3'>
+                                                            <div className='form-group col-md-3 col-6'>
                                                                 <label className='d-flex justify-content-between'><span>Price Tag</span> <span>PricePerUnit</span></label>
                                                                 <div className='input-group'>
                                                                     <input className='form-control' disabled name={`med${i}`} value={medicine[i].priceTag} />
@@ -186,7 +202,7 @@ const GeneratePharmacyBill = (props)=> {
                                                 }
                                             </div>
                                             <div className='d-flex justify-content-end'>
-                                                <p>Net Price: {totalPrice}</p>
+                                                <p className='h6'>Net Price: <strong>{ totalPrice === '' ? '' : <FontAwesomeIcon icon='naira-sign' /> }{totalPrice}</strong></p>
                                             </div>
                                             <button type='submit' id='submitForm' className='d-none'>Submit Form</button>
                                         </form>
