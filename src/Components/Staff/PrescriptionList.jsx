@@ -75,22 +75,26 @@ const PrescriptionList = () => {
                                             <td> {each.illness} </td>
                                             <td> {each.doctorName} </td>
 
-                                            <td style={{height:'10px'}}> { each.prescribedMedicine.length>3 && <div className='display-drugs'><ol>                                               
-                                                {each.prescribedMedicine.map((each,index)=>(
-                                                    <li key={index}>{each}</li>
-                                                ))}
-                                                
-                                                </ol></div>}{ each.prescribedMedicine.length<=3 && <div className=''><ol>                                               
-                                                {each.prescribedMedicine.map((each,index)=>(
-                                                    <li key={index}>{each}</li>
-                                                ))}
-                                                
-                                                </ol></div>}
-                                                
-                                                
-                                                
+                                            <td style={{height:'10px'}}> 
+                                                {
+                                                    (<div className={each.prescribedMedicine.length > 3 ? 'display-drugs' : ''}>
+                                                    <ol style={{listStyleType: 'circle'}}>                                               
+                                                    {each.prescribedMedicine.map((each,index)=>(
+                                                        <li key={index}> { each } </li>
+                                                    ))}                                                
+                                                    </ol>
+                                                    </div>)
+                                                }                                               
                                                 </td>
-                                            <td> <button onClick={()=>billNow(each)} className='btn btn-warning'>Bill Now</button> </td>
+                                            <td> 
+                                                {
+                                                    each.billStatus
+                                                    ?
+                                                    (<button  className='btn btn-light font-weight-bold'>Billed</button>)
+                                                    :
+                                                    (<button onClick={()=>billNow(each)} className='btn btn-warning'>Bill Now</button>)
+                                                } 
+                                            </td>
                                         </tr>
                                     ))
                                 }
