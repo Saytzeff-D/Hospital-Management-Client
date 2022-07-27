@@ -34,7 +34,6 @@ const AppointmentList=()=>{
         let newAppointments=[]
         allAppointments.forEach( (each,index)=>{
             let doctorName='Dr.' + staffDetails.fname + ' ' + staffDetails.lname
-            alert(staffDetails.fname)
             if(each.paymentStatus && !each.prescriptionStatus && (each.doctorName===doctorName || staffDetails.role==='Admin') ){
                 oldAppointments.push(each)
             }else if(each.paymentStatus && each.prescriptionStatus && (each.doctorName===doctorName || staffDetails.role=='Admin')) {
