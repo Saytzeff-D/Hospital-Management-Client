@@ -51,7 +51,7 @@ const AppointmentList=()=>{
             <div className="container mt-5">
                 <ul className="nav nav-pills d-flex justify-content-around mt-5" role="tablist">
                     <li className="nav-item">
-                    <a className="nav-link active h4" data-toggle="pill" href="#home">Today's Appointments</a>
+                    <a className="nav-link active h4" data-toggle="pill" href="#home">Recent Appointments</a>
                     </li>
                     <li className="nav-item">
                     <a className="nav-link h4" data-toggle="pill" href="#menu1">Appointments History</a>

@@ -110,49 +110,57 @@ const filterWithParameter=(params,ID)=>{
                                 <input  onChange={(e)=>setFilterByName(e.target.value)}   className='form-control m-1' placeholder='Search Patient by Name' />
                             </div>
                         </div>
-                        <table className="table table-warning table-hover table-responsive text-center">
-                            <thead>
-                                <tr>
-                                    <th>NO.</th>
-                                    <th>App. ID</th>
-                                    <th>Doctor</th>
-                                    <th>Patient ID</th>
-                                    <th>App. Date</th>
-                                    <th>Time</th>
-                                    <th>Message</th>
-                                    <th>Payment</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredList.map((each,index)=>(
-                                    <tr key={index}>
-                                        <td>{index+1}</td>
-                                        <td>{each.appointmentNo}</td>
-                                        <td>{each.doctorName}</td>
-                                        <td>{each.healthId}</td>
-                                        <td>{each.appointmentDate}</td>
-                                        <td>{each.timeSlot}</td>
-                                        <td>{each.message}</td>
-                                        <td>{each.paymentStatus?<span>Paid <i className="fa fa-check text-success mx-1"></i></span>:<span>Pending</span>}</td>
-                                        <td style={{cursor:'pointer'}} >
-                                            <div className='d-flex justify-content-between'>
-                                                <button style={{fontSize:'10px'}}  onClick={()=>diagnose(each.appointmentNo, each.healthId)} title="Remove" className="btn btn-success  text-white ml-1">
-                                                    Diagnose
-                                                </button>
-                                                <button style={{fontSize:'10px'}}  onClick={()=>reschedule(each)} title="Remove" className="btn btn-danger  text-white ml-1" data-target='#checkApp' data-toggle='modal'>
-                                                    Reschedule
-                                                </button>
-                                                <button style={{fontSize:'10px'}}  className="btn bg-white ml-1" onClick={()=>fetchPatientProfile(each.healthId)}><i data-target='#viewProfile' data-toggle='modal' className='fa fa-photo text-warning fa-lg'></i>
-                                                </button>
-                                            </div>
-                                        </td>                      
-                                    </tr>   
+                        {
+                            filteredList.length === 0
+                            ?
+                            (<p className="font-weight-bolder h5 py-2">No recent Appointment</p>)
+                            :
+                            (
+                                <table className="table table-warning table-hover table-responsive text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>NO.</th>
+                                            <th>App. ID</th>
+                                            <th>Doctor</th>
+                                            <th>Patient ID</th>
+                                            <th>App. Date</th>
+                                            <th>Time</th>
+                                            <th>Message</th>
+                                            <th>Payment</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredList.map((each,index)=>(
+                                            <tr key={index}>
+                                                <td>{index+1}</td>
+                                                <td>{each.appointmentNo}</td>
+                                                <td>{each.doctorName}</td>
+                                                <td>{each.healthId}</td>
+                                                <td>{each.appointmentDate}</td>
+                                                <td>{each.timeSlot}</td>
+                                                <td>{each.message}</td>
+                                                <td>{each.paymentStatus?<span>Paid <i className="fa fa-check text-success mx-1"></i></span>:<span>Pending</span>}</td>
+                                                <td style={{cursor:'pointer'}} >
+                                                    <div className='d-flex justify-content-between'>
+                                                        <button style={{fontSize:'10px'}}  onClick={()=>diagnose(each.appointmentNo, each.healthId)} title="Remove" className="btn btn-success  text-white ml-1">
+                                                            Diagnose
+                                                        </button>
+                                                        <button style={{fontSize:'10px'}}  onClick={()=>reschedule(each)} title="Remove" className="btn btn-danger  text-white ml-1" data-target='#checkApp' data-toggle='modal'>
+                                                            Reschedule
+                                                        </button>
+                                                        <button style={{fontSize:'10px'}}  className="btn bg-white ml-1" onClick={()=>fetchPatientProfile(each.healthId)}><i data-target='#viewProfile' data-toggle='modal' className='fa fa-photo text-warning fa-lg'></i>
+                                                        </button>
+                                                    </div>
+                                                </td>                      
+                                            </tr>   
 
-                                ))}
-                                
-                            </tbody>
-                        </table>
+                                        ))}
+                                        
+                                    </tbody>
+                                </table>
+                            )
+                        }
                     </div>
                 </div>
 
