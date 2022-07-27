@@ -17,6 +17,7 @@ const ApprovedAppointments=(props)=>{
 
     useEffect(()=>{
        setFilteredList(approvedAppointment)
+       console.log(approvedAppointment,9000)
 
     },[approvedAppointment])
 

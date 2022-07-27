@@ -2,32 +2,24 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 
-const AppointmentHistory = ()=>{
+const AppointmentHistory = (props)=>{
+    let {appointmentHistory}=props
     const url=useSelector(state=>state.UrlReducer.url)
     const staffDetails=useSelector(state=>state.StaffReducer.staffInfo)
     const [newAppointments,setNewAppointments]=useState([])
-    const [oldAppointments,setOldAppointments]=useState([])
     const [actionType,setActionType]=useState({action:'',data:{}})
     let [filterById,setFilterById]=useState('')
     let [filterByName,setFilterByName]=useState('')
-    let [filteredList, setFilteredList]=useState([])
+    let [filteredList, setFilteredList]=useState(appointmentHistory)
     let [appointmentDate,setNewDate]=useState('')
     let [shift,setShift]=useState('')
-    let [viewPat,setViewPat]=useState({})
 
 
     
 
 
     useEffect(()=>{
-        axios.get(`${url}staff/allAppointments`).then(res=>{
-            if(res.data.status){                            
-                filterAppointment(res.data.appointments)
-            }else{
-                console.log(res.data.message)
-            }
-        })
-
+        setNewAppointments(appointmentHistory)
     },[actionType, url])
 
     useEffect(()=>{
@@ -83,36 +75,6 @@ const filterWithParameter=(params,ID)=>{
 
 
 
-    function filterAppointment(allAppointments){
-        let oldAppointments=[]
-        let newAppointments=[]
-        allAppointments.forEach( (each,index)=>{
-            let doctorName='Dr.' + staffDetails.fname + ' ' + staffDetails.lname
-            if(each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin') ){
-                oldAppointments.push(each)
-            }else if(!each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin')) {
-                newAppointments.push(each)
-            }
-        })
-        setOldAppointments(oldAppointments)
-        setNewAppointments(newAppointments)
-        setFilteredList(newAppointments)
-    }
-    const checkAppointment=()=>{
-        if(actionType.action ==='approve'){
-            let updateAppointment=actionType.data
-            updateAppointment.approvalStatus=true
-            axios.post(`${url}staff/checkAppointment`, updateAppointment).then(res=>{
-            if(res.data.status){
-                alert('Appointment approved succesfully')
-                setActionType({action:'',data:{}})
-                }
-        }).catch(err=>console.log(err))
-
-        }else{
-            alert('Successfully declined')
-        }
-    }
     const reschedule=(each)=>{
         setActionType({action:'decline',data:each})
         setNewDate(each.appointmentDate)
@@ -121,13 +83,13 @@ const filterWithParameter=(params,ID)=>{
     }
 
     const fetchPatientProfile=(healthId)=>{
-        let patientId={healthId}
-        axios.post(`${url}staff/getPat`,patientId).then(res=>{
-            console.log(res.data)
-            setViewPat(res.data.patDetails)            
-        }).then(err=>{
-            console.log(err)            
-        })
+        // let patientId={healthId}
+        // axios.post(`${url}staff/getPat`,patientId).then(res=>{
+        //     console.log(res.data)
+        //     setViewPat(res.data.patDetails)            
+        // }).then(err=>{
+        //     console.log(err)            
+        // })
     }
     return (
         <div>
