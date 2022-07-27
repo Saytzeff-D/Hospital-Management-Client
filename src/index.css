@@ -15,12 +15,56 @@ NavLink {
   text-decoration: none;
 }
 .banner{
-    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./Assets/background.jpg');
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
-    height: 657px;
+    height: 625px;
 }
+@media only screen and (max-width: 768px) {
+  .banner{
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 1005px;
+  }
+}
+/* Carousel */
+.carousel {
+  z-index: -99;
+} /* keeps this behind all content */
+.carousel-item {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: opacity 1s;
+  -moz-transition: opacity 1s;
+  -ms-transition: opacity 1s;
+  -o-transition: opacity 1s;
+  transition: opacity 1s;
+}
+#c-one {
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/background.jpg');
+  background-size: cover;
+  -moz-background-size: cover;
+}
+#c-two {
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/slider1.jpg');
+  background-size: cover;
+  -moz-background-size: cover;
+}
+#c-three {
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/slider2.jpg');
+  background-size: cover;
+  -moz-background-size: cover;
+}
+.carousel .active .left {
+  left: 0;
+  opacity: 0;
+  z-index: 2;
+}
+/* Carousel */
 .icon{
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
