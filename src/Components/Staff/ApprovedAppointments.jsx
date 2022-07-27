@@ -11,6 +11,8 @@ const ApprovedAppointments=(props)=>{
     let [filterByName,setFilterByName]=useState('')
     let [filteredList, setFilteredList]=useState([])
     let [viewPat,setViewPat]=useState({})
+    const patientTray=useSelector(state=>state.PatientReducer.patientTray)
+    console.log(patientTray)
     useEffect(()=>{
        setFilteredList(approvedAppointment)
 
@@ -49,13 +51,9 @@ const filterWithParameter=(params,ID)=>{
 
     }
     const fetchPatientProfile=(healthId)=>{
-        let patientId={healthId}
-        axios.post(`${url}staff/getPat`,patientId).then(res=>{
-            console.log(res.data)
-            setViewPat(res.data.patDetails)            
-        }).then(err=>{
-            console.log(err)            
-        })
+        console.log(healthId)
+        let patient=patientTray.find((each,i)=>each.healthId==healthId)
+        setViewPat(patient)
     }
 
 

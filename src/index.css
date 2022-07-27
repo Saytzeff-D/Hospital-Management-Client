@@ -23,7 +23,7 @@ NavLink {
 }
 @media only screen and (max-width: 768px) {
   .banner{
-    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+    background-image: linear-gradient(rgba(45, 39, 39, 0.7), rgba(0,0,0,0.9));
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -55,7 +55,7 @@ NavLink {
   -moz-background-size: cover;
 }
 #c-three {
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/images.jpg');
   background-size: cover;
   -moz-background-size: cover;
 }
