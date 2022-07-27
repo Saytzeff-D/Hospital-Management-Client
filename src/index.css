@@ -15,7 +15,7 @@ NavLink {
   text-decoration: none;
 }
 .banner{
-    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/background.jpg');
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -23,7 +23,7 @@ NavLink {
 }
 @media only screen and (max-width: 768px) {
   .banner{
-    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/background.jpg');
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -45,17 +45,17 @@ NavLink {
   transition: opacity 1s;
 }
 #c-one {
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/background.jpg');
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
   background-size: cover;
   -moz-background-size: cover;
 }
 #c-two {
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/slider1.jpg');
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
   background-size: cover;
   -moz-background-size: cover;
 }
 #c-three {
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/slider2.jpg');
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
   background-size: cover;
   -moz-background-size: cover;
 }

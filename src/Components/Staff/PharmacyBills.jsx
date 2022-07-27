@@ -60,7 +60,7 @@ const PharmacyBills = () => {
                                                 <td> {bills.doctorName} </td>
                                                 <td> {bills.amount} </td>
                                                 <td> {bills.paidAmount} </td>
-                                                <td> {bills.amount - bills.paidAmount} </td>
+                                                <td> {Number( bills.amount) - Number(bills.paidAmount)} </td>
                                                 <td>
                                                         <button className='btn btn-dark'> <FontAwesomeIcon icon='bars' /> </button>
                                                 </td>

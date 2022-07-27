@@ -25,7 +25,9 @@ const AppointmentList=()=>{
 
     useEffect(()=>{
         axios.get(`${url}staff/allAppointments`).then(res=>{
-            if(res.data.status){                            
+            if(res.data.status){                       
+                
+                console.log(res.data.appointments)     
                 filterAppointment(res.data.appointments)
             }else{
                 console.log(res.data.message)
@@ -92,6 +94,7 @@ const filterWithParameter=(params,ID)=>{
         let newAppointments=[]
         allAppointments.forEach( (each,index)=>{
             let doctorName='Dr.' + staffDetails.fname + ' ' + staffDetails.lname
+            console.log(doctorName)
             if(each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin') ){
                 oldAppointments.push(each)
             }else if(!each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin')) {
