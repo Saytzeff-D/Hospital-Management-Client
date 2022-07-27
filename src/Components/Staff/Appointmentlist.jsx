@@ -71,15 +71,18 @@ const filterWithParameter=(params,ID)=>{
         let newAppointments=[]
         allAppointments.forEach( (each,index)=>{
             let doctorName='Dr.' + staffDetails.fname + ' ' + staffDetails.lname
-            if(each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin') ){
+            if(each.paymentStatus && !each.prescriptionStatus && (each.doctorName===doctorName || staffDetails.role==='Admin') ){
                 oldAppointments.push(each)
-            }else if(!each.approvalStatus && (each.doctorName==doctorName || staffDetails.role=='Admin')) {
+            }else if(each.paymentStatus && each.prescriptionStatus && (each.doctorName===doctorName || staffDetails.role=='Admin')) {
                 newAppointments.push(each)
             }
         })
         setOldAppointments(oldAppointments)
         setNewAppointments(newAppointments)
         setFilteredList(newAppointments)
+        console.log(allAppointments)
+        console.log(oldAppointments)
+        console.log(newAppointments)
     }
     const reschedule=(each)=>{
         setActionType({action:'decline',data:each})
@@ -118,7 +121,7 @@ const filterWithParameter=(params,ID)=>{
                     <ApprovedAppointments approvedAppointment={oldAppointments}/>                        
                     </div>
                     <div id="menu1" className="tab-pane fade">
-                        <AppointmentHistory />
+                        <AppointmentHistory appointmentHistory={newAppointments} />
                     </div>
                 </div>
             </div>
