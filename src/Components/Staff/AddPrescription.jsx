@@ -15,17 +15,19 @@ const AddPrescription = (props)=>{
     const [success, setSuccess] = useState('')
     const [loading, setLoading] = useState(false)
     const [errorTray,setErrorTray]=useState({status:true,message:''})
+    const [diagnose, setDiagnoseInfo] = useState({healthId: '', appointmentNo: ''})
 
     useEffect(()=>{
-        if(   (prescriptionObj.patientName=='Record not found...')||(prescriptionObj.patientName=='') || (prescriptionObj.illness=='')  ){
-            setErrorTray({status:true,message:'Please fill all inputs correctly'})
-
+        setDiagnoseInfo(JSON.parse(sessionStorage.getItem('diagnoseInfo')))
+        const patient = patientTray.find((patient, i)=>(patient.healthId === diagnose.healthId))
+        if(patient === undefined){
+            setPrescriptionObj({...prescriptionObj, patientName:'Record not found...',})
         }else{
+            setPrescriptionObj({...prescriptionObj, healthId: diagnose.healthId, patientName: patient.fullName})
             setErrorTray({status:false,message:''})
-
         }
 
-    },[prescriptionObj])
+    },[patientTray])
     const moreInput = ()=>{
         setTestInputArr([...testInputArr, 1])
         setPrescribeMed([...prescribeMed, ''])
@@ -59,21 +61,14 @@ const AddPrescription = (props)=>{
         }
     }
 
-    const getPatientName = (healthId)=>{
-        const patient = patientTray.find((patient, i)=>(patient.healthId === healthId))
-        if(patient === undefined){
-            setPrescriptionObj({...prescriptionObj, patientName:'Record not found...',})
-        }else{
-            setPrescriptionObj({...prescriptionObj, healthId: healthId, patientName: patient.fullName})
-        }
-        
-    }
+
     const addPrescription = (e)=>{
         e.preventDefault()
         let Meds=prescribeMed.filter( (each,i)=> each!=='')    
         if(Meds.length>0){
             if(filterDrugArray(Meds)){
                 prescriptionObj.prescribedMedicine=Meds
+                prescriptionObj.appointmentNo = diagnose.appointmentNo
                 setLoading(true)
                 axios.post(`${url}staff/addPrescription`, prescriptionObj).then((res)=>{
                     setLoading(false)
@@ -143,7 +138,7 @@ const AddPrescription = (props)=>{
                             <div className='form-row'>
                                 <div className='form-group col-6'>
                                     <label className='h6'>HealthId</label>
-                                    <input onChange={(e)=>getPatientName(e.target.value)} className='form-control' name='healthId' />
+                                    <input value={diagnose.healthId} disabled className='form-control' name='healthId' />
                                 </div>
                                 <div className='form-group col-6'>
                                     <label className='h6'>Patient Name</label>

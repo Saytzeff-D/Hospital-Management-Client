@@ -123,10 +123,6 @@ const StaffSideBar = ()=>{
                       (staffInfo.role === 'Admin' || staffInfo.role === 'Doctor' || staffInfo.role ==='Nurse') &&
                       <NavLink style={{textDecoration: 'none'}} to='/staff/deathRecords' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='skull-crossbones' />  Death Records</NavLink>
                     }
-                    { 
-                      (staffInfo.role === 'Doctor' ) ?
-                      <NavLink style={{textDecoration: 'none'}} to='/staff/addPrescription' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='prescription-bottle-medical' />  Add Prescription</NavLink> : ''
-                    }
                     {
                       (staffInfo.role === 'Pharmacist') ? 
                       <NavLink style={{textDecoration: 'none'}} to='/staff/medStock' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon='tablets' />  Medicine Stock</NavLink> : ''
