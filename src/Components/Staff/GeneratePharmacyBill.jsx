@@ -44,6 +44,7 @@ const GeneratePharmacyBill = (props)=> {
         let billData={healthId:prescription.healthId,prescriptionId:prescription.prescriptionId,amount:totalPrice,doctorName:prescription.doctorName,medicineTray,illness:prescription.illness}
 
         if(validations(billData.medicineTray)){
+            setSendRequest(true)
             axios.post(`${url}staff/createPharmBill`, billData).then((res)=>{
                 console.log(res.data)
                 navigate('/staff/prescriptionList')
@@ -52,23 +53,32 @@ const GeneratePharmacyBill = (props)=> {
                 setSendRequest(false)
                 err.message === "Request failed with status code 300" ? setError(err.response.data.message) : setError(err.message)
             })
+        }else{
+            alert(false)
         }
        
     }
-    function validations(alldrugs,totalPrice){
-        console.log(totalPrice,NaN)
+    function validations(alldrugs){
+        console.log(alldrugs)
+        let error=false
         alldrugs.forEach((each,i)=>{
             if(!each.drug_id){
+                error=true
                 setError(`Please select the correct Category for ${each.medicineName}`)
                 return false
             }
-            if( each.unit==0 || isNaN(each.unit)){
+            if( each.priceTag==0 || isNaN(each.priceTag)){
+                error=true
                 setError(`Please type a correct quantity for ${each.medicineName}`)
                 return false
             }
-                setError('')
         })
-        return true
+        if(!error){
+            setError('')
+            return true
+
+        }
+        // return true
     }
     useEffect(()=>{
         let prescribe = JSON.parse(sessionStorage.getItem('prescription'))
