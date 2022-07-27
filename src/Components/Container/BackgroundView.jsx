@@ -5,11 +5,16 @@ function BackgroundView() {
 
     return (
         <div>
-            <div className='banner animate__animated animate__pulse animate__faster'>
-                <div className='d-flex justify-content-center pt-5'>
-                    <div className='col-lg-9 text-white'>
-                        <Outlet></Outlet>
-                    </div>
+            <div className='carousel slide carousel-fade' data-ride='carousel' data-interval='5000'>
+                <div className='carousel-inner'>
+                    <div className='carousel-item active' id='c-one'></div>
+                    <div className='carousel-item' id='c-two'></div>
+                    <div className='carousel-item' id='c-three'></div>
+                </div>
+            </div>
+            <div className='d-flex justify-content-center py-5'>
+                <div className='col-lg-9 text-white'>
+                    <Outlet />
                 </div>
             </div>
         </div>
