@@ -10,6 +10,7 @@ const PatientReducer = (state=initState, action)=>{
             return {...state, patientDetails: action.payload}
         case 'getAllPatients':
             return {...state, patientTray: action.payload}
+            
         default:
             return state
     }
