@@ -45,12 +45,12 @@ NavLink {
   transition: opacity 1s;
 }
 #c-one {
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/background.jpg');
   background-size: cover;
   -moz-background-size: cover;
 }
 #c-two {
-  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+  background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('./assets/slider1.jpg');
   background-size: cover;
   -moz-background-size: cover;
 }
