@@ -137,90 +137,83 @@ const filterWithParameter=(params,ID)=>{
   
 
     return(
-
-            <section className="" style={{paddingTop:'5px'}}>          
-
+        <section className="" style={{paddingTop:'5px'}}>        
             <div className="container mt-5">
-  <ul className="nav nav-pills d-flex justify-content-around mt-5" role="tablist">
-    <li className="nav-item">
-      <a className="nav-link active h4" data-toggle="pill" href="#home">Pending Appointments</a>
-    </li>
-    <li className="nav-item">
-      <a className="nav-link h4" data-toggle="pill" href="#menu1">Approved Appointments</a>
-    </li>
-   
-  </ul>
-     
+                <ul className="nav nav-pills d-flex justify-content-around mt-5" role="tablist">
+                    <li className="nav-item">
+                    <a className="nav-link active h4" data-toggle="pill" href="#home">Pending Appointments</a>
+                    </li>
+                    <li className="nav-item">
+                    <a className="nav-link h4" data-toggle="pill" href="#menu1">Approved Appointments</a>
+                    </li>                
+                </ul>
              
 
   <div className="tab-content mt-4">
-    <div id="home" className="w-100 tab-pane active"><br/>
-
-    <div className='py-3'>
-                <div className='bg-white border p-2'>
-                    <div className='d-flex justify-content-between border-bottom'>
-                        <div>
-                            <p className='h6'>APPOINTMENTS LIST</p>
-                            </div>
-                    </div>
-
-            <div className='row w-100 text-center'>
-                <div className='col-sm-6'>
-                    <input value={filterById}  onChange={(e)=>setFilterById(e.target.value)} className='form-control m-1' placeholder='Search Patient by ID' />
+    <div id="home" className="w-100 tab-pane active">
+        <div className='py-3'>
+            <div className='bg-white border p-2'>
+                <div className='border-bottom'>
+                    <p className='h6'>APPOINTMENTS LIST</p>
                 </div>
-                <div className='col-sm-6'>
-                    <input value={filterByName}  onChange={(e)=>setFilterByName(e.target.value)}  className='form-control m-1' placeholder='Search Patient by Name' />
+                <div className='row w-100 text-center'>
+                    <div className='col-sm-6'>
+                        <input value={filterById}  onChange={(e)=>setFilterById(e.target.value)} className='form-control m-1' placeholder='Search Patient by ID' />
+                    </div>
+                    <div className='col-sm-6'>
+                        <input value={filterByName}  onChange={(e)=>setFilterByName(e.target.value)}  className='form-control m-1' placeholder='Search Patient by Name' />
                     </div>
                 </div>
-            </div>
-     </div>
 
-        <table className="table table-bordered table-stripped  border-primary text-center  ">
-            <thead className="table-dark text-white">
-                <tr>
-                    <th>NO.</th>
-                    <th>App. ID</th>
-                    <th>Doctor</th>
-                    <th>Patient ID</th>
-                    <th>App. Date</th>
-                    <th>Time</th>
-                    <th>Message</th>
-                    <th>Payment</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {filteredList.map((each,index)=>(
-                    <tr key={index}>
-                        <td>{index+1}</td>
-                        <td>{each.appointmentNo}</td>
-                        <td>{each.doctorName}</td>
-                        <td>{each.healthId}</td>
-                        <td>{each.appointmentDate}</td>
-                        <td>{each.timeSlot}</td>
-                        <td>{each.message}</td>
-                        <td>{each.paymentStatus?<span>Paid <i className="fa fa-check text-success mx-1"></i></span>:<span>Pending</span>}</td>
-                        <td style={{cursor:'pointer'}} >
-                            <div className="d-flex justify-content-between">
-                             <div>
-                            <button style={{fontSize:'10px'}} disabled={!each.paymentStatus} onClick={()=>setActionType({action:'approve',data:each})} title="Accept Appointment" className="btn btn-success text-white " data-target='#checkApp' data-toggle='modal'>Accept</button></div>
-                                <div>
-                            <button style={{fontSize:'10px'}}  onClick={()=>reschedule(each)} title="Remove" className="btn btn-danger  text-white ml-1" data-target='#checkApp' data-toggle='modal'>Reschedule</button></div>                            
-                            <div>
-                                <button style={{fontSize:'10px'}}  className="btn bg-white ml-1" onClick={()=>fetchPatientProfile(each.healthId)}><i data-target='#viewProfile' data-toggle='modal' className='fa fa-photo text-warning fa-lg'></i>
-                            </button></div>
-                            </div>
-                        </td>
+                <table className="table table-primary table-hover table-responsive text-center">
+                    <thead>
+                        <tr>
+                            <th>NO.</th>
+                            <th>App. ID</th>
+                            <th>Doctor</th>
+                            <th>Patient ID</th>
+                            <th>App. Date</th>
+                            <th>Time</th>
+                            <th>Message</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredList.map((each,index)=>(
+                            <tr key={index}>
+                                <td>{index+1}</td>
+                                <td>{each.appointmentNo}</td>
+                                <td>{each.doctorName}</td>
+                                <td>{each.healthId}</td>
+                                <td>{each.appointmentDate}</td>
+                                <td>{each.timeSlot}</td>
+                                <td>{each.message}</td>
+                                <td>{each.paymentStatus?<span>Paid <i className="fa fa-check text-success mx-1"></i></span>:<span>Pending</span>}</td>
+                                <td style={{cursor:'pointer'}} >
+                                    <div className="d-flex justify-content-between">
+                                    <div>
+                                    <button style={{fontSize:'10px'}} disabled={!each.paymentStatus} onClick={()=>setActionType({action:'approve',data:each})} title="Accept Appointment" className="btn btn-success text-white " data-target='#checkApp' data-toggle='modal'>Accept</button></div>
+                                        <div>
+                                    <button style={{fontSize:'10px'}}  onClick={()=>reschedule(each)} title="Remove" className="btn btn-danger  text-white ml-1" data-target='#checkApp' data-toggle='modal'>Reschedule</button></div>                            
+                                    <div>
+                                        <button style={{fontSize:'10px'}}  className="btn bg-white ml-1" onClick={()=>fetchPatientProfile(each.healthId)}><i data-target='#viewProfile' data-toggle='modal' className='fa fa-photo text-warning fa-lg'></i>
+                                    </button></div>
+                                    </div>
+                                </td>
+                                
+                            </tr>   
+
+                        ))}
                         
-                    </tr>   
+                    </tbody>
+                    </table>      
+            </div>
+        </div>
 
-                ))}
-                
-            </tbody>
-            </table>      
     </div>
     
-    <div className='modal fade big-modal' id="checkApp" data-backdrop="static">
+                <div className='modal fade big-modal' id="checkApp" data-backdrop="static">
                      <div className='modal-dialog modal-dialog-centered'>
                          <div className='modal-content'>
                               <div className='modal-header'>
@@ -263,7 +256,7 @@ const filterWithParameter=(params,ID)=>{
                         </div>
                     </div>
                     
-  <div className='modal fade big-modal' id="viewProfile" data-backdrop="static">
+                <div className='modal fade big-modal' id="viewProfile" data-backdrop="static">
                      <div className='modal-dialog modal-dialog-centered'>
                          <div className='modal-content'>
                               <div className='modal-header'>
