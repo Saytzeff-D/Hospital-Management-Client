@@ -3,8 +3,10 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 const ApprovedAppointments=(props)=>{
+    const navigate = useNavigate()
     let {approvedAppointment}=props
     let url = useSelector(state=>state.UrlReducer.url)    
     let [filterById,setFilterById]=useState('')
@@ -85,6 +87,11 @@ const filterWithParameter=(params,ID)=>{
 
         }).catch(err=> console.log(err))
     }
+    const diagnose = (appointmentNo, healthId)=>{
+        let diagnoseInfo = {appointmentNo, healthId}
+        sessionStorage.setItem('diagnoseInfo', JSON.stringify(diagnoseInfo))
+        navigate('/staff/addPrescription')
+    }
 
     return(
         <>        
@@ -129,6 +136,9 @@ const filterWithParameter=(params,ID)=>{
                                         <td>{each.paymentStatus?<span>Paid <i className="fa fa-check text-success mx-1"></i></span>:<span>Pending</span>}</td>
                                         <td style={{cursor:'pointer'}} >
                                             <div className='d-flex justify-content-between'>
+                                                <button style={{fontSize:'10px'}}  onClick={()=>diagnose(each.appointmentNo, each.healthId)} title="Remove" className="btn btn-success  text-white ml-1">
+                                                    Diagnose
+                                                </button>
                                                 <button style={{fontSize:'10px'}}  onClick={()=>reschedule(each)} title="Remove" className="btn btn-danger  text-white ml-1" data-target='#checkApp' data-toggle='modal'>
                                                     Reschedule
                                                 </button>
