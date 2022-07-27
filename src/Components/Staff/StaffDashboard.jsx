@@ -13,6 +13,8 @@ function StaffDashboard() {
   let [fetching,fetched]=useState('')
   let [patNum,setPatNum]=useState(0)
   let [appointment,setAppointments]=useState(0)
+  let [pharmBillLength, setPharmBillLength] = useState()
+  let [income, setIncome] = useState()
   const [loading, setLoading] = useState(true)
 
   useEffect(()=>{
@@ -21,6 +23,8 @@ function StaffDashboard() {
       setAllStaffs(res.data.staffArr)
       setPatNum(res.data.patsNum)
       setAppointments(res.data.appointments)
+      setPharmBillLength(res.data.pharmNum)
+      setIncome(res.data.income)
       fetched('fetched')
       setLoading(false)
     })
@@ -69,7 +73,15 @@ function StaffDashboard() {
       <div className="w3-container shadow-lg rounded-lg w3-blue w3-padding-16">
         <div className="w3-left"><FontAwesomeIcon icon='capsules' className='w3-xxlarge' /></div>
         <div className="w3-right">
-          <h3>99</h3>
+          <h3>
+            {
+              loading
+              ?
+              <span className='spinner-border text-white'></span>
+              :
+              pharmBillLength
+            }
+          </h3>
         </div>
         <div className="w3-clear py-3"></div>
         <h4>Pharmacy Bills</h4>
@@ -79,7 +91,7 @@ function StaffDashboard() {
       <div className="w3-container shadow-lg rounded-lg w3-teal w3-padding-16">
         <div className="w3-left"><i className="fa fa-ambulance w3-xxlarge"></i></div>
         <div className="w3-right">
-          <h3>23</h3>
+          <h3>0</h3>
         </div>
         <div className="w3-clear py-3"></div>
         <h4>Ambulance</h4>
@@ -200,7 +212,7 @@ function StaffDashboard() {
               ?
               <span className='spinner-border text-white'></span>
               :
-              <span><FontAwesomeIcon icon='naira-sign' />10,000</span>
+              <span><FontAwesomeIcon icon='naira-sign' /> {income} </span>
             }
             </h3>
         </div>
