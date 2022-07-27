@@ -54,6 +54,7 @@ const GeneratePharmacyBill = (props)=> {
                 err.message === "Request failed with status code 300" ? setError(err.response.data.message) : setError(err.message)
             })
         }else{
+            // setError('Please fill in the inputs')
             alert(false)
         }
        

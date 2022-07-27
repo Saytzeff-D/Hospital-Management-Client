@@ -83,7 +83,7 @@ const StaffSideBar = ()=>{
                       <div className='d-flex justify-content-center'><span className='spinner-border text-danger'></span></div>
                       :
                       <>
-                        <div className="w3-col s4">
+                        <div className="w3-col s4" data-target='#profile' data-toggle='modal'>
                     <img src={staffInfo.photo} alt='photoNow' className="w3-circle w3-margin-right" style={{width: '80px'}} />
                     </div>
                     <div className="w3-col s8 w3-bar">
@@ -167,7 +167,29 @@ const StaffSideBar = ()=>{
                     </div>
                 </div>
             </div>
+
+            <div className='modal fade' data-backdrop='static' id='profile'>
+                <div className='modal-dialog modal-dialog-centered'>
+                    <div className='modal-content'>
+                        <div className='modal-header'>
+                            <p className='h6'>Profile Picture</p>
+                            <button type="button" className="close text-danger" data-dismiss="modal" >&times;</button>
+
+                        </div>
+                        <div className='modal-body border-zero'>
+                          <div className='w-100 card container border-zero mx-auto'>
+                            <div className='card-body mx-auto'>
+                            <img src={staffInfo.photo} alt='profilePhoto' style={{borderRadius:'100%',left:'50%'}}/>
+                            </div>
+                          </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        
     )
 }
 

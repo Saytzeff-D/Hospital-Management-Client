@@ -13,11 +13,6 @@ const AppointmentList=()=>{
     const [newAppointments,setNewAppointments]=useState([])
     const [oldAppointments,setOldAppointments]=useState([])
     const [actionType,setActionType]=useState({action:'',data:{}})
-    let [filterById,setFilterById]=useState('')
-    let [filterByName,setFilterByName]=useState('')
-    let [filteredList, setFilteredList]=useState([])
-    let [appointmentDate,setNewDate]=useState('')
-    let [shift,setShift]=useState('')
     let [viewPat,setViewPat]=useState({})
 
 
@@ -34,38 +29,6 @@ const AppointmentList=()=>{
         })
 
     },[actionType, url])
-
-    useEffect(()=>{
-        filterWithParameter(filterByName)
-    },[filterByName])
-    useEffect(()=>{
-    filterWithParameter(filterById,'id')
-    },[filterById])
-    
-const filterWithParameter=(params,ID)=>{     
-
-    if(params!==''){
-        let filteredList=[]
-        let allApp=newAppointments
-        if(!ID){        
-        allApp.forEach( (each,i)=>{
-            if((each.doctorName.toLowerCase()).includes(params.toLowerCase())){
-                filteredList.push(each)
-            }
-        })
-    }else{allApp.forEach((each,i)=>{
-            if((each.appointmentNo.toLowerCase()).includes(params.toLowerCase())){
-                filteredList.push(each)
-            }
-        })
-    }
-         setFilteredList(filteredList)
-
-    }else{
-        setFilteredList(newAppointments)
-
-    }}
-
     function filterAppointment(allAppointments){
         let oldAppointments=[]
         let newAppointments=[]
@@ -79,30 +42,10 @@ const filterWithParameter=(params,ID)=>{
         })
         setOldAppointments(oldAppointments)
         setNewAppointments(newAppointments)
-        setFilteredList(newAppointments)
         console.log(allAppointments)
         console.log(oldAppointments)
         console.log(newAppointments)
     }
-    const reschedule=(each)=>{
-        setActionType({action:'decline',data:each})
-        setNewDate(each.appointmentDate)
-        setShift(each.shift)
-               
-    }
-
-    const fetchPatientProfile=(healthId)=>{
-        let patientId={healthId}
-        axios.post(`${url}staff/getPat`,patientId).then(res=>{
-            console.log(res.data)
-            setViewPat(res.data.patDetails)            
-        }).then(err=>{
-            console.log(err)            
-        })
-    }
-
-  
-
     return(
         <section className="" style={{paddingTop:'5px'}}>        
             <div className="container mt-5">
@@ -116,15 +59,15 @@ const filterWithParameter=(params,ID)=>{
                 </ul>
              
 
-                <div className="tab-content mt-4">
+                {staffDetails.fname==''?<span className='spinner-border text-white'></span>:<div className="tab-content mt-4">
                     <div id="home" className="w-100 tab-pane active">
                     <ApprovedAppointments approvedAppointment={oldAppointments}/>                        
                     </div>
                     <div id="menu1" className="tab-pane fade">
                         <AppointmentHistory appointmentHistory={newAppointments} />
                     </div>
-                </div>
-            </div>
+                </div>}
+            </div> 
             {/* Modals */}                    
                 <div className='modal fade big-modal' id="viewProfile" data-backdrop="static">
                      <div className='modal-dialog modal-dialog-centered'>

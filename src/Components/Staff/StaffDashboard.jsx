@@ -24,7 +24,7 @@ function StaffDashboard() {
       setPatNum(res.data.patsNum)
       setAppointments(res.data.appointments)
       setPharmBillLength(res.data.pharmNum)
-      setIncome(res.data.income)
+      setIncome(totalIncome(res.data.payments))
       fetched('fetched')
       setLoading(false)
     })
@@ -37,12 +37,16 @@ function StaffDashboard() {
     })
     setCountRole(count)
   },[fetching])
-
-  // const getRoles=()=>{
-    
-  // }
-  
   console.log(countRole)
+
+  const totalIncome = (result)=>{
+    let total = 0
+      result.map((each)=>{
+        total = parseInt(each.amount) + total
+    })
+    
+    return total
+  }
   
    return (
         <div>
