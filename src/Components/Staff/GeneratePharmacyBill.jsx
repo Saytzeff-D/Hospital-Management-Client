@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 const GeneratePharmacyBill = (props)=> {
-    const navigate = useNavigate()
+    const navigate=useNavigate()
     const url=useSelector(state=>state.UrlReducer.url)
     const [error, setError] = useState('')
     const [totalPrice,setTotalPrice]=useState(0)
@@ -13,8 +13,8 @@ const GeneratePharmacyBill = (props)=> {
     const allMedicines = useSelector(state=>state.PharmacyReducer.medicineTray)
     const reducerError = useSelector(state=>state.PharmacyReducer.reducerError)
     const [medicine, setMedicine] = useState([])
+    const [pharmBill, setPharmBill] = useState({})
     const [sendRequest, setSendRequest]=useState(false)
-
     const clickGenerate = ()=>{
         document.getElementById('submitForm').click()
     }
@@ -22,37 +22,64 @@ const GeneratePharmacyBill = (props)=> {
         setError('')
         e.preventDefault()
         let medicineTray=[]
-        setSendRequest(true)
-        // prescription.prescribedMedicine.forEach((each,i)=>{
-        //     let drug;
-        //     let drug_id            
-        //     medicine.forEach((drugs,index)=>{
-        //         allMedicines.forEach((medicines,k)=>{
-        //             if(medicines.medicineName.toLowerCase() === each.toLowerCase() &&medicines.medicineCategory.toLowerCase() === drugs.category.toLowerCase()){
-        //                 drug_id=medicines._id
-        //                 setError('')
-        //             }
-        //         })
-        //         drugs.drug_id=drug_id
-        //         drug=drugs
-        //     })            
-        //     medicineTray.push({medicineName:each,...drug})            
-        //     drug_id=''
-        // })
-       
-        let billData = { healthId: prescription.healthId, prescriptionId: prescription.prescriptionId, amount: totalPrice, doctorName: prescription.doctorName, medicineTray: medicine,illness: prescription.illness }
-        console.log(billData)
-        axios.post(`${url}staff/createPharmBill`, billData).then((res)=>{
-            console.log(res.data)
-            navigate('/staff/prescriptionList')
-        }).catch((err)=>{
-            console.log(err)
-            setSendRequest(false)
-            err.message === "Request failed with status code 300" ? setError(err.response.data.message) : setError(err.message)
-        })
-        
-    }
+        prescription.prescribedMedicine.forEach((each,i)=>{
+            let drug;
+            let drug_id;
+            medicine.forEach((drugs,index)=>{
+                if(i==index){
+                    allMedicines.forEach((medicines,k)=>{
+                        if(medicines.medicineName.toLowerCase()==each.toLowerCase() &&medicines.medicineCategory.toLowerCase()==drugs.category.toLowerCase()){
+                            drug_id=medicines._id
+                            setError('')
+                        }
+                    })
+                    drugs.drug_id=drug_id
+                    drug=drugs
+                }
 
+            })         
+            medicineTray.push({medicineName:each,...drug})
+        })
+       
+        let billData={healthId:prescription.healthId,prescriptionId:prescription.prescriptionId,amount:totalPrice,doctorName:prescription.doctorName,medicineTray,illness:prescription.illness}
+
+        if(validations(billData.medicineTray)){
+            setSendRequest(true)
+            axios.post(`${url}staff/createPharmBill`, billData).then((res)=>{
+                console.log(res.data)
+                navigate('/staff/prescriptionList')
+            }).catch((err)=>{
+                console.log(err)
+                setSendRequest(false)
+                err.message === "Request failed with status code 300" ? setError(err.response.data.message) : setError(err.message)
+            })
+        }else{
+            alert(false)
+        }
+       
+    }
+    function validations(alldrugs){
+        console.log(alldrugs)
+        let error=false
+        alldrugs.forEach((each,i)=>{
+            if(!each.drug_id){
+                error=true
+                setError(`Please select the correct Category for ${each.medicineName}`)
+                return false
+            }
+            if( each.priceTag==0 || isNaN(each.priceTag)){
+                error=true
+                setError(`Please type a correct quantity for ${each.medicineName}`)
+                return false
+            }
+        })
+        if(!error){
+            setError('')
+            return true
+
+        }
+        // return true
+    }
     useEffect(()=>{
         let prescribe = JSON.parse(sessionStorage.getItem('prescription'))
         setPrescription({...prescription, ...prescribe})
@@ -70,6 +97,7 @@ const GeneratePharmacyBill = (props)=> {
         let unitPrice = allMedicines.find((each)=>(each.medicineName.toLowerCase() === drugs.toLowerCase())).pricePerUnit
         medicine[index].unit = value
         medicine[index].priceTag = unitPrice * value
+        console.log(medicine)
         setMedicine([...medicine])
 
         let TotalPrice=0
