@@ -2,8 +2,10 @@ import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { useSelector }  from 'react-redux'
+import { useNavigate } from 'react-router'
 
 const AddPrescription = (props)=>{
+    const navigate = useNavigate
     const url = useSelector(state=>state.UrlReducer.url)
     const patientTray = useSelector(state=>state.PatientReducer.patientTray)
     const medicineTray = useSelector(state=>state.PharmacyReducer.medicineTray)
@@ -74,7 +76,7 @@ const AddPrescription = (props)=>{
                     setLoading(false)
                     setSuccess(res.data.message)
                     setTimeout(()=>{
-                        document.location.reload()
+                        navigate('/staff/appointment')
                     },2000)
                 }).catch((err)=>{
                     setLoading(false)
