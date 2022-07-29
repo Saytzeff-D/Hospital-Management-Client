@@ -36,7 +36,7 @@ const AppointmentList=()=>{
             let doctorName='Dr.' + staffDetails.fname + ' ' + staffDetails.lname
             if(each.paymentStatus && !each.prescriptionStatus && (each.doctorName===doctorName || staffDetails.role==='Admin') ){
                 oldAppointments.push(each)
-            }else if(each.paymentStatus && each.prescriptionStatus && (each.doctorName===doctorName || staffDetails.role=='Admin')) {
+            }else if(each.paymentStatus && each.prescriptionStatus && (each.doctorName === doctorName || staffDetails.role === 'Admin')) {
                 newAppointments.push(each)
             }
         })
@@ -59,7 +59,7 @@ const AppointmentList=()=>{
                 </ul>
              
 
-                {staffDetails.fname==''?<span className='spinner-border text-white'></span>:<div className="tab-content mt-4">
+                {staffDetails.fname ===''?<span className='spinner-border text-white'></span>:<div className="tab-content mt-4">
                     <div id="home" className="w-100 tab-pane active">
                     <ApprovedAppointments approvedAppointment={oldAppointments}/>                        
                     </div>
