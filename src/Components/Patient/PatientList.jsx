@@ -13,11 +13,10 @@ const  PatientList=()=>{
     let url=useSelector(state=>state.UrlReducer.url)
     let [allPat,setAllPat]=useState([])
     let [filteredList, setFilteredList]=useState([])
-    let [filterByName,setFilterByName]=useState('')
     let [filterById,setFilterById]=useState('')
     let [image,setImage]=useState('')
     let [staffAddPatRoute,setAddPatRoute]=useState('')
-    const displayAtOnce = 4
+    const displayAtOnce = 3
     const [presentPage,setPresentPage]=useState(0)
     const [editsuccess,setEditMessage]=useState('')
     useEffect(()=>{
@@ -27,9 +26,9 @@ const  PatientList=()=>{
                 sessionStorage.patTray=JSON.stringify(res.data)
                 setAllPat(res.data)
                 setFilteredList(res.data)
+                setTablePage()
                 localStorage.allPat=JSON.stringify
-                (res.data)
-                setTablePage()              
+                (res.data) 
         }).catch(err=>{
             console.log(err)
             console.log('cannot connect')
@@ -39,45 +38,26 @@ const  PatientList=()=>{
 useEffect(()=>{
     setTablePage()
 },[presentPage])
-useEffect(()=>{
-   filterWithParameter(filterByName)
-   if(filterByName === ''){
-     setTablePage()
-   }
-   setPresentPage(0)
-   
-},[filterByName])  
 
 useEffect(()=>{
-    filterWithParameter(filterById,'id')
-     if(filterById === ''){
-        setTablePage()
-      }
-      setPresentPage(0)
- },[filterById])  
+    filterWithParameter(filterById)
+},[filterById])
+
  
-const filterWithParameter=(params,ID)=>{     
-
-    if(params!==''){
-        let filteredList=[]
-        let allPatients=allPat
-        if(!ID){        
-        allPatients.forEach( (each,i)=>{
-            if((each.fullName.toLowerCase()).includes(params.toLowerCase())){
-                filteredList.push(each)
+const filterWithParameter=(params)=>{
+    console.log(params)
+    let filterList=[]
+    let allPatients=allPat    
+        allPatients.forEach( (each,i)=>{    
+            if((each.fullName.toLowerCase()).includes(params.toLowerCase())|| (each.healthId.toLowerCase()).includes(params.toLowerCase())){
+                filterList.push(each)
             }
         })
-    }else{
-        allPatients.forEach((each,i)=>{
-            if((each.healthId.toLowerCase()).includes(params.toLowerCase())){
-                filteredList.push(each)
-            }
-        })
-    }
-         setFilteredList(filteredList)
-    }else{
-        setFilteredList(allPat)
-    }
+        console.log(filteredList)
+        setFilteredList(filterList)
+        if(params==''){
+            setTablePage()
+        }
     }
 
     const deletePatient=(obj,index)=>{
@@ -107,16 +87,15 @@ const filterWithParameter=(params,ID)=>{
         setPresentPage(presentPage+1)
         }
         setTablePage()
-        setFilterByName('')
         setFilterById('')
 
     }
     const fastForwardEnd=()=>{
         let allpat=JSON.parse(sessionStorage.patTray)
         let lastPage= Math.floor((allpat.length)/displayAtOnce)
+        console.log(lastPage)
         setPresentPage(lastPage)
         setTablePage()
-        setFilterByName('')
         setFilterById('')
     }
     const backWard=()=>{
@@ -124,7 +103,6 @@ const filterWithParameter=(params,ID)=>{
         setPresentPage(presentPage-1)
         }
         setTablePage()
-        setFilterByName('')
         setFilterById('')
 
 
@@ -132,7 +110,6 @@ const filterWithParameter=(params,ID)=>{
     const backWardEnd=()=>{
         setPresentPage(0)
         setTablePage()
-        setFilterByName('')
         setFilterById('')
     }
     function setTablePage(){
@@ -174,10 +151,7 @@ const filterWithParameter=(params,ID)=>{
 
             <div className='row w-100'>
                 <div className='col-md-6'>
-                    <input value={filterById}  onChange={(e)=>setFilterById(e.target.value)}className='form-control m-1' placeholder='Search Patient by ID' />
-                    </div>
-                    <div className='col-md-6'>
-                        <input value={filterByName}  onChange={(e)=>setFilterByName(e.target.value)} className='form-control m-1' placeholder='Search Patient by Name' />
+                    <input value={filterById}  onChange={(e)=>setFilterById(e.target.value)}className='form-control m-1' placeholder='Search Patient by Name or ID'/>
                     </div>
              </div>
         <section>               
