@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPatientAppointmentList, getStaff } from '../../actions';
 import { useNavigate } from 'react-router';
 import { PaystackButton } from 'react-paystack';
+import * as Yup from 'yup'
 
 function PatientAppointment(props) {
     const navigate = useNavigate()
@@ -29,10 +30,14 @@ function PatientAppointment(props) {
             appointmentDate: '',
             doctorName: '',
             appointmentPriority: '',
-            specialist: '',
-            shift: '',
             message: ''
         },
+        validationSchema: Yup.object({
+            appointmentDate: Yup.string().required(),
+            doctorName: Yup.string().required(),
+            appointmentPriority: Yup.string().required(),
+            message: Yup.string().required()
+        }),
         onSubmit: (values)=>{
             setError('')
             setIsLoading(true)
@@ -98,6 +103,15 @@ function PatientAppointment(props) {
     text: '',
     onSuccess: (reference) => handlePaystackSuccessAction(reference),
     onClose: handlePaystackCloseAction,
+}
+const delAppoint = (_id)=>{
+    console.log(_id)
+    let status = window.confirm('Are you sure you want to delete this appointment?')
+    if(status){
+        axios.delete(`${url}patient/delAppoint`, {data: {_id}}).then((res)=>{
+            console.log(res.data)
+        })
+    }else{}
 }
     return (
         <div>
@@ -206,7 +220,7 @@ function PatientAppointment(props) {
                                                             </div>)
                                                         }
                                                         <button className='btn'><FontAwesomeIcon className='cursor-pointer text-warning' icon='bars' /></button> 
-                                                        <button className='btn'><FontAwesomeIcon className='text-danger cursor-pointer' icon='trash' /></button>
+                                                        <button onClick={()=>delAppoint(appointment._id)} className='btn'><FontAwesomeIcon className='text-danger cursor-pointer' icon='trash' /></button>
                                                         </div> 
                                                     </td>                                                    
                                                 </tr>
