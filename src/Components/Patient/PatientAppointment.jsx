@@ -22,6 +22,8 @@ function PatientAppointment(props) {
     const [isLoading, setIsLoading] = useState(false)
     const reducerError = useSelector(state=>state.AppointmentReducer.awaitingResponse)
     const [payloading, setPayloading] = useState(false)
+    const [deleteLoading, setDeleteLoading] = useState(false)
+    
     useEffect(()=>{
             dispatch(getPatientAppointmentList(url, {healthId: patient.healthId}))
     }, [dispatch, url, patient.healthId])
@@ -108,8 +110,16 @@ const delAppoint = (_id)=>{
     console.log(_id)
     let status = window.confirm('Are you sure you want to delete this appointment?')
     if(status){
+        setDeleteLoading(true)
         axios.delete(`${url}patient/delAppoint`, {data: {_id}}).then((res)=>{
-            console.log(res.data)
+            if(res.data.status){
+                setDeleteLoading(false)
+                alert('Deleted Successfully')
+                dispatch(getPatientAppointmentList(url, {healthId: patient.healthId}))
+            }else {
+                setDeleteLoading(false)
+                alert('Appointment failed to delete')
+            }
         })
     }else{}
 }
@@ -157,6 +167,17 @@ const delAppoint = (_id)=>{
                             <button className='btn btn-primary' data-toggle='modal' data-target='#appointmentBox'><FontAwesomeIcon icon='plus' /> Add Appointment</button>
                         </div>
                         <input className='form-control col-lg-4 col-md-6 col-sm-8' placeholder='Search...'  />
+                           {
+                           deleteLoading 
+                           ? 
+                           (
+                             <div className='mt-2'>
+                                 <span className='spinner-border text-danger'></span><span> Deleting...</span>
+                            </div>
+                           )
+                            :
+                            ''
+                           }
                         {
                             reducerError === 'Waiting' || payloading
                             ?
