@@ -15,7 +15,8 @@ function StaffLogin() {
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
-   
+   console.info(900)
+   console.log(800)
     const formik = useFormik({
         initialValues: {
           
