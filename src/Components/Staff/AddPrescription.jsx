@@ -66,7 +66,10 @@ const AddPrescription = (props)=>{
 
     const addPrescription = (e)=>{
         e.preventDefault()
-        let Meds=prescribeMed.filter( (each,i)=> each!=='')    
+        console.log(prescriptionObj.illness)
+        let Meds=prescribeMed.filter((each,i)=> each!=='')
+        
+    if(prescriptionObj.illness!==''){
         if(Meds.length>0){
             if(filterDrugArray(Meds)){
                 prescriptionObj.prescribedMedicine=Meds
@@ -75,10 +78,10 @@ const AddPrescription = (props)=>{
                 axios.post(`${url}staff/addPrescription`, prescriptionObj).then((res)=>{
                     setLoading(false)
                     setSuccess(res.data.message)
-                    setTimeout(()=>{
-                        navigate('/staff/appointment')
-                    },2000)
+                    // navigate('/staff/appointment')
+                    window.location.reload()
                 }).catch((err)=>{
+                    console.log(err)
                     setLoading(false)
                     setError('An error has occured...')
                 })
@@ -86,6 +89,10 @@ const AddPrescription = (props)=>{
         }else{
             setErrorTray({status:false,message:'Please fill the drug Inputs'})
         } 
+    }else{
+        setErrorTray({status:false,message:'fill the illness input'})
+    }
+
 
     }
 
@@ -99,11 +106,11 @@ const AddPrescription = (props)=>{
                 drugsArr.push(each)
             }  
           })
+
           if(drugsNotFound ===''){
             return true
           }else{
-            setError('')
-            
+            setError('')            
             setErrorTray({status:false,message:`${drugsNotFound.slice(0,drugsNotFound.length-2)} ${drugsArr.length>1? `are`:`is`} not available in Pharmacy`})
             return false
           }
