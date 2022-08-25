@@ -7,6 +7,7 @@ import { getPatientAppointmentList, getStaff } from '../../actions';
 import { useNavigate } from 'react-router';
 import { PaystackButton } from 'react-paystack';
 import * as Yup from 'yup'
+import AppointmentDetails from './AppointmentDetails';
 
 function PatientAppointment(props) {
     const navigate = useNavigate()
@@ -23,6 +24,7 @@ function PatientAppointment(props) {
     const reducerError = useSelector(state=>state.AppointmentReducer.awaitingResponse)
     const [payloading, setPayloading] = useState(false)
     const [deleteLoading, setDeleteLoading] = useState(false)
+    const [appointDetails, setAppointDetails] = useState({})
     
     useEffect(()=>{
             dispatch(getPatientAppointmentList(url, {healthId: patient.healthId}))
@@ -225,7 +227,7 @@ const delAppoint = (_id)=>{
                                                     <td>{appointment.appointmentPriority}</td>
                                                     <td>{appointment.specialist}</td>
                                                     <td>{appointment.doctorName}</td>
-                                                    <td>{appointment.approvalStatus ? <span className='bg-success rounded-pill h6 p-2 text-white font-weight-bold'>Approved</span> : <span className='rounded-pill bg-warning h6 p-2 font-weight-bold'>Pending</span>}</td>
+                                                    <td>{appointment.paymentStatus ? <span className='bg-success rounded-pill h6 p-2 text-white font-weight-bold'>Approved</span> : <span className='rounded-pill bg-warning h6 p-2 font-weight-bold'>Pending</span>}</td>
                                                     <td>{appointment.message}</td>
                                                     <td>{appointment.paymentStatus ? <span className='font-weight-bold'>PAID</span> : <span className='font-weight-bold'>YET TO PAY</span>}</td>
                                                     <td>
@@ -240,7 +242,7 @@ const delAppoint = (_id)=>{
                                                             </PaystackButton> 
                                                             </div>)
                                                         }
-                                                        <button className='btn'><FontAwesomeIcon className='cursor-pointer text-warning' icon='bars' /></button> 
+                                                        <button onClick={()=>setAppointDetails(appointment)} className='btn' data-toggle="modal" data-target="#detailsAppointment"><FontAwesomeIcon className='cursor-pointer text-warning' icon='bars' /></button> 
                                                         <button onClick={()=>delAppoint(appointment._id)} className='btn'><FontAwesomeIcon className='text-danger cursor-pointer' icon='trash' /></button>
                                                         </div> 
                                                     </td>                                                    
@@ -339,6 +341,20 @@ const delAppoint = (_id)=>{
                                     }</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* AppointmentDetailsModal */}
+            <div className="modal fade" id="detailsAppointment">
+                <div className="modal-dialog modal-md">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            Details of your Appointment
+                        </div>
+                        <div className="modal-body">
+                            <AppointmentDetails details={appointDetails} />
                         </div>
                     </div>
                 </div>
