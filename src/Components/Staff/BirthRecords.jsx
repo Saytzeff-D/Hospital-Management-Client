@@ -16,7 +16,9 @@ const BirthRecords = (props)=>{
     const [success,setSuccess]=useState('')
     const [searchText,setText]=useState('')
     const [btnLoading, setBtnLoading] = useState({btn: 'Save Records', loadStyle: ''})
+    const [exportRecord,setExportRecord]=useState({})
     const [loading, setLoading] = useState(true)
+    const [uploadButton,setButton]=useState({text:'Yes, Export', class:'',disabled:false})
 
     useEffect(()=>{
         axios.get(`${url}staff/getBirth`).then(res=>{
@@ -60,7 +62,7 @@ const BirthRecords = (props)=>{
                 if(res.data.status){
                     setSuccess(res.data.message)
                     setError('')
-                    setBtnLoading({btn: 'Save Records', loadStyle: ''})
+                    setBtnLoading({btn: 'Save Records', loadStyle: '',disabled:true})
                     console.log(res.data)
                 }else{
                     setError(res.data.message)
@@ -103,6 +105,22 @@ const BirthRecords = (props)=>{
         }
 
     }
+    const exportAsPatient=()=>{
+        console.log(exportRecord)
+        setButton({text:'',class:'spinner-border spinner-border-sm mx-2'})
+        let obj={_id:exportRecord._id,fullName:exportRecord.childName,guardianName:exportRecord.motherName,gender:exportRecord.gender,dob:exportRecord.birthDate,exporting:true}
+        axios.post(`${url}patient/register`, obj).then(res=>{
+            if(res.data.status==true){
+                setButton({text:'Exported',class:'fa fa-check mx-2'})
+                window.location.reload()
+            }else{
+                alert('please try again')
+                setButton({text:'Yes, Export',class:''})
+
+            }
+        })
+
+    }
     return(
         <>
             <div className='container-fluid p-3'>
@@ -143,6 +161,7 @@ const BirthRecords = (props)=>{
                                             <th>Mother Name</th>
                                             <th>Father Name</th>
                                             <th>Report</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -156,6 +175,7 @@ const BirthRecords = (props)=>{
                                                     <td> {item.motherName} </td>
                                                     <td> {item.fatherName} </td>
                                                     <td> {item.report} </td>
+                                                    {!item.exported? <td data-target='#exportPatient' data-toggle='modal' onClick={()=>setExportRecord(item)} className='text-center'><i title='import patient' style={{cursor:'pointer'}} className='fa fa-upload text-danger'></i></td>: <button style={{fontSize:'7px'}} className='btn btn-danger mt-2 ml-3'>exported</button>}
                                                 </tr>
                                             ))                                            
                                         }
@@ -247,6 +267,40 @@ const BirthRecords = (props)=>{
                                      <button className='btn btn-primary btn-block mb-1' type='submit'>{btnLoading.btn} <span className={btnLoading.loadStyle}></span></button>
                                 </form>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='modal fade' id='exportPatient' data-backdrop='static'>
+                    <div className='modal-dialog modal-dialog-centered'>
+                        <div className='modal-content'>
+                            <div className='modal-header'>
+                                <h4 className='modal-title'>Export Birth Record to Patient</h4>
+                                <button type="button" className="close text-danger" data-dismiss="modal" >&times;</button>
+                            </div>
+                            <div className='modal-body border-zero'>
+                                <div className='row'>
+                                    <div className='col-6 '>
+                                      <h5>  Name: {exportRecord.childName}</h5>
+                                    </div>
+                                    <div className='col-6'>
+                                        <h5>DOB: {exportRecord.birthDate}</h5>
+                                    </div>
+                                    <div className='col-6 my-4'>
+                                        <h5>Gender: {exportRecord.gender} </h5>
+                                    </div>
+                                    <div className='col-6 my-4'>
+                                        <h5>Guardian: {exportRecord.motherName}</h5>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div className='modal-footer'>
+                                <button disabled={uploadButton.disabled} className='btn btn-success' onClick={exportAsPatient}>{uploadButton.text} <i className={uploadButton.class}></i> </button>
+                                <button className='btn btn-danger mx-2' data-dismiss='modal'>Go back</button>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

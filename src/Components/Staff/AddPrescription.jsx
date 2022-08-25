@@ -78,8 +78,7 @@ const AddPrescription = (props)=>{
                 axios.post(`${url}staff/addPrescription`, prescriptionObj).then((res)=>{
                     setLoading(false)
                     setSuccess(res.data.message)
-                    // navigate('/staff/appointment')
-                    window.location.reload()
+                    navigate('/staff/prescriptionList')
                 }).catch((err)=>{
                     console.log(err)
                     setLoading(false)
