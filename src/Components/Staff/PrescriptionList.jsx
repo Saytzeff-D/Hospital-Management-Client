@@ -9,6 +9,8 @@ const PrescriptionList = () => {
     const [error, setError] = useState('')
     const [list, setList] = useState([])
     const url = useSelector(state=>state.UrlReducer.url)
+    const staffInfo=useSelector(state=>state.StaffReducer.staffInfo)
+    console.log(staffInfo)
     useEffect(()=>{
         axios.get(`${url}staff/allPrescription`).then((res)=>{
             setList(res.data.result)
@@ -63,7 +65,7 @@ const PrescriptionList = () => {
                                     <th>Illness</th>
                                     <th>Physician Name</th>
                                     <th>Prescribed Medicine</th>
-                                    <th>FurtherAction</th>
+                                    {staffInfo.role.toLowerCase()=='pharmacist' && <th>FurtherAction</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,7 +88,7 @@ const PrescriptionList = () => {
                                                     </div>)
                                                 }                                               
                                                 </td>
-                                            <td> 
+                                                {staffInfo.role.toLowerCase()=='pharmacist' &&<td> 
                                                 {
                                                     each.billStatus
                                                     ?
@@ -94,7 +96,7 @@ const PrescriptionList = () => {
                                                     :
                                                     (<button onClick={()=>billNow(each)} className='btn btn-warning'>Bill Now</button>)
                                                 } 
-                                            </td>
+                                            </td>}
                                         </tr>
                                     ))
                                 }

@@ -23,12 +23,10 @@ const  PatientList=()=>{
         console.log('refetching')
         axios.get(`${url}patient/allPatient`).then(res=>{
                 console.log(res)
-                sessionStorage.patTray=JSON.stringify(res.data)
+                localStorage.patTray=JSON.stringify(res.data)
                 setAllPat(res.data)
                 setFilteredList(res.data)
                 setTablePage()
-                localStorage.allPat=JSON.stringify
-                (res.data) 
         }).catch(err=>{
             console.log(err)
             console.log('cannot connect')
@@ -82,7 +80,7 @@ const filterWithParameter=(params)=>{
         setFilteredList(filterFilteredList)
     }
     const fastForward=()=>{
-        let allpat=JSON.parse(sessionStorage.patTray)
+        let allpat=allPat
         if(presentPage<Math.floor((allpat.length)/displayAtOnce)){
         setPresentPage(presentPage+1)
         }
@@ -91,7 +89,7 @@ const filterWithParameter=(params)=>{
 
     }
     const fastForwardEnd=()=>{
-        let allpat=JSON.parse(sessionStorage.patTray)
+        let allpat=allPat
         let lastPage= Math.floor((allpat.length)/displayAtOnce)
         console.log(lastPage)
         setPresentPage(lastPage)
@@ -116,7 +114,7 @@ const filterWithParameter=(params)=>{
         let pageNumber=presentPage
         let filteredList=[]
         
-        let allPatients=JSON.parse(sessionStorage.patTray)
+        let allPatients=JSON.parse(localStorage.patTray)
         console.log(allPatients)
         allPatients.forEach((each,index)=>{
             if(index>=pageNumber*displayAtOnce && index<=pageNumber*displayAtOnce+displayAtOnce-1){
@@ -240,7 +238,7 @@ const filterWithParameter=(params)=>{
                                 <div className='modal-body border-zero'>
                                     <div className='w-100 card container border-zero'>
                                         <div className='card-body '> 
-                                            <img src={image} alt='profilePhoto' class='w-100'/>
+                                            {image?<img src={image} alt='profilePhoto' class='w-100'/> : <div>No image, please upload an image here <br/> <input className='my-3' type='file'/></div>}
 
                                         </div>
                                     </div>
