@@ -19,17 +19,16 @@ const  PatientList=()=>{
     const displayAtOnce = 3
     const [presentPage,setPresentPage]=useState(0)
     const [editsuccess,setEditMessage]=useState('')
+    const [uploadButton,setButton]=useState({text:'Upload', class:'',disabled:true})
+    const [newImage,setNewImage]=useState('')
     useEffect(()=>{
-        console.log('refetching')
         axios.get(`${url}patient/allPatient`).then(res=>{
-                console.log(res)
                 localStorage.patTray=JSON.stringify(res.data)
                 setAllPat(res.data)
                 setFilteredList(res.data)
                 setTablePage()
         }).catch(err=>{
             console.log(err)
-            console.log('cannot connect')
         })
 
     },[url,editsuccess])
@@ -43,7 +42,6 @@ useEffect(()=>{
 
  
 const filterWithParameter=(params)=>{
-    console.log(params)
     let filterList=[]
     let allPatients=allPat    
         allPatients.forEach( (each,i)=>{    
@@ -51,7 +49,6 @@ const filterWithParameter=(params)=>{
                 filterList.push(each)
             }
         })
-        console.log(filteredList)
         setFilteredList(filterList)
         if(params==''){
             setTablePage()
@@ -60,7 +57,6 @@ const filterWithParameter=(params)=>{
 
     const deletePatient=(obj,index)=>{
         axios.post(`${url}patient/deletePat`,obj).then(res=>{
-            console.log(res)
             if(res.data.status){
                 alert('deleted')
                 filterArray(obj._id)
@@ -91,7 +87,6 @@ const filterWithParameter=(params)=>{
     const fastForwardEnd=()=>{
         let allpat=allPat
         let lastPage= Math.floor((allpat.length)/displayAtOnce)
-        console.log(lastPage)
         setPresentPage(lastPage)
         setTablePage()
         setFilterById('')
@@ -115,7 +110,6 @@ const filterWithParameter=(params)=>{
         let filteredList=[]
         
         let allPatients=JSON.parse(localStorage.patTray)
-        console.log(allPatients)
         allPatients.forEach((each,index)=>{
             if(index>=pageNumber*displayAtOnce && index<=pageNumber*displayAtOnce+displayAtOnce-1){
                 filteredList.push(each)
@@ -127,7 +121,32 @@ const filterWithParameter=(params)=>{
     const setEdit=()=>{
         setEditMessage('updated')
     }
-    
+    const uploadImage=()=>{
+        setButton({text:'',class:'spinner-border spinner-border-sm mx-2'})
+        let obj={fullName:image.fullName,image:newImage,_id:image._id}
+        axios.post(`${url}patient/updatePhoto`,obj).then(res=>{
+            if(res.data.status){
+                setButton({text:'Done',class:' fa fa-check mx-2', disabled:true})
+                window.location.reload()
+            }
+        }).catch(err=>{
+            setButton({text:'Upload', class:'',disabled:false})
+        })
+    }
+    const pickFile =(e)=>{
+        const file = e.target.files[0]
+        if(file){
+            setButton({text:'Upload', class:'',disabled:false})
+        }else{
+            setButton({text:'Upload', class:'',disabled:true})
+            
+        }
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = ()=>{
+            setNewImage(reader.result)
+        }
+    }
 
 
     return(
@@ -183,7 +202,7 @@ const filterWithParameter=(params)=>{
                                 <div className='col-4'><FontAwesomeIcon className='text-success' style={{cursor: 'pointer'}} icon='edit' data-target='#editPat' data-toggle='modal'  onClick={()=>dispatch({type:'viewPatientDetails', payload:each})} /></div>
                                 <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} onClick={()=>deletePatient(each,i)} className='text-danger' icon='trash' /></div>        
                             <div className='col-4'><FontAwesomeIcon style={{cursor: 'pointer'}} className='text-warning' icon='image' data-target='#viewPat' data-toggle='modal'
-                             onClick={()=>setImage(each.photo)} /></div>          
+                             onClick={()=>setImage(each)} /></div>          
                             </div>          
                                 </td>
                         </tr> 
@@ -238,7 +257,7 @@ const filterWithParameter=(params)=>{
                                 <div className='modal-body border-zero'>
                                     <div className='w-100 card container border-zero'>
                                         <div className='card-body '> 
-                                            {image?<img src={image} alt='profilePhoto' class='w-100'/> : <div>No image, please upload an image here <br/> <input className='my-3' type='file'/></div>}
+                                            {image.photo?<img src={image.photo} alt='profilePhoto' class='w-100'/> : <div>No image, please upload an image here <br/> <input onChange={pickFile}  className='my-3' type='file'/> <br/> <button disabled={uploadButton.disabled} onClick={uploadImage} className='btn btn-success mx-1'>{uploadButton.text} <i className={uploadButton.class}></i></button></div>}
 
                                         </div>
                                     </div>
