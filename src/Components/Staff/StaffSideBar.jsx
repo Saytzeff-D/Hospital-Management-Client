@@ -141,7 +141,7 @@ const StaffSideBar = ()=>{
                     (staffInfo.role === 'Admin' || staffInfo.role ==='Accountant') ? 
                     <NavLink style={{textDecoration: 'none'}} to='/staff/staffList' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"> <FontAwesomeIcon icon="people-line" />  Staffs</NavLink> : ''
                     }
-                    <NavLink style={{textDecoration: 'none'}} to='/staff/liveChat' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="comment-medical" />  Live Chat</NavLink>
+                    {/* <NavLink style={{textDecoration: 'none'}} to='/staff/liveChat' activeclassname='w3-blue' className="w3-bar-item w3-button w3-padding"><FontAwesomeIcon icon="comment-medical" />  Live Chat</NavLink> */}
                     <p data-toggle='modal' data-target='#logoutModal' style={{textDecoration: 'none'}} onClick={logoutStaff} className="w3-bar-item w3-button w3-padding w3-hide-large"><i className="fa fa-power-off fa-fw"></i>  Logout</p> 
                 </div>
             </nav>
