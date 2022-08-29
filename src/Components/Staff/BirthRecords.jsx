@@ -151,7 +151,7 @@ const BirthRecords = (props)=>{
                             )
                             :
                             (
-                                <table className='table table-light table-striped table-responsive'>
+                                <table className='table table-light table-striped table-responsive-md'>
                                     <thead>
                                         <tr>
                                             <th>Records Id</th>
