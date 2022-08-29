@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { getStaff } from '../../actions';
@@ -11,6 +12,22 @@ function AllStaff(props) {
     useEffect(()=>{
         dispatch(getStaff(url))
     }, [dispatch, url])
+
+    const deleteStaff = (id)=>{
+        let staff = allStaff.filter((each)=>(each._id !== id))
+       let del = window.confirm("Are you sure you want to delte this Staff with Id" + id)
+        if(del){
+            axios.delete(`${url}staff/delete`, {data: {id} }).then((res)=>{
+                console.log(res)
+                if(res.data.status){
+                    dispatch({type: 'getStaff', payload: staff})
+                    alert('Deleted Successfully')
+                }
+            }).catch((err)=>{
+                alert("Error")
+            })
+        }else{}
+    }
     return (
         
         <div className='py-3'>
@@ -69,9 +86,12 @@ function AllStaff(props) {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className='backView bg-danger p-5'>
-                                        <button className='btn btn-primary'>Edit Staff</button>
+                                        <div className='backView bg-dark py-5'>
+                                            <div className='d-flex justify-content-center' >
+                                            {/* <button className='btn btn-primary mx-1'>Edit Staff</button> */}
+                                            <button onClick={()=>deleteStaff(staff._id)} className='btn btn-light mx-1'>Delete</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
