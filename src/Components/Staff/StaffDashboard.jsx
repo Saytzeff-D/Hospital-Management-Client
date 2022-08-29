@@ -4,6 +4,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 function StaffDashboard() {
   let url=useSelector(state=>state.UrlReducer.url)
@@ -16,6 +17,7 @@ function StaffDashboard() {
   let [pharmBillLength, setPharmBillLength] = useState()
   let [income, setIncome] = useState()
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(()=>{
     axios.get(`${url}staff/getDashboardInfo`).then( res=>{
@@ -56,7 +58,7 @@ function StaffDashboard() {
 
   <div className="w3-row-padding w3-margin-bottom">
     <div className="w3-quarter">
-      <div className="w3-container shadow-lg rounded-lg w3-red w3-padding-16" id='box1'>
+      <div onClick={()=>navigate('/staff/appointment')} className="w3-container shadow-lg rounded-lg w3-red w3-padding-16" id='box1' style={{cursor: 'pointer'}} >
         <div className="w3-left"><i className="fa fa-calendar w3-xxlarge"></i></div>
         <div className="w3-right">
           <h3>
@@ -74,7 +76,7 @@ function StaffDashboard() {
       </div>
     </div>
     <div className="w3-quarter" id='box2'>
-      <div className="w3-container shadow-lg rounded-lg w3-blue w3-padding-16">
+      <div onClick={()=>navigate('/staff/pharmacyBills')} className="w3-container shadow-lg rounded-lg w3-blue w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><FontAwesomeIcon icon='capsules' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>
@@ -92,7 +94,7 @@ function StaffDashboard() {
       </div>
     </div>
     <div className="w3-quarter" id='box3' >
-      <div className="w3-container shadow-lg rounded-lg w3-teal w3-padding-16">
+      <div onClick={()=>navigate('/staff/ambulance')} className="w3-container shadow-lg rounded-lg w3-teal w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><i className="fa fa-ambulance w3-xxlarge"></i></div>
         <div className="w3-right">
           <h3>0</h3>
@@ -102,7 +104,7 @@ function StaffDashboard() {
       </div>
     </div>
     <div className="w3-quarter" id='box4'>
-      <div className="w3-container shadow-lg rounded-lg w3-orange w3-text-white w3-padding-16">
+      <div onClick={()=>navigate('/staff/patientList')} className="w3-container shadow-lg rounded-lg w3-orange w3-text-white w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><FontAwesomeIcon icon='bed' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>
@@ -127,7 +129,7 @@ function StaffDashboard() {
   </header>
   <div className="w3-row-padding w3-margin-bottom">
     <div className="w3-quarter" id='box5' >
-      <div className="w3-container shadow-lg rounded-lg text-white bg-success w3-padding-16">
+      <div onClick={()=>navigate('/staff/staffList')} className="w3-container shadow-lg rounded-lg text-white bg-success w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>
@@ -145,7 +147,7 @@ function StaffDashboard() {
       </div>
     </div>
     <div className="w3-quarter" id='box6'>
-      <div className="w3-container shadow-lg rounded-lg text-white w3-gray w3-padding-16">
+      <div onClick={()=>navigate('/staff/staffList')} className="w3-container shadow-lg rounded-lg text-white w3-gray w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><FontAwesomeIcon icon='stethoscope' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>
@@ -163,7 +165,7 @@ function StaffDashboard() {
       </div>
     </div>
     <div className="w3-quarter" id='box7'>
-      <div className="w3-container shadow-lg rounded-lg text-white w3-deep-orange w3-padding-16">
+      <div onClick={()=>navigate('/staff/staffList')} className="w3-container shadow-lg rounded-lg text-white w3-deep-orange w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><FontAwesomeIcon icon='prescription' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>
@@ -181,7 +183,7 @@ function StaffDashboard() {
       </div>
     </div>
     <div className="w3-quarter" id='box8'>
-      <div className="w3-container shadow-lg rounded-lg text-white w3-brown w3-text-white w3-padding-16">
+      <div onClick={()=>navigate('/staff/staffList')} className="w3-container shadow-lg rounded-lg text-white w3-brown w3-text-white w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><FontAwesomeIcon icon='bed' className='w3-xxlarge' /></div>
         <div className="w3-right">
           <h3>
@@ -207,7 +209,7 @@ function StaffDashboard() {
   </header>
   <div className="w3-row-padding w3-margin-bottom">
     <div className="w3-quarter" id='box5' >
-      <div className="w3-container shadow-lg rounded-lg text-white bg-primary w3-padding-16">
+      <div onClick={()=>navigate('/staff/finance')} className="w3-container shadow-lg rounded-lg text-white bg-primary w3-padding-16" style={{cursor: 'pointer'}} >
         <div className="w3-left"><FontAwesomeIcon className='w3-xxlarge' icon='sack-dollar' /></div>
         <div className="w3-right">
           <h3>
