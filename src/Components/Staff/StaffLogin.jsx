@@ -15,8 +15,6 @@ function StaffLogin() {
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState({btn: 'Login', loadStyle: ''})
-   console.info(900)
-   console.log(800)
     const formik = useFormik({
         initialValues: {
           
@@ -32,17 +30,14 @@ function StaffLogin() {
             password: Yup.string().required('Enter your Password')      
         }),
         onSubmit: (values)=>{
-            console.log(values)
             setError('')
             setLoading({btn: '', loadStyle: 'spinner-border spinner-border-sm'})
             axios.post(`${url}staff/login`, values).then((res)=>{
                 if (res.data.status === false) {
-                    console.log(res.data)
                     setError(res.data.message)
                     setLoading({btn: 'Login', loadStyle: ''})
                 } else {
                     let staffDetails=res.data.details 
-                    console.log(res.data.token)  
                     localStorage.StaffToken=res.data.token
                     dispatch(setStaff(staffDetails))
                     sessionStorage.StaffDetails = JSON.stringify({ ...staffDetails,password:null })
@@ -51,7 +46,6 @@ function StaffLogin() {
             })
             .catch((err)=>{
                 setLoading({btn: 'Login', loadStyle: ''})
-                console.log(err)
                 setError('An Error has occurred, pls try again')
             })
         }

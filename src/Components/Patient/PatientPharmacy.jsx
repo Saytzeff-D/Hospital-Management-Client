@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { patientPharmBill } from '../../actions';
 import { PaystackButton } from 'react-paystack'
+import axios from 'axios'
 
 function PatientPharmacy(props) {
     const dispatch = useDispatch()
@@ -10,7 +11,7 @@ function PatientPharmacy(props) {
     const pharmBills = useSelector(state=>state.PharmacyReducer.patientPharmBills)
     const patient = useSelector(state=>state.PatientReducer.patientDetails)
     const details = { paymentRef: `H${Math.ceil(Math.random()*1000)}M${Math.ceil(Math.random()*1000)}S${Math.ceil(Math.random()*1000)}`, paymentType: 'Pharmacy', amount: 500, healthId: patient.healthId }
-    const [config, setconfig] = useState({reference: details.paymentRef, email: patient.email, amount: '', publicKey: 'pk_test_bfe3a2fb617743847ecf6d9ea96e3153e2a1186d'})
+    const [config, setconfig] = useState({reference: details.paymentRef, email: patient.email, amount: '1200.00', publicKey: 'pk_test_bfe3a2fb617743847ecf6d9ea96e3153e2a1186d'})
 
 
     const handlePaystackCloseAction = ()=>{}
@@ -20,7 +21,15 @@ function PatientPharmacy(props) {
         onSuccess: (reference) => handlePaystackSuccessAction(reference),
         onClose: handlePaystackCloseAction,
     }
-    const handlePaystackSuccessAction = (ref)=>{}
+    const handlePaystackSuccessAction = (ref)=>{
+        let obj={paymentRef:config.reference,paymentType:'Pharmacy',amount:config.amount,healthId:patient.healthId,_id:'6304fe7e3ee2a98ec32ee12c'}
+        console.log(obj)
+        axios.post(`${url}patient/payPharmBill`,obj).then(res=>{
+            if(res.data.message=='Success'){
+                window.location.reload()
+            }
+        }).catch(err=>console.log(err))
+    }
 
     useEffect(()=>{
         dispatch(patientPharmBill(url, {healthId: patient.healthId}))
@@ -57,7 +66,7 @@ function PatientPharmacy(props) {
                                 <tbody>
                                     {
                                         pharmBills.map((bills, i)=>(
-                                            <tr key={i}>
+                                            <tr onMouseOver={()=>setconfig({...config, amount: bills.amount + '00'})} key={i}>
                                                 <td> {bills.billNo} </td>
                                                 <td> {bills.healthId} </td>
                                                 <td> {bills.created} </td>
@@ -66,7 +75,7 @@ function PatientPharmacy(props) {
                                                 <td> {bills.paidAmount} </td>
                                                 <td> {bills.amount - bills.paidAmount} </td>
                                                 <td>
-                                                     <div className='d-flex jsutify-content-between'>
+                                                     <div  className='d-flex jsutify-content-between'>
                                                         <div onClick={()=>setconfig({...config, amount: bills.amount + '00'})}>
                                                             <PaystackButton {...componentProps} className='btn'><FontAwesomeIcon className='text-success cursor-pointer' icon='credit-card' /></PaystackButton> 
                                                         </div>

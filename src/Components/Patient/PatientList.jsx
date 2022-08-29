@@ -124,7 +124,6 @@ const filterWithParameter=(params)=>{
     const uploadImage=()=>{
         setButton({text:'',class:'spinner-border spinner-border-sm mx-2'})
         let obj={fullName:image.fullName,image:newImage,_id:image._id}
-        console.log(obj)
         axios.post(`${url}patient/updatePhoto`,obj).then(res=>{
             if(res.data.status){
                 setButton({text:'Done',class:' fa fa-check mx-2', disabled:true})
