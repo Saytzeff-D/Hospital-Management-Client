@@ -116,7 +116,7 @@ const filterWithParameter=(params,ID)=>{
                             (<p className="font-weight-bolder h5 py-2">No recent Appointment</p>)
                             :
                             (
-                                <table className="table table-warning table-hover table-responsive text-center">
+                                <table className="table table-warning table-hover table-responsive-md text-center">
                                     <thead>
                                         <tr>
                                             <th>NO.</th>
