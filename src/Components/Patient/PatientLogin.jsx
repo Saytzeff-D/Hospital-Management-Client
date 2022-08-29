@@ -62,8 +62,12 @@ function PatientLogin(props) {
  
     return (
         <div>
-            <main className='form-row'>
-                <div className='col-md-6 p-5 border-right'>
+            <main className='row w-100 mx-auto'>
+                <div className='d-none d-lg-block col-lg-6 animate__animated animate__fadeInUp animate__slower'>
+                    <p className='display-3 h1 py-5 font-weight-bold text-warning'>Welcome to Hospital Management System</p>
+                    <p className='text-white h6'>Login Here <i className='fa fa-arrow-right'></i> </p>
+                </div>
+                <div className='col-md-8 col-lg-6 p-5'>
                 <form className='text-white p-4' style={{backgroundColor: '#000000', opacity: '0.75'}} onSubmit={formik.handleSubmit}>
                     <div className='bg-warning text-white h5 text-center p-3'>
                         HOSPITAL MANAGEMENT SOFTWARE
@@ -95,13 +99,13 @@ function PatientLogin(props) {
                         </div>
                     
                    <button className='btn btn-primary btn-block' type='submit'>{loading.btn} <span className={loading.loadStyle}></span></button>
-                   <div className="d-flex justify-content-between pt-2">
+                   <div className="d-flex justify-content-between pt-2 flex-lg-row flex-column">
                         <div>
                             <a href='/views/patientIdRetrieval' className='text-warning' >Forgot Health Id?</a>
                         </div>
                         <div>
-                            <div className='d-flex justify-content-between'>
-                                <p onClick={goToRegister} className='text-primary px-1 font-weight-bold border-right' style={{cursor: 'pointer'}}>Register</p>
+                            <div className='d-flex justify-content-between pt-2 pt-md-0'>
+                                <p onClick={goToRegister} className='text-primary px-1 font-weight-bold' style={{cursor: 'pointer'}}>Register</p>
                                 <p className='text-primary px-1 font-weight-bold' onClick={goToStaffLogin} style={{cursor: 'pointer'}}>Staff Login</p>
                             </div>
                         </div>
@@ -110,14 +114,6 @@ function PatientLogin(props) {
                   
             </form>
                 </div>
-                <div className='col-6 d-none d-lg-block p-5'>
-                        <div className='form-group col-md-12 '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
-                        </div>
-                        <div className='form-group col-md-12 '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
-                        </div>
-                        <div className='form-group col-md-12 '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci sint cum beatae iusto numquam aut mollitia nobis amet, laudantium animi ea consectetur ratione! Placeat dignissimos quis debitis? Consectetur, eos enim!
-                        </div>
-              </div>
             </main>
            
         </div>
