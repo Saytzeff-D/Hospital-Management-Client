@@ -40,7 +40,7 @@ const AppointmentHistory = (props)=>{
                         (<p className='font-weight-bolder h5 py-2'>No History of Appointment</p>)
                         :
                         (
-                            <table className="table table-primary table-hover table-responsive text-center">
+                            <table className="table table-primary table-hover table-responsive-md text-center">
                                 <thead>
                                     <tr>
                                         <th>NO.</th>
