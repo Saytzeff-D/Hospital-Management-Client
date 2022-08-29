@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { patientPharmBill } from '../../actions';
 import { PaystackButton } from 'react-paystack'
@@ -10,13 +10,8 @@ function PatientPharmacy(props) {
     const pharmBills = useSelector(state=>state.PharmacyReducer.patientPharmBills)
     const patient = useSelector(state=>state.PatientReducer.patientDetails)
     const details = { paymentRef: `H${Math.ceil(Math.random()*1000)}M${Math.ceil(Math.random()*1000)}S${Math.ceil(Math.random()*1000)}`, paymentType: 'Pharmacy', amount: 500, healthId: patient.healthId }
+    const [config, setconfig] = useState({reference: details.paymentRef, email: patient.email, amount: '', publicKey: 'pk_test_bfe3a2fb617743847ecf6d9ea96e3153e2a1186d'})
 
-    const config = {
-        reference: details.paymentRef,
-        email: patient.email,
-        amount: 50000,
-        publicKey: 'pk_test_bfe3a2fb617743847ecf6d9ea96e3153e2a1186d',
-    }
 
     const handlePaystackCloseAction = ()=>{}
     const componentProps = {
@@ -72,7 +67,9 @@ function PatientPharmacy(props) {
                                                 <td> {bills.amount - bills.paidAmount} </td>
                                                 <td>
                                                      <div className='d-flex jsutify-content-between'>
-                                                     <PaystackButton {...componentProps} className='btn'><FontAwesomeIcon className='text-success cursor-pointer' icon='credit-card' /></PaystackButton> 
+                                                        <div onClick={()=>setconfig({...config, amount: bills.amount + '00'})}>
+                                                            <PaystackButton {...componentProps} className='btn'><FontAwesomeIcon className='text-success cursor-pointer' icon='credit-card' /></PaystackButton> 
+                                                        </div>
                                                         <button className='btn text-warning'> <FontAwesomeIcon icon='bars' /> </button>
                                                      </div> 
                                                 </td>
