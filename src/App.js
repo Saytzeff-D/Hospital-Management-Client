@@ -40,7 +40,7 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
   return (
     <>
       <Routes>
-        <Route path='/' element={<Navigate replace to='/views/addPatient' />} />
+        <Route path='/' element={<Navigate replace to='/views/patientLogin' />} />
         <Route path='/views' element={<BackgroundView />}>
           <Route path='/views/addPatient' element={<RegisterPatient />} />
           <Route path='/views/addStaff' element={<RegisterStaff/>} />
