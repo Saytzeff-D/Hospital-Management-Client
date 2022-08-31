@@ -7,10 +7,11 @@ import axios from 'axios'
 
 function PatientPharmacy(props) {
     const dispatch = useDispatch()
+    const [amountToBePaid, setamountToBePaid] = useState();
     const url = useSelector(state=>state.UrlReducer.url)
     const pharmBills = useSelector(state=>state.PharmacyReducer.patientPharmBills)
     const patient = useSelector(state=>state.PatientReducer.patientDetails)
-    const details = { paymentRef: `H${Math.ceil(Math.random()*1000)}M${Math.ceil(Math.random()*1000)}S${Math.ceil(Math.random()*1000)}`, paymentType: 'Pharmacy', amount: 500, healthId: patient.healthId }
+    const details = { paymentRef: `H${Math.ceil(Math.random()*1000)}M${Math.ceil(Math.random()*1000)}S${Math.ceil(Math.random()*1000)}`, paymentType: 'Pharmacy', healthId: patient.healthId }
     const [config, setconfig] = useState({
         reference: details.paymentRef, 
         email: patient.email, 
@@ -23,7 +24,7 @@ function PatientPharmacy(props) {
     const handlePaystackCloseAction = ()=>{}
     const componentProps = {
         ...config,
-        text: '',
+        text: `Pay ${amountToBePaid}`,
         onSuccess: (reference) => handlePaystackSuccessAction(reference),
         onClose: handlePaystackCloseAction,
     }
@@ -35,6 +36,10 @@ function PatientPharmacy(props) {
                 window.location.reload()
             }
         }).catch(err=>console.log(err))
+    }
+    const setPaymentDetails = (amount, _id)=>{
+        setconfig({...config, amount: amount + '00', billId: _id, reference: `H${Math.ceil(Math.random()*1000)}M${Math.ceil(Math.random()*1000)}S${Math.ceil(Math.random()*1000)}`})
+        setamountToBePaid(amount)
     }
 
     useEffect(()=>{
@@ -72,7 +77,7 @@ function PatientPharmacy(props) {
                                 <tbody>
                                     {
                                         pharmBills.map((bills, i)=>(
-                                            <tr onMouseOver={()=>setconfig({...config, amount: bills.amount + '00', billId: bills._id})} key={i}>
+                                            <tr key={i}>
                                                 <td> {bills.billNo} </td>
                                                 <td> {bills.healthId} </td>
                                                 <td> {bills.created} </td>
@@ -85,17 +90,11 @@ function PatientPharmacy(props) {
                                                         {
                                                             !bills.paymentStatus
                                                             &&
-                                                            <div onClick={()=>setconfig({...config, amount: bills.amount + '00'})}>
-                                                                <PaystackButton
-                                                                 {...componentProps} 
-                                                                 className='btn'
-                                                                 >
+                                                            <button data-toggle='modal' data-target='#payModal' className='btn text-success' onClick={()=>setPaymentDetails(bills.amount, bills._id)}>
                                                                     <FontAwesomeIcon
-                                                                     className='text-success cursor-pointer'
                                                                       icon='credit-card' 
                                                                     />
-                                                                </PaystackButton> 
-                                                            </div>
+                                                            </button>
                                                         }
                                                         <button
                                                          className='btn text-warning'
@@ -112,6 +111,28 @@ function PatientPharmacy(props) {
                             </table>
                         )
                     }
+                </div>
+            </div>
+
+            {/* Modal */}
+            <div className="modal fade" id='payModal'>
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header h4">
+                            Bill Payment
+                        </div>
+                        <div className="modal-body h6">
+                            Are your sure you want to pay for this bill?
+                        </div>
+                        <div className="modal-footer">
+                        <PaystackButton
+                            {...componentProps} 
+                            className='btn btn-success'
+                            >
+                        </PaystackButton>
+                            <button className='btn btn-dark' data-dismiss="modal" >Cancel</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
