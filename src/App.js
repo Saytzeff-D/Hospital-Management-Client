@@ -50,7 +50,7 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
         </Route>
         <Route path='/patient/' element={<PatientSideBar />} >
           <Route path='/patient/dashboard' element={<PatientDashboard />} />
-          <Route path='/patient/liveChat' element={<Chat socket={socket} />} />
+          <Route path='/patient/liveChat' element={<PatientAmbulance socket={socket} />} />
           <Route path='/patient/appointment' element={<PatientAppointment />} />
           <Route path='/patient/pharmacy' element={<PatientPharmacy />} />
           <Route path='/patient/ambulance' element={<PatientAmbulance />} />
@@ -62,13 +62,14 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
           <Route path='/staff/medStock' element={<MedStock />} />
           <Route path='/staff/staffList' element={<AllStaff />} />
           <Route path='/staff/patientList' element={<PatientList />} />
-          <Route path='/staff/livechat' element={<Chat />} />
+          <Route path='/staff/livechat' element={<PatientAmbulance/>} />
           <Route path='/staff/appointment' element={<AppointmentList />} />
           <Route path='/staff/birthRecords' element={<BirthRecords />} />
           <Route path='/staff/deathRecords' element={<DeathRecords />} />
           <Route path='/staff/prescriptionList' element={<PrescriptionList />} />
           <Route path='/staff/addPrescription' element={<AddPrescription />} />
           <Route path='/staff/finance' element={<Finance />} />
+          <Route path='/staff/ambulance' element={<PatientAmbulance />} />
         </Route>
       </Routes>
     </>

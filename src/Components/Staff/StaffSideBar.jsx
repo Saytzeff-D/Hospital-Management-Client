@@ -25,7 +25,6 @@ const StaffSideBar = ()=>{
           'Accept':'application/json'
         }}).then(res=>{
         if(res.data.status){
-            console.log(res.data.staffDetails)
           dispatch(allMedicines(url))
           dispatch(setStaff(res.data.staffDetails))
           dispatch(getAllPatient(url))
@@ -38,7 +37,6 @@ const StaffSideBar = ()=>{
         }
         
         }).catch(err=>{
-            console.log(err, token)
             localStorage.removeItem('StaffToken')
             navigate('/views/staffLogin')
         })

@@ -14,6 +14,7 @@ const AppointmentList=()=>{
     const [oldAppointments,setOldAppointments]=useState([])
     const [actionType,setActionType]=useState({action:'',data:{}})
     let [viewPat,setViewPat]=useState({})
+    const [isLoading,setLoading]=useState(true)
 
 
     
@@ -23,6 +24,7 @@ const AppointmentList=()=>{
         axios.get(`${url}staff/allAppointments`).then(res=>{
             if(res.data.status){                            
                 filterAppointment(res.data.appointments)
+                setLoading(false)
             }else{
                 console.log(res.data.message)
             }
@@ -59,10 +61,10 @@ const AppointmentList=()=>{
                 </ul>
              
 
-                {staffDetails.fname ===''?<span className='spinner-border text-white'></span>:<div className="tab-content mt-4">
-                    <div id="home" className="w-100 tab-pane active">
-                    <ApprovedAppointments approvedAppointment={oldAppointments}/>                        
-                    </div>
+                {staffDetails.fname ==='' || isLoading?<span className='spinner-border text-dark mt-5 mx-5'></span>:<div className="tab-content mt-4">
+                   <div id="home" className="w-100 tab-pane active">
+                   {  <ApprovedAppointments approvedAppointment={oldAppointments}/>      }                  
+                    </div> 
                     <div id="menu1" className="tab-pane fade">
                         <AppointmentHistory appointmentHistory={newAppointments} />
                     </div>
