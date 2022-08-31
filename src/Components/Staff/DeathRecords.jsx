@@ -20,7 +20,6 @@ function DeathRecords(props) {
     useEffect(()=>{
         axios.get(`${url}staff/getDeath`).then(res=>{
             if(res.data.status){
-                console.log(res.data.result)
                 setDeathTray(res.data.result)
                 setList(res.data.result)
                 setLoading(false)
@@ -65,7 +64,6 @@ function DeathRecords(props) {
                     setSuccess(res.data.message)
                     setError('')
                     setBtnLoading({btn: 'Save Records', loadStyle: ''})
-                    console.log(res.data)
                 }else{
                     setError(res.data.message)
                     setBtnLoading({btn: 'Save Records', loadStyle: ''})
