@@ -5,7 +5,7 @@ import { useSelector }  from 'react-redux'
 import { useNavigate } from 'react-router'
 
 const AddPrescription = (props)=>{
-    const navigate = useNavigate
+    const navigate = useNavigate()
     const url = useSelector(state=>state.UrlReducer.url)
     const patientTray = useSelector(state=>state.PatientReducer.patientTray)
     const medicineTray = useSelector(state=>state.PharmacyReducer.medicineTray)
@@ -20,7 +20,11 @@ const AddPrescription = (props)=>{
     const [diagnose, setDiagnoseInfo] = useState({healthId: '', appointmentNo: ''})
 
     useEffect(()=>{
+        if(localStorage.diagnoseInfo){
         setDiagnoseInfo(JSON.parse(sessionStorage.getItem('diagnoseInfo')))
+        }else{
+            navigate('/staff/appointment')
+        }
         const patient = patientTray.find((patient, i)=>(patient.healthId === diagnose.healthId))
         if(patient === undefined){
             setPrescriptionObj({...prescriptionObj, patientName:'Record not found...',})
@@ -45,7 +49,6 @@ const AddPrescription = (props)=>{
     }
     const handleChange = (e)=>{
         setPrescriptionObj({...prescriptionObj, [e.target.name]: e.target.value})
-        console.log(prescriptionObj)
     }
    
     const handleMedicineChange = (e,i)=>{
@@ -66,9 +69,7 @@ const AddPrescription = (props)=>{
 
     const addPrescription = (e)=>{
         e.preventDefault()
-        console.log(prescriptionObj.illness)
-        let Meds=prescribeMed.filter((each,i)=> each!=='')
-        
+        let Meds=prescribeMed.filter((each,i)=> each!=='')        
     if(prescriptionObj.illness!==''){
         if(Meds.length>0){
             if(filterDrugArray(Meds)){
@@ -76,13 +77,20 @@ const AddPrescription = (props)=>{
                 prescriptionObj.appointmentNo = diagnose.appointmentNo
                 setLoading(true)
                 axios.post(`${url}staff/addPrescription`, prescriptionObj).then((res)=>{
-                    setLoading(false)
-                    setSuccess(res.data.message)
-                    navigate('/staff/prescriptionList')
+                    if(res.data.status){
+                        console.log(res.data)
+                        setLoading(false)
+                        setSuccess(res.data.message)
+                        sessionStorage.removeItem('diagnoseInfo')
+                        navigate('/staff/prescriptionList')
+                    }
                 }).catch((err)=>{
-                    console.log(err)
-                    setLoading(false)
-                    setError('An error has occured...')
+                    if(err){
+                        setLoading(false)
+                        setError('An error has occured...')
+
+                    }
+
                 })
             }
         }else{

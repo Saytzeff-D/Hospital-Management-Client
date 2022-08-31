@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router';
 function StaffDashboard() {
   let url=useSelector(state=>state.UrlReducer.url)
   let [allStaffs,setAllStaffs]=useState([])
-  console.log(allStaffs)
   let [countRole,setCountRole]=useState({Admin:0,Pharmacist:0,Nurse:0,Doctor:0})
   let [fetching,fetched]=useState('')
   let [patNum,setPatNum]=useState(0)
@@ -21,7 +20,6 @@ function StaffDashboard() {
 
   useEffect(()=>{
     axios.get(`${url}staff/getDashboardInfo`).then( res=>{
-      console.log(res.data)
       setAllStaffs(res.data.staffArr)
       setPatNum(res.data.patsNum)
       setAppointments(res.data.appointments)
@@ -39,7 +37,6 @@ function StaffDashboard() {
     })
     setCountRole(count)
   },[fetching])
-  console.log(countRole)
 
   const totalIncome = (result)=>{
     let total = 0
