@@ -86,9 +86,9 @@ const StaffSideBar = ()=>{
                     </div>
                     <div className="w3-col s8 w3-bar">
                     <span>Welcome, <strong className='text-capitalize '>{ `${staffInfo.fname}`}.</strong></span><br/>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
+                    <a href="/staff/liveChat" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
+                    <a href="" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
+                    <a href="" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
                     <br/><br/>
                   <span className='h6 text-capitalize'>{staffInfo.role}</span> 
                     </div>
