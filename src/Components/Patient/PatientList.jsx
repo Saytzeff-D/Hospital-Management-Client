@@ -107,9 +107,13 @@ const filterWithParameter=(params)=>{
     }
     function setTablePage(){
         let pageNumber=presentPage
-        let filteredList=[]
-        
-        let allPatients=JSON.parse(localStorage.patTray)
+        let filteredList=[] 
+        let allPatients=[]     
+        if(localStorage.patTray){
+        allPatients=JSON.parse(localStorage.patTray)
+        } else{
+        allPatients=allPat
+        } 
         allPatients.forEach((each,index)=>{
             if(index>=pageNumber*displayAtOnce && index<=pageNumber*displayAtOnce+displayAtOnce-1){
                 filteredList.push(each)
