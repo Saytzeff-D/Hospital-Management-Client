@@ -10,7 +10,6 @@ const PrescriptionList = () => {
     const [list, setList] = useState([])
     const url = useSelector(state=>state.UrlReducer.url)
     const staffInfo=useSelector(state=>state.StaffReducer.staffInfo)
-    console.log(staffInfo)
     useEffect(()=>{
         axios.get(`${url}staff/allPrescription`).then((res)=>{
             setList(res.data.result)

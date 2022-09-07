@@ -107,9 +107,13 @@ const filterWithParameter=(params)=>{
     }
     function setTablePage(){
         let pageNumber=presentPage
-        let filteredList=[]
-        
-        let allPatients=JSON.parse(localStorage.patTray)
+        let filteredList=[] 
+        let allPatients=[]     
+        if(localStorage.patTray){
+        allPatients=JSON.parse(localStorage.patTray)
+        } else{
+        allPatients=allPat
+        } 
         allPatients.forEach((each,index)=>{
             if(index>=pageNumber*displayAtOnce && index<=pageNumber*displayAtOnce+displayAtOnce-1){
                 filteredList.push(each)
@@ -172,7 +176,7 @@ const filterWithParameter=(params)=>{
                     </div>
              </div>
         <section>               
-                <table className='table table-light table-striped table-bordered border-primary my-4'>
+                <table className='table table-light table-striped table-responsive-md table-bordered border-primary my-4'>
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -222,6 +226,13 @@ const filterWithParameter=(params)=>{
                     <span className='text-center m-auto' style={{marginLeft:'20px'}}>{presentPage+1}</span>
 
                     <i className='fa fa-angle-right text-center' style={{marginLeft:'35px',border:'1px solid black', width:'20px',borderRadius:'4px'}} onClick={fastForward}></i>
+                    <i style={{border:'1px solid black', width:'20px',borderRadius:'4px',cursor:'pointer'}} className={'fa fa-angle-double-left mr-2 text-center'  }  onClick={backWardEnd}></i>
+                    
+                     <i  className='fa fa-angle-left text-center' style={{marginRight:'35px',border:'1px solid black', width:'20px',borderRadius:'4px', cursor:'pointer'}}  onClick={backWard}></i>
+                                     
+                    <span className='text-center m-auto' style={{marginLeft:'20px'}}>{presentPage+1}</span>
+
+                    <i className='fa fa-angle-right text-center' style={{marginLeft:'35px',border:'1px solid black', width:'20px',borderRadius:'4px',cursor:'pointer'}} onClick={fastForward}></i>
 
                     <i className='fa fa-angle-double-right ml-2 text-center' style={{border:'1px solid black', width:'20px',borderRadius:'4px'}}  onClick={fastForwardEnd} ></i>
                     <br/> <span style={{marginTop:'15px',float:'right'}} className='text-danger'>{Math.ceil((allPat.length)/displayAtOnce)} pages</span>                  

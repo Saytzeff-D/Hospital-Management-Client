@@ -19,7 +19,6 @@ const ApprovedAppointments=(props)=>{
 
     useEffect(()=>{
        setFilteredList(approvedAppointment)
-       console.log(approvedAppointment,9000)
 
     },[approvedAppointment])
 
@@ -96,7 +95,7 @@ const filterWithParameter=(params,ID)=>{
 
     return(
         <>        
-            <div id="home" className="w-100 tab-pane active">
+            { filteredList.length===0? <h2 className="mx-5 my-5">No recent appointment</h2> : <div id="home" className="w-100 tab-pane active">
                  <div className='py-3'>
                     <div className='bg-white border p-2'>
                         <div className='border-bottom'>
@@ -164,7 +163,7 @@ const filterWithParameter=(params,ID)=>{
                     </div>
                 </div>
 
-            </div>
+            </div>}
 
 
                 <div className='modal fade big-modal' id="viewProfile" data-backdrop="static">

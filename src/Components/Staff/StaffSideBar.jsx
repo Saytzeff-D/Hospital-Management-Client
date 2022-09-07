@@ -25,7 +25,6 @@ const StaffSideBar = ()=>{
           'Accept':'application/json'
         }}).then(res=>{
         if(res.data.status){
-            console.log(res.data.staffDetails)
           dispatch(allMedicines(url))
           dispatch(setStaff(res.data.staffDetails))
           dispatch(getAllPatient(url))
@@ -38,7 +37,6 @@ const StaffSideBar = ()=>{
         }
         
         }).catch(err=>{
-            console.log(err, token)
             localStorage.removeItem('StaffToken')
             navigate('/views/staffLogin')
         })
@@ -88,9 +86,9 @@ const StaffSideBar = ()=>{
                     </div>
                     <div className="w3-col s8 w3-bar">
                     <span>Welcome, <strong className='text-capitalize '>{ `${staffInfo.fname}`}.</strong></span><br/>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
-                    <a href="/" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
+                    <a href="/staff/liveChat" className="w3-bar-item w3-button"><i className="fa fa-envelope"></i></a>
+                    <a href="" className="w3-bar-item w3-button"><i className="fa fa-user"></i></a>
+                    <a href="" className="w3-bar-item w3-button"><i className="fa fa-cog"></i></a>
                     <br/><br/>
                   <span className='h6 text-capitalize'>{staffInfo.role}</span> 
                     </div>

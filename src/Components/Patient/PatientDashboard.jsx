@@ -15,9 +15,7 @@ function PatientDashboard(props) {
     axios.post(`${url}patient/getInfo`,patientDetails).then(res=>{
       if(res.data.status){
         let data=res.data
-        console.log(data.AppNo,data.presNo)
-        setPatInfo({...patInfo,AppNo:data.AppNo,presNo:data.presNo})
-        console.log(patInfo)
+        setPatInfo({...patInfo,AppNo:data.AppNo,presNo:data.presNo,patNo:data.patNo})
       }
     })
   },[])
@@ -58,7 +56,7 @@ function PatientDashboard(props) {
       <div style={{cursor: 'pointer'}} onClick={()=>navigate('/patient/ambulance')} className="w3-container w3-teal w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><i className="fa fa-ambulance w3-xxlarge"></i></div>
         <div className="w3-right">
-          <h3>23</h3>
+          <h3>0</h3>
         </div>
         <div className="w3-clear py-3"></div>
         <h4>Ambulance</h4>
@@ -68,7 +66,10 @@ function PatientDashboard(props) {
       <div className="w3-container w3-orange w3-text-white w3-padding-16 shadow rounded-lg">
         <div className="w3-left"><FontAwesomeIcon icon='bed' className='w3-xxlarge' /></div>
         <div className="w3-right">
-          <h3>50</h3>
+        <h3>{(patInfo.patNo ==='' && patInfo.patNo!==0 ) ?  
+              <span className='spinner-border text-white'></span>:patInfo.patNo
+          
+        }</h3>
         </div>
         <div className="w3-clear py-3"></div>
         <h4>Patients</h4>

@@ -50,7 +50,11 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
         </Route>
         <Route path='/patient/' element={<PatientSideBar />} >
           <Route path='/patient/dashboard' element={<PatientDashboard />} />
+<<<<<<< HEAD
           <Route path='/patient/liveChat' element={<Chat socket={socket} />} />
+=======
+          <Route path='/patient/liveChat' element={<PatientAmbulance socket={socket} />} />
+>>>>>>> 434adc0f9921d2b29f4045c6dff840a2663b3221
           <Route path='/patient/appointment' element={<PatientAppointment />} />
           <Route path='/patient/pharmacy' element={<PatientPharmacy />} />
           <Route path='/patient/ambulance' element={<PatientAmbulance />} />
@@ -62,13 +66,21 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
           <Route path='/staff/medStock' element={<MedStock />} />
           <Route path='/staff/staffList' element={<AllStaff />} />
           <Route path='/staff/patientList' element={<PatientList />} />
+<<<<<<< HEAD
           <Route path='/staff/livechat' element={<Chat />} />
+=======
+          <Route path='/staff/livechat' element={<PatientAmbulance/>} />
+>>>>>>> 434adc0f9921d2b29f4045c6dff840a2663b3221
           <Route path='/staff/appointment' element={<AppointmentList />} />
           <Route path='/staff/birthRecords' element={<BirthRecords />} />
           <Route path='/staff/deathRecords' element={<DeathRecords />} />
           <Route path='/staff/prescriptionList' element={<PrescriptionList />} />
           <Route path='/staff/addPrescription' element={<AddPrescription />} />
           <Route path='/staff/finance' element={<Finance />} />
+<<<<<<< HEAD
+=======
+          <Route path='/staff/ambulance' element={<PatientAmbulance />} />
+>>>>>>> 434adc0f9921d2b29f4045c6dff840a2663b3221
         </Route>
       </Routes>
     </>
