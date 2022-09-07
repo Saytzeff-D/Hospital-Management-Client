@@ -62,7 +62,7 @@ function PatientLogin(props) {
  
     return (
         <div>
-            <main className='row w-100 mx-auto'>
+            <main className='row w-100 mx-0'>
                 <div className='d-none d-lg-block col-lg-6 animate__animated animate__fadeInUp animate__slower'>
                     <p className='display-3 h1 py-5 font-weight-bold text-warning'>Welcome to Hospital Management System</p>
                     <p className='text-white h6'>Login Here <i className='fa fa-arrow-right'></i> </p>

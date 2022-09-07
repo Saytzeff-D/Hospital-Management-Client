@@ -31,6 +31,7 @@ import AddPrescription from './Components/Staff/AddPrescription';
 import PrescriptionList from './Components/Staff/PrescriptionList';
 import PharmacyBills from './Components/Staff/PharmacyBills';
 import Finance from './Components/Staff/Finance';
+import WildCard from './Components/Container/WildCard';
 library.add(fas, faTwitter, faFontAwesome)
 
 
@@ -47,6 +48,7 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
           <Route path='/views/patientLogin' element={<PatientLogin />}/>
           <Route path='/views/staffLogin' element={<StaffLogin />} />
           <Route path='/views/patientIdRetrieval' element={<PatientIdRetrieval />} />
+          <Route path='/views/notFound' element={<WildCard />} />
         </Route>
         <Route path='/patient/' element={<PatientSideBar />} >
           <Route path='/patient/dashboard' element={<PatientDashboard />} />
@@ -71,6 +73,7 @@ const socket = useRef(socketClient(useSelector(state=>state.UrlReducer.url)))
           <Route path='/staff/finance' element={<Finance />} />
           <Route path='/staff/ambulance' element={<PatientAmbulance />} />
         </Route>
+        <Route path='*' element={<Navigate replace to='/views/notFound' />} />
       </Routes>
     </>
   )
