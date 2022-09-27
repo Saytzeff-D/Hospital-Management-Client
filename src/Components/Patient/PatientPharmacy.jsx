@@ -48,9 +48,9 @@ function PatientPharmacy(props) {
     return (
         <div>
             <div className='row m-3 pt-3'>
-                <div className='col-12 border bg-white'>
+                <div className='col-12 border bg-white rounded-lg shadow-lg'>
                     <div className='border-bottom p-2'>
-                    <p className='p-1 h6'>Pharmacy Bills</p>
+                    <p className='p-1 h6 text-dark'>Pharmacy Bills</p>
                     </div>
                     <div>
                        <input className='form-control col-lg-4 col-md-6 col-sm-8 mt-2' placeholder='Search...' />
@@ -118,11 +118,11 @@ function PatientPharmacy(props) {
             <div className="modal fade" id='payModal'>
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
-                        <div className="modal-header h4">
+                        <div className="modal-header h4 text-dark">
                             Bill Payment
                         </div>
-                        <div className="modal-body h6">
-                            Are your sure you want to pay for this bill?
+                        <div className="modal-body h6 text-dark">
+                            Are you sure you want to pay for this bill?
                         </div>
                         <div className="modal-footer">
                         <PaystackButton

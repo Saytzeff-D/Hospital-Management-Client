@@ -128,7 +128,7 @@ const delAppoint = (_id)=>{
     return (
         <div>
             <div className='row px-5 py-2'>
-                <div className='col-md-3 bg-white py-2 mt-2'>
+                <div className='col-md-3 bg-white py-2 mt-2 text-dark shadow-lg rounded-lg'>
                         <div className='d-flex justify-content-center'>
                             <img src={patient.photo} alt='patientPhoto' className='rounded-circle' width='100px' height='100px'  />
                         </div>
@@ -163,7 +163,7 @@ const delAppoint = (_id)=>{
                         </div>
                 </div>
                 <div className='col-md-9 px-3 mt-2'>
-                    <div className='bg-white border p-2'>
+                    <div className='bg-white text-dark border p-2 rounded-lg shadow-lg'>
                         <div className='d-flex justify-content-between border-bottom py-1 mb-1'>
                             <p className='h6'>My Appointments</p>
                             <button className='btn btn-primary' data-toggle='modal' data-target='#appointmentBox'><FontAwesomeIcon icon='plus' /> Add Appointment</button>
@@ -261,11 +261,11 @@ const delAppoint = (_id)=>{
             <div className='modal fade' id='appointmentBox' data-backdrop='static'>
                 <div className='modal-dialog modal-dialog-centered'>
                     <div className='modal-content'>
-                        <div className='modal-header'>
+                        <div className='modal-header text-dark'>
                             <h4 className='modal-title'>Add Appointment</h4>
                             <button data-dismiss='modal' className='close'>&times;</button>
                         </div>
-                        <div className='modal-body'>
+                        <div className='modal-body text-dark'>
                             <form onSubmit={formik.handleSubmit}>
                                 {
                                     error !== '' &&
